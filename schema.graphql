@@ -1,0 +1,79 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type TaskContentModel {
+  id: ID!
+  checked: Boolean!
+  title: String!
+  createdAt: Date!
+  updatedAt: Date!
+  task: TaskModel!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type TaskModel {
+  id: ID!
+  title: String!
+  createdAt: Date!
+  updatedAt: Date!
+  taskContents: [TaskContentModel!]!
+  categories: [CategoryModel!]!
+}
+
+type CategoryModel {
+  id: ID!
+  name: String!
+  color: Color!
+  createdAt: Date!
+  updatedAt: Date!
+  tasks: TaskModel!
+}
+
+enum Color {
+  red
+  blue
+  green
+}
+
+type Query {
+  task(id: ID!): TaskModel
+  tasks(take: Int): [TaskModel!]!
+  category(id: ID!): CategoryModel
+  categories: [CategoryModel!]!
+  taskContent(id: ID!): TaskContentModel
+  taskContents: [TaskContentModel!]!
+}
+
+type Mutation {
+  saveTask(task: AddTaskInput!): TaskModel!
+  deleteTask(id: ID!): TaskModel
+  saveCategory(category: AddCategoryInput!): CategoryModel!
+  deleteCategory(id: ID!): CategoryModel
+  saveTaskContent(taskContent: AddTaskContentInput!): TaskContentModel!
+  updateTaskContent(taskContent: UpdateTaskContentInput!): TaskContentModel!
+  deleteTaskContent(id: ID!): TaskContentModel
+}
+
+input AddTaskInput {
+  title: String!
+  categoryIds: [ID!]!
+}
+
+input AddCategoryInput {
+  name: String!
+  color: Color!
+}
+
+input AddTaskContentInput {
+  title: String!
+  taskId: ID!
+}
+
+input UpdateTaskContentInput {
+  id: ID!
+  checked: Boolean
+  title: String
+}

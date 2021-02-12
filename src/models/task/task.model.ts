@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   CreateDateColumn,
@@ -8,13 +8,13 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
-import { CategoryModel } from '@/models/category.model';
-import { TaskContentModel } from '@/models/taskContent.model';
+import { CategoryModel } from "@/models/category/category.model";
+import { TaskContentModel } from "@/models/task-content/task-content.model";
 
 @ObjectType()
-@Entity('tasks')
+@Entity("tasks")
 export class TaskModel {
   @Field((type) => ID)
   @PrimaryGeneratedColumn()
@@ -38,6 +38,16 @@ export class TaskModel {
 
   @Field((type) => [CategoryModel], { defaultValue: [] })
   @ManyToMany((type) => CategoryModel, (category) => category.tasks)
-  @JoinTable({ name: 'tasks_categories' })
+  @JoinTable({
+    name: "tasks_categories",
+    joinColumn: {
+      name: "task_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "category_id",
+      referencedColumnName: "id",
+    },
+  })
   categories: CategoryModel[];
 }

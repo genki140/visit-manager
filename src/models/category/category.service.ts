@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { AddCategoryInput } from '@/dto/category.dto';
-import { CategoryModel } from '@/models/category.model';
+import { AddCategoryInput } from "@/dto/category.dto";
+import { CategoryModel } from "@/models/category/category.model";
 
 @Injectable()
 export class CategoryService {
@@ -13,11 +13,11 @@ export class CategoryService {
   ) {}
 
   async findOne(id: number) {
-    return this.categoryRepository.findOne(id, { relations: ['tasks'] });
+    return this.categoryRepository.findOne(id, { relations: ["tasks"] });
   }
 
   async findAll() {
-    return this.categoryRepository.find({ relations: ['tasks'] });
+    return this.categoryRepository.find({ relations: ["tasks"] });
   }
 
   async findByIds(ids: number[]) {

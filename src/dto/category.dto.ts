@@ -1,6 +1,6 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from "@nestjs/graphql";
 
-import { Color } from '@/models/category.model';
+import { Color } from "@/models/category/category.model";
 
 @InputType()
 export class AddCategoryInput {
