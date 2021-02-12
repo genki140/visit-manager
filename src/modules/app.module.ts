@@ -1,37 +1,4 @@
 // import { Module } from '@nestjs/common';
-// import { TypeOrmModule } from '@nestjs/typeorm';
-// // import { AppController } from './app.controller';
-// import { AppService } from './app.service';
-// import { UserModule } from './user/user.module';
-
-// @Module({
-//   imports: [TypeOrmModule.forRoot(), UserModule],
-//   providers: [AppService],
-// })
-// export class AppModule {}
-
-import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { CategoryModule } from './modules/category.module';
-import { TaskModule } from './modules/task.module';
-import { TaskContentModule } from './modules/taskContent.module';
-
-@Module({
-  imports: [
-    TypeOrmModule,
-    GraphQLModule.forRoot({
-      playground: true,
-      autoSchemaFile: 'schema.graphql',
-    }),
-    TaskModule,
-    TaskContentModule,
-    CategoryModule,
-  ],
-})
-export class AppModule {}
-
-// import { Module } from '@nestjs/common';
 // import { ConfigModule, ConfigService } from '@nestjs/config';
 // import { GraphQLModule } from '@nestjs/graphql';
 // import { TypeOrmModule } from '@nestjs/typeorm';
