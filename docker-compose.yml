@@ -6,7 +6,7 @@ services:
     build: ./
     tty: true
     ports:
-      - 3333:3000
+      - 3333-3339:3000
 
   # MySQL
   db:
@@ -20,8 +20,8 @@ services:
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./docker/db:/docker-entrypoint-initdb.d
-    ports:
-      - 6666:3306
+    # ports:
+    #   - 6666:3306
 
   # phpMyAdmin
   phpmyadmin:
@@ -33,4 +33,4 @@ services:
       - PMA_PASSWORD=password
       - UPLOAD_LIMIT=300M
     ports:
-      - 8888:80
+      - 8888-8999:80
