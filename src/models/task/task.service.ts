@@ -38,6 +38,9 @@ export class TaskService {
 
   async save({ categoryIds, ...payload }: AddTaskInput) {
     const categories = await this.categoryService.findByIds(categoryIds);
+    if (categories.length < categoryIds.length) {
+      throw new Error("couldn't get it all");
+    }
     return await this.taskRepository.save({ ...payload, categories });
   }
 

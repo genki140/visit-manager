@@ -1,3 +1,17 @@
+# nest サンプルプロジェクト
+
+## 目標
+
+- クライアントとサーバーを同一 VSCode 上で開発。
+
+- Docker 上に Nest サーバー、Next クライアント、mySql、phpMyAdmin 全自動構築。（ソース管理に docker プロジェクトも入れたいがソースは別？用検討）
+
+- デバッグとホットリロードに対応させる。
+
+- モデル構造をサーバーとクライアントで共有（同一ファイルを参照できるのが理想）
+
+メモ：多分 1 つの docker で nest と next サーバー同時デバッグ実行する感じになる。
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
