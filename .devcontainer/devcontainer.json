@@ -1,0 +1,10 @@
+{
+  "name": "Nust Next Test",
+
+  "dockerComposeFile": ["../docker/docker-compose.yml"],
+
+  "service": "web",
+  "workspaceFolder": "/home/project/",
+
+  "extensions": ["esbenp.prettier-vscode"]
+}
