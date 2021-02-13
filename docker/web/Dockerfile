@@ -1,6 +1,7 @@
 FROM node:12
 
 WORKDIR /home/project/
+COPY ../../ /home/project/
 
 # ENV DEBIAN_FRONTEND=noninteractive
 
