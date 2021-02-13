@@ -1,5 +1,13 @@
 # nest サンプルプロジェクト
 
+使い方：
+
+git clone で取得したフォルダを vscode で開き、remote development 拡張機能をインストールし、remote container で開く
+
+npm ci を実行
+
+デバッグタブから実行。以上
+
 ## 目標
 
 - クライアントとサーバーを同一 VSCode 上で開発。

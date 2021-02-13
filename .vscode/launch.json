@@ -7,7 +7,7 @@
       "type": "pwa-node",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "start:debug"],
-      "cwd": "${workspaceRoot}",
+      "cwd": "${workspaceFolder}/backend",
       "internalConsoleOptions": "openOnSessionStart",
       "console": "internalConsole",
       "outputCapture": "std"
