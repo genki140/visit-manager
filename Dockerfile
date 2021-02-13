@@ -12,7 +12,11 @@ RUN apt update && \
     locale-gen ja_JP.UTF-8 && \
     echo "export LANG=ja_JP.UTF-8" >> ~/.bashrc && \
     # git npm nest
-    npm i -g @nestjs/cli
+    npm i -g @nestjs/cli && \
+    cd backend && \
+    npm ci && \
+    cd ../frontend && \
+    npm ci
 
 # ENV DEBIAN_FRONTEND=noninteractive
 
