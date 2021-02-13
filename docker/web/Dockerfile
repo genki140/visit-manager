@@ -1,6 +1,18 @@
-FROM ubuntu:18.04
+FROM node:12
 
 WORKDIR /home/project/
+
+# ENV DEBIAN_FRONTEND=noninteractive
+
+# RUN apt update && \
+#     apt upgrade -y && \
+#     # locale
+#     apt install -y locales && \
+#     locale-gen ja_JP.UTF-8 && \
+#     echo "export LANG=ja_JP.UTF-8" >> ~/.bashrc && \
+#     # git npm nest
+#     apt install -y git npm
+#     npm i -g @nestjs/cli
 
 # ENV DEBIAN_FRONTEND=noninteractive
 

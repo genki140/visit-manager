@@ -1,7 +1,7 @@
 {
   "name": "Nust Next Test",
 
-  "dockerComposeFile": ["../docker/docker-compose.yml"],
+  "dockerComposeFile": ["../docker-compose.yml"],
 
   "service": "web",
   "workspaceFolder": "/home/project/",
