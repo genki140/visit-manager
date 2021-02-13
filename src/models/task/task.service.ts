@@ -20,14 +20,6 @@ export class TaskService {
     });
   }
 
-  async findTop(count: number) {
-    return this.taskRepository.find({
-      order: { createdAt: 'ASC' },
-      relations: ['taskContents', 'categories'],
-      take: count,
-    });
-  }
-
   async findAll(take?: number) {
     return this.taskRepository.find({
       order: { createdAt: 'ASC' },

@@ -11,7 +11,7 @@ import {
 import { TaskModel } from '@/models/task/task.model';
 
 @ObjectType()
-@Entity('taskContents')
+@Entity('task_contents')
 export class TaskContentModel {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
