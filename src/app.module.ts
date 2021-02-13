@@ -28,8 +28,8 @@ type EnvironmentVariables = {
       inject: [ConfigService],
       useFactory: (configService: ConfigService<EnvironmentVariables>) => ({
         type: 'mysql',
-        host: configService.get('DB_HOST') || 'localhost',
-        port: configService.get('DB_PORT') || 3308,
+        host: configService.get('DB_HOST') || 'db',
+        port: configService.get('DB_PORT') || 3306,
         username: configService.get('DB_USERNAME') || 'username',
         password: configService.get('DB_PASSWORD') || 'password',
         database: configService.get('DB_NAME') || 'database',

@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  # # Application
+  # Application
   web:
-    build: ./docker/web
+    build: ./
     tty: true
     ports:
       - 3333:3000
