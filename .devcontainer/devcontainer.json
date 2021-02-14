@@ -6,5 +6,5 @@
   "service": "web",
   "workspaceFolder": "/home/project/",
 
-  "extensions": ["esbenp.prettier-vscode"]
+  "extensions": ["esbenp.prettier-vscode", "eamodio.gitlens"]
 }
