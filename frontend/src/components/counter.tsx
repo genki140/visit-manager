@@ -1,6 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import counterSlice, { useCounterState } from '../ducks/counter';
+import Button from '@material-ui/core/Button';
+
+import counterSlice, { useCounterState } from '@/ducks/counter';
 
 const Counter: React.FC<{
   caption: string;
@@ -8,23 +10,26 @@ const Counter: React.FC<{
   const dispatch = useDispatch();
   const state = useCounterState().counter;
 
-  const onClickIncrement = () => {
-    dispatch(counterSlice.actions.incrementCounter(1));
-  };
-
-  const onClickDecrement = () => {
-    dispatch(counterSlice.actions.decrementCounter(1));
-  };
-
   return (
     <>
       <h2>{props.caption}</h2>
-      <button type="button" onClick={onClickIncrement}>
-        ふやす
-      </button>
-      <button type="button" onClick={onClickDecrement}>
-        へらす
-      </button>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => dispatch(counterSlice.actions.incrementCounter(1))}
+      >
+        増やす
+      </Button>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => dispatch(counterSlice.actions.decrementCounter(1))}
+      >
+        減らす
+      </Button>
+
       <p>ねこが{state.count} 匹いる</p>
     </>
   );
