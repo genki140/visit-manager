@@ -1,6 +1,8 @@
+import React from 'react';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Counter from '@/components/counter';
+import Tasks from '@/components/Tasks';
 
 const IndexPage = () => (
   <Layout title="Home | Next.js + TypeScript Example">
@@ -11,6 +13,7 @@ const IndexPage = () => (
       </Link>
     </p>
     <Counter caption="aacああccab" />
+    <Tasks />
   </Layout>
 );
 export default IndexPage;
