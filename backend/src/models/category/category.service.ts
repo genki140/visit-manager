@@ -2,17 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import {
-  CategoryModel,
-  CreateCategoryInput,
-  UpdateCategoryInput,
-} from '@/models/category/category.model';
+import { Category, CreateCategoryInput, UpdateCategoryInput } from '@/models/category/category.model';
 
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectRepository(CategoryModel)
-    private categoryRepository: Repository<CategoryModel>,
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
   ) {}
 
   async findOne(id: number) {
@@ -27,10 +23,8 @@ export class CategoryService {
     return this.categoryRepository.findByIds(ids);
   }
 
-  create = (payload: CreateCategoryInput) =>
-    this.categoryRepository.save({ ...payload });
-  update = (payload: UpdateCategoryInput) =>
-    this.categoryRepository.save({ ...payload });
+  create = (payload: CreateCategoryInput) => this.categoryRepository.save({ ...payload });
+  update = (payload: UpdateCategoryInput) => this.categoryRepository.save({ ...payload });
   async delete(id: number) {
     await this.categoryRepository.delete(id);
     return await this.findOne(id);

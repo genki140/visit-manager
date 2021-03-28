@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateTaskInput, TaskModel } from './task.model';
+import { CreateTaskInput, Task } from './task.model';
 
 import { CategoryService } from '@/models/category/category.service';
 
 @Injectable()
 export class TaskService {
   constructor(
-    @InjectRepository(TaskModel)
-    private taskRepository: Repository<TaskModel>,
+    @InjectRepository(Task)
+    private taskRepository: Repository<Task>,
     private categoryService: CategoryService,
   ) {}
 

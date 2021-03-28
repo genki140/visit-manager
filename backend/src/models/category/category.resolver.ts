@@ -1,38 +1,34 @@
 import { Inject } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import {
-  CategoryModel,
-  CreateCategoryInput,
-  UpdateCategoryInput,
-} from '@/models/category/category.model';
+import { Category, CreateCategoryInput, UpdateCategoryInput } from '@/models/category/category.model';
 import { CategoryService } from '@/models/category/category.service';
 
-@Resolver(() => CategoryModel)
+@Resolver(() => Category)
 export class CategoryResolver {
   constructor(@Inject(CategoryService) private taskService: CategoryService) {}
 
-  @Query(() => CategoryModel, { nullable: true })
+  @Query(() => Category, { nullable: true })
   async category(@Args('id', { type: () => ID }) id: number) {
     return await this.taskService.findOne(id);
   }
 
-  @Query(() => [CategoryModel])
+  @Query(() => [Category])
   async categories() {
     return await this.taskService.findAll();
   }
 
-  @Mutation(() => CategoryModel)
+  @Mutation(() => Category)
   async createCategory(@Args('category') category: CreateCategoryInput) {
     return await this.taskService.create(category);
   }
 
-  @Mutation(() => CategoryModel)
+  @Mutation(() => Category)
   async updateCategory(@Args('category') category: UpdateCategoryInput) {
     return await this.taskService.update(category);
   }
 
-  @Mutation(() => CategoryModel, { nullable: true })
+  @Mutation(() => Category, { nullable: true })
   async deleteCategory(@Args('id', { type: () => ID }) id: number) {
     return await this.taskService.delete(id);
   }

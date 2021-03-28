@@ -2,34 +2,34 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type TaskContentModel {
+type TaskContent {
   id: ID!
   checked: Boolean!
   title: String!
   createdAt: Date!
   updatedAt: Date!
-  task: TaskModel!
+  task: Task!
 }
 
 """Date custom scalar type"""
 scalar Date
 
-type TaskModel {
+type Task {
   id: ID!
   title: String!
   createdAt: Date!
   updatedAt: Date!
-  taskContents: [TaskContentModel!]!
-  categories: [CategoryModel!]!
+  taskContents: [TaskContent!]!
+  categories: [Category!]!
 }
 
-type CategoryModel {
+type Category {
   id: ID!
   name: String!
   color: Color!
   createdAt: Date!
   updatedAt: Date!
-  tasks: TaskModel!
+  tasks: Task!
 }
 
 enum Color {
@@ -38,48 +38,48 @@ enum Color {
   green
 }
 
-type UserModel {
+type User {
   id: ID!
-  username: String!
+  userId: String!
   password: String!
 }
 
-type RoleModel {
+type Role {
   id: ID!
   name: String!
 }
 
-type AbilityModel {
+type Ability {
   id: ID!
   name: String!
 }
 
 type Query {
-  task(id: ID!): TaskModel
-  tasks(take: Int): [TaskModel!]!
-  category(id: ID!): CategoryModel
-  categories: [RoleModel!]!
-  taskContent(id: ID!): TaskContentModel
-  taskContents: [TaskContentModel!]!
-  user(id: ID!): UserModel
-  users: [UserModel!]!
-  Role(id: ID!): RoleModel
-  ability(id: ID!): AbilityModel
-  abilities: [AbilityModel!]!
+  task(id: ID!): Task
+  tasks(take: Int): [Task!]!
+  category(id: ID!): Category
+  categories: [Role!]!
+  taskContent(id: ID!): TaskContent
+  taskContents: [TaskContent!]!
+  user(id: ID!): User
+  users: [User!]!
+  Role(id: ID!): Role
+  ability(id: ID!): Ability
+  abilities: [Ability!]!
 }
 
 type Mutation {
-  createTask(task: CreateTaskInput!): TaskModel!
-  deleteTask(id: ID!): TaskModel
-  createCategory(category: CreateCategoryInput!): CategoryModel!
-  updateCategory(category: UpdateCategoryInput!): CategoryModel!
-  deleteCategory(id: ID!): CategoryModel
-  createTaskContent(taskContent: CreateTaskContentInput!): TaskContentModel!
-  updateTaskContent(taskContent: UpdateTaskContentInput!): TaskContentModel!
-  deleteTaskContent(id: ID!): TaskContentModel
-  createUser(user: CreateUserInput!): UserModel!
-  deleteUser(id: ID!): AbilityModel
-  deleteRole(id: ID!): RoleModel
+  createTask(task: CreateTaskInput!): Task!
+  deleteTask(id: ID!): Task
+  createCategory(category: CreateCategoryInput!): Category!
+  updateCategory(category: UpdateCategoryInput!): Category!
+  deleteCategory(id: ID!): Category
+  createTaskContent(taskContent: CreateTaskContentInput!): TaskContent!
+  updateTaskContent(taskContent: UpdateTaskContentInput!): TaskContent!
+  deleteTaskContent(id: ID!): TaskContent
+  createUser(user: CreateUserInput!): User!
+  deleteUser(id: ID!): Ability
+  deleteRole(id: ID!): Role
 }
 
 input CreateTaskInput {
@@ -110,6 +110,6 @@ input UpdateTaskContentInput {
 }
 
 input CreateUserInput {
-  username: String!
+  userId: String!
   password: String!
 }

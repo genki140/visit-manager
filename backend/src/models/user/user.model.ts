@@ -4,17 +4,17 @@ import { Max, MaxLength, Min } from 'class-validator';
 
 @ObjectType()
 @Entity('users')
-export class UserModel {
+export class User {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
-  // ユーザーID
+  /** ユーザーID */
   @Field()
-  @Column({ length: 100 })
-  username: string;
+  @Column({ name: 'user_id', length: 100 })
+  userId: string;
 
-  // パスワード
+  /** パスワード */
   @Field()
   @Column({ length: 100 })
   password: string;
@@ -23,10 +23,10 @@ export class UserModel {
 @InputType()
 export class CreateUserInput {
   @Field()
-  @MaxLength(10)
-  username: string;
+  @MaxLength(1000)
+  userId: string;
 
   @Field()
-  @MaxLength(10)
+  @MaxLength(1000)
   password: string;
 }

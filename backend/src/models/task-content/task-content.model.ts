@@ -1,18 +1,11 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { TaskModel } from '@/models/task/task.model';
+import { Task } from '@/models/task/task.model';
 
 @ObjectType()
 @Entity('task_contents')
-export class TaskContentModel {
+export class TaskContent {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -33,13 +26,13 @@ export class TaskContentModel {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field(() => TaskModel)
-  @ManyToOne(() => TaskModel, (task) => task.taskContents, {
+  @Field(() => Task)
+  @ManyToOne(() => Task, (task) => task.taskContents, {
     nullable: false,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  task: TaskModel;
+  task: Task;
 }
 
 @InputType()

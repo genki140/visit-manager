@@ -1,20 +1,7 @@
-import {
-  Field,
-  ID,
-  InputType,
-  ObjectType,
-  registerEnumType,
-} from '@nestjs/graphql';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Field, ID, InputType, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { TaskModel } from '@/models/task/task.model';
+import { Task } from '@/models/task/task.model';
 
 export enum Color {
   red = 'red',
@@ -26,7 +13,7 @@ registerEnumType(Color, { name: 'Color' });
 
 @ObjectType()
 @Entity('categories')
-export class CategoryModel {
+export class Category {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -47,9 +34,9 @@ export class CategoryModel {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field(() => TaskModel, { defaultValue: [] })
-  @ManyToMany(() => TaskModel, (task) => task.categories)
-  tasks: TaskModel[];
+  @Field(() => Task, { defaultValue: [] })
+  @ManyToMany(() => Task, (task) => task.categories)
+  tasks: Task[];
 }
 
 @InputType()

@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { AbilityModel } from './ability.model';
+import { Ability } from './ability.model';
 
 @Injectable()
 export class AbilityService {
   constructor(
-    @InjectRepository(AbilityModel)
-    private abilityRepository: Repository<AbilityModel>,
+    @InjectRepository(Ability)
+    private abilityRepository: Repository<Ability>,
   ) {}
 
   findOne = (id: number) => this.abilityRepository.findOne(id);

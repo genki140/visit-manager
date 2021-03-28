@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { RoleModel } from './role.model';
+import { Role } from './role.model';
 
 @Injectable()
 export class RoleService {
   constructor(
-    @InjectRepository(RoleModel)
-    private roleRepository: Repository<RoleModel>,
+    @InjectRepository(Role)
+    private roleRepository: Repository<Role>,
   ) {}
 
   findOne = async (id: number) => this.roleRepository.findOne(id);

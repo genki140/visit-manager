@@ -12,6 +12,8 @@ import { AbilityModule } from '@/models/ability/ability.module';
 
 import { TaskContentModule } from '@/models/task-content/task-content.module';
 import { DateScalar } from '@/scalars/date.scalar';
+import { AuthModule } from './auth/auth.module';
+import { AppController } from './app.controller';
 
 type EnvironmentVariables = {
   DB_HOST: string;
@@ -24,8 +26,8 @@ type EnvironmentVariables = {
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    GraphQLModule.forRoot({ autoSchemaFile: 'schema.graphql' }),
+    ConfigModule.forRoot({ isGlobal: true }), // envファイルを読み込むために使用
+    GraphQLModule.forRoot({ autoSchemaFile: 'schema.graphql' }), //GraphQL
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -47,7 +49,11 @@ type EnvironmentVariables = {
     UserModule,
     RoleModule,
     AbilityModule,
+    AuthModule,
   ],
+
+  controllers: [AppController],
+
   providers: [DateScalar],
 })
 export class AppModule {}

@@ -1,31 +1,29 @@
 import { Inject } from '@nestjs/common';
 import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { CreateTaskInput, TaskModel } from '@/models/task/task.model';
+import { CreateTaskInput, Task } from '@/models/task/task.model';
 import { TaskService } from '@/models/task/task.service';
 
-@Resolver(() => TaskModel)
+@Resolver(() => Task)
 export class TaskResolver {
   constructor(@Inject(TaskService) private taskService: TaskService) {}
 
-  @Query(() => TaskModel, { nullable: true })
+  @Query(() => Task, { nullable: true })
   async task(@Args('id', { type: () => ID }) id: number) {
     return await this.taskService.findOne(id);
   }
 
-  @Query(() => [TaskModel])
-  async tasks(
-    @Args('take', { type: () => Int, nullable: true }) take?: number,
-  ) {
+  @Query(() => [Task])
+  async tasks(@Args('take', { type: () => Int, nullable: true }) take?: number) {
     return await this.taskService.findAll((take = take));
   }
 
-  @Mutation(() => TaskModel)
+  @Mutation(() => Task)
   async createTask(@Args('task') task: CreateTaskInput) {
     return await this.taskService.save(task);
   }
 
-  @Mutation(() => TaskModel, { nullable: true })
+  @Mutation(() => Task, { nullable: true })
   async deleteTask(@Args('id', { type: () => ID }) id: number) {
     return await this.taskService.delete(id);
   }

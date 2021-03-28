@@ -2,18 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import {
-  CreateTaskContentInput,
-  TaskContentModel,
-  UpdateTaskContentInput,
-} from './task-content.model';
+import { CreateTaskContentInput, TaskContent, UpdateTaskContentInput } from './task-content.model';
 import { TaskService } from '@/models/task/task.service';
 
 @Injectable()
 export class TaskContentService {
   constructor(
-    @InjectRepository(TaskContentModel)
-    private taskContentRepository: Repository<TaskContentModel>,
+    @InjectRepository(TaskContent)
+    private taskContentRepository: Repository<TaskContent>,
     private taskService: TaskService,
   ) {}
 

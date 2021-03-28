@@ -1,18 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateUserInput, UserModel } from './user.model';
+import { CreateUserInput, User } from './user.model';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UserModel)
-    private userRepository: Repository<UserModel>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   findOne = async (id: number) => this.userRepository.findOne(id);
 
+  @UseGuards()
   async findAll() {
     return this.userRepository.find();
   }
@@ -21,10 +22,17 @@ export class UserService {
     return this.userRepository.findByIds(ids);
   }
 
-  create = (payload: CreateUserInput) =>
-    this.userRepository.save({ ...payload });
-  // update = (payload: UpdateUserInput) =>
-  //   this.userRepository.save({ ...payload });
+  async findByUserId(userId: string) {
+    return this.userRepository.findOne({ where: { userId: userId } });
+  }
+
+  async create(payload: CreateUserInput) {
+    // 同名チェック
+    if ((await this.userRepository.count({ where: { userId: payload.userId } })) > 0) {
+      throw new Error('userId is already used.');
+    }
+    return await this.userRepository.save({ ...payload });
+  }
 
   async delete(id: number) {
     await this.userRepository.delete(id);

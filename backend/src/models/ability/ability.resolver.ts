@@ -1,24 +1,24 @@
 import { Inject } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { AbilityModel } from './ability.model';
+import { Ability } from './ability.model';
 import { AbilityService } from './ability.service';
 
-@Resolver(() => AbilityModel)
+@Resolver(() => Ability)
 export class AbilityResolver {
   constructor(@Inject(AbilityService) private abilityService: AbilityService) {}
 
-  @Query(() => AbilityModel, { nullable: true })
+  @Query(() => Ability, { nullable: true })
   async ability(@Args('id', { type: () => ID }) id: number) {
     return await this.abilityService.findOne(id);
   }
 
-  @Query(() => [AbilityModel])
+  @Query(() => [Ability])
   async abilities() {
     return await this.abilityService.findAll();
   }
 
-  @Mutation(() => AbilityModel, { nullable: true })
+  @Mutation(() => Ability, { nullable: true })
   async deleteUser(@Args('id', { type: () => ID }) id: number) {
     return await this.abilityService.delete(id);
   }

@@ -10,12 +10,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { CategoryModel } from '@/models/category/category.model';
-import { TaskContentModel } from '@/models/task-content/task-content.model';
+import { Category } from '@/models/category/category.model';
+import { TaskContent } from '@/models/task-content/task-content.model';
 
 @ObjectType()
 @Entity('tasks')
-export class TaskModel {
+export class Task {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -32,12 +32,12 @@ export class TaskModel {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field(() => [TaskContentModel], { defaultValue: [] })
-  @OneToMany(() => TaskContentModel, (taskContent) => taskContent.task)
-  taskContents: TaskContentModel[];
+  @Field(() => [TaskContent], { defaultValue: [] })
+  @OneToMany(() => TaskContent, (taskContent) => taskContent.task)
+  taskContents: TaskContent[];
 
-  @Field(() => [CategoryModel], { defaultValue: [] })
-  @ManyToMany(() => CategoryModel, (category) => category.tasks)
+  @Field(() => [Category], { defaultValue: [] })
+  @ManyToMany(() => Category, (category) => category.tasks)
   @JoinTable({
     name: 'tasks_categories',
     joinColumn: {
@@ -49,7 +49,7 @@ export class TaskModel {
       referencedColumnName: 'id',
     },
   })
-  categories: CategoryModel[];
+  categories: Category[];
 }
 
 @InputType()
