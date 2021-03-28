@@ -1,8 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { AddTaskInput } from '@/dto/task.dto';
-import { TaskModel } from '@/models/task/task.model';
+import { CreateTaskInput, TaskModel } from '@/models/task/task.model';
 import { TaskService } from '@/models/task/task.service';
 
 @Resolver(() => TaskModel)
@@ -22,7 +21,7 @@ export class TaskResolver {
   }
 
   @Mutation(() => TaskModel)
-  async saveTask(@Args('task') task: AddTaskInput) {
+  async createTask(@Args('task') task: CreateTaskInput) {
     return await this.taskService.save(task);
   }
 

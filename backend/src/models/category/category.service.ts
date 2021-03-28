@@ -2,8 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { AddCategoryInput } from '@/dto/category.dto';
-import { CategoryModel } from '@/models/category/category.model';
+import {
+  CategoryModel,
+  CreateCategoryInput,
+  UpdateCategoryInput,
+} from '@/models/category/category.model';
 
 @Injectable()
 export class CategoryService {
@@ -24,10 +27,10 @@ export class CategoryService {
     return this.categoryRepository.findByIds(ids);
   }
 
-  async save(payload: AddCategoryInput) {
-    return this.categoryRepository.save({ ...payload });
-  }
-
+  create = (payload: CreateCategoryInput) =>
+    this.categoryRepository.save({ ...payload });
+  update = (payload: UpdateCategoryInput) =>
+    this.categoryRepository.save({ ...payload });
   async delete(id: number) {
     await this.categoryRepository.delete(id);
     return await this.findOne(id);

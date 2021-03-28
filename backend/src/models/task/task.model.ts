@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -21,7 +21,7 @@ export class TaskModel {
   id: number;
 
   @Field()
-  @Column()
+  @Column({ length: 100 })
   title: string;
 
   @Field()
@@ -50,4 +50,10 @@ export class TaskModel {
     },
   })
   categories: CategoryModel[];
+}
+
+@InputType()
+export class CreateTaskInput {
+  @Field() title: string;
+  @Field(() => [ID]) categoryIds: number[];
 }

@@ -3,8 +3,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+// Import modules
 import { CategoryModule } from '@/models/category/category.module';
 import { TaskModule } from '@/models/task/task.module';
+import { UserModule } from '@/models/user/user.module';
+import { RoleModule } from '@/models/role/role.module';
+import { AbilityModule } from '@/models/ability/ability.module';
+
 import { TaskContentModule } from '@/models/task-content/task-content.module';
 import { DateScalar } from '@/scalars/date.scalar';
 
@@ -20,9 +25,7 @@ type EnvironmentVariables = {
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    GraphQLModule.forRoot({
-      autoSchemaFile: 'schema.graphql',
-    }),
+    GraphQLModule.forRoot({ autoSchemaFile: 'schema.graphql' }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -41,6 +44,9 @@ type EnvironmentVariables = {
     TaskModule,
     TaskContentModule,
     CategoryModule,
+    UserModule,
+    RoleModule,
+    AbilityModule,
   ],
   providers: [DateScalar],
 })

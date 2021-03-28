@@ -1,8 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { AddCategoryInput } from '@/dto/category.dto';
-import { CategoryModel } from '@/models/category/category.model';
+import {
+  CategoryModel,
+  CreateCategoryInput,
+  UpdateCategoryInput,
+} from '@/models/category/category.model';
 import { CategoryService } from '@/models/category/category.service';
 
 @Resolver(() => CategoryModel)
@@ -20,8 +23,13 @@ export class CategoryResolver {
   }
 
   @Mutation(() => CategoryModel)
-  async saveCategory(@Args('category') category: AddCategoryInput) {
-    return await this.taskService.save(category);
+  async createCategory(@Args('category') category: CreateCategoryInput) {
+    return await this.taskService.create(category);
+  }
+
+  @Mutation(() => CategoryModel)
+  async updateCategory(@Args('category') category: UpdateCategoryInput) {
+    return await this.taskService.update(category);
   }
 
   @Mutation(() => CategoryModel, { nullable: true })

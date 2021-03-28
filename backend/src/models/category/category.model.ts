@@ -1,4 +1,10 @@
-import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
+import {
+  Field,
+  ID,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -44,4 +50,17 @@ export class CategoryModel {
   @Field(() => TaskModel, { defaultValue: [] })
   @ManyToMany(() => TaskModel, (task) => task.categories)
   tasks: TaskModel[];
+}
+
+@InputType()
+export class CreateCategoryInput {
+  @Field() name: string;
+  @Field(() => Color) color: Color;
+}
+
+@InputType()
+export class UpdateCategoryInput {
+  @Field(() => ID) id: number;
+  @Field() name?: string;
+  @Field(() => Color) color?: Color;
 }

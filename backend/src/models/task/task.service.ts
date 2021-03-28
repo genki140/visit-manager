@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { AddTaskInput } from '@/dto/task.dto';
-import { TaskModel } from '@/models/task/task.model';
+import { CreateTaskInput, TaskModel } from './task.model';
+
 import { CategoryService } from '@/models/category/category.service';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class TaskService {
     });
   }
 
-  async save({ categoryIds, ...payload }: AddTaskInput) {
+  async save({ categoryIds, ...payload }: CreateTaskInput) {
     const categories = await this.categoryService.findByIds(categoryIds);
     if (categories.length < categoryIds.length) {
       throw new Error("couldn't get it all");

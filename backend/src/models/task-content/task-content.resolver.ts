@@ -2,11 +2,11 @@ import { Inject } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import {
-  AddTaskContentInput,
+  CreateTaskContentInput,
+  TaskContentModel,
   UpdateTaskContentInput,
-} from '@/dto/taskContent.dto';
-import { TaskContentModel } from '@/models/task-content/task-content.model';
-import { TaskContentService } from '@/models/task-content/task-content.service';
+} from './task-content.model';
+import { TaskContentService } from './task-content.service';
 
 @Resolver(() => TaskContentModel)
 export class TaskContentResolver {
@@ -25,8 +25,10 @@ export class TaskContentResolver {
   }
 
   @Mutation(() => TaskContentModel)
-  async saveTaskContent(@Args('taskContent') taskContent: AddTaskContentInput) {
-    return await this.taskContentService.save(taskContent);
+  async createTaskContent(
+    @Args('taskContent') taskContent: CreateTaskContentInput,
+  ) {
+    return await this.taskContentService.create(taskContent);
   }
 
   @Mutation(() => TaskContentModel)

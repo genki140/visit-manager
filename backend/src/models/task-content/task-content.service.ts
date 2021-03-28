@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import {
-  AddTaskContentInput,
+  CreateTaskContentInput,
+  TaskContentModel,
   UpdateTaskContentInput,
-} from '@/dto/taskContent.dto';
-import { TaskContentModel } from '@/models/task-content/task-content.model';
+} from './task-content.model';
 import { TaskService } from '@/models/task/task.service';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class TaskContentService {
     return this.taskContentRepository.find({ relations: ['task'] });
   }
 
-  async save(payload: AddTaskContentInput) {
+  async create(payload: CreateTaskContentInput) {
     const task = await this.taskService.findOne(payload.taskId);
     return this.taskContentRepository.save({ ...payload, task });
   }

@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -40,4 +40,17 @@ export class TaskContentModel {
     onUpdate: 'CASCADE',
   })
   task: TaskModel;
+}
+
+@InputType()
+export class CreateTaskContentInput {
+  @Field() title: string;
+  @Field(() => ID) taskId: number;
+}
+
+@InputType()
+export class UpdateTaskContentInput {
+  @Field(() => ID) id: number;
+  @Field({ nullable: true }) checked?: boolean;
+  @Field({ nullable: true }) title?: string;
 }

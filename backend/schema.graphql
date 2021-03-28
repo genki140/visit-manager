@@ -38,36 +38,67 @@ enum Color {
   green
 }
 
+type UserModel {
+  id: ID!
+  username: String!
+  password: String!
+}
+
+type RoleModel {
+  id: ID!
+  name: String!
+}
+
+type AbilityModel {
+  id: ID!
+  name: String!
+}
+
 type Query {
   task(id: ID!): TaskModel
   tasks(take: Int): [TaskModel!]!
   category(id: ID!): CategoryModel
-  categories: [CategoryModel!]!
+  categories: [RoleModel!]!
   taskContent(id: ID!): TaskContentModel
   taskContents: [TaskContentModel!]!
+  user(id: ID!): UserModel
+  users: [UserModel!]!
+  Role(id: ID!): RoleModel
+  ability(id: ID!): AbilityModel
+  abilities: [AbilityModel!]!
 }
 
 type Mutation {
-  saveTask(task: AddTaskInput!): TaskModel!
+  createTask(task: CreateTaskInput!): TaskModel!
   deleteTask(id: ID!): TaskModel
-  saveCategory(category: AddCategoryInput!): CategoryModel!
+  createCategory(category: CreateCategoryInput!): CategoryModel!
+  updateCategory(category: UpdateCategoryInput!): CategoryModel!
   deleteCategory(id: ID!): CategoryModel
-  saveTaskContent(taskContent: AddTaskContentInput!): TaskContentModel!
+  createTaskContent(taskContent: CreateTaskContentInput!): TaskContentModel!
   updateTaskContent(taskContent: UpdateTaskContentInput!): TaskContentModel!
   deleteTaskContent(id: ID!): TaskContentModel
+  createUser(user: CreateUserInput!): UserModel!
+  deleteUser(id: ID!): AbilityModel
+  deleteRole(id: ID!): RoleModel
 }
 
-input AddTaskInput {
+input CreateTaskInput {
   title: String!
   categoryIds: [ID!]!
 }
 
-input AddCategoryInput {
+input CreateCategoryInput {
   name: String!
   color: Color!
 }
 
-input AddTaskContentInput {
+input UpdateCategoryInput {
+  id: ID!
+  name: String!
+  color: Color!
+}
+
+input CreateTaskContentInput {
   title: String!
   taskId: ID!
 }
@@ -76,4 +107,9 @@ input UpdateTaskContentInput {
   id: ID!
   checked: Boolean
   title: String
+}
+
+input CreateUserInput {
+  username: String!
+  password: String!
 }
