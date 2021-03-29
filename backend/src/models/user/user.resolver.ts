@@ -1,9 +1,10 @@
-import { Inject, UseGuards } from '@nestjs/common';
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { createParamDecorator, ExecutionContext, Inject, Injectable, UseGuards } from '@nestjs/common';
+import { Args, GqlExecutionContext, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CreateUserInput, User } from '@/models/user/user.model';
 import { UserService } from '@/models/user/user.service';
-import { AuthGuard } from '@nestjs/passport';
+import { CurrentUserId, GqlAuthGuard } from '@/auth/graphql-guards';
+
 
 @Resolver(() => User)
 export class UserResolver {
@@ -15,7 +16,9 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  async users() {
+  @UseGuards(GqlAuthGuard)
+  async users(@CurrentUserId() user: User) {
+    console.log(user);
     return await this.userService.findAll();
   }
 

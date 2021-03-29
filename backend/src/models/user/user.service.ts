@@ -1,5 +1,4 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -14,9 +13,7 @@ export class UserService {
 
   findOne = async (id: number) => this.userRepository.findOne(id);
 
-  // @UseGuards(AuthGuard('jwt'))
   async findAll() {
-    // console.log('get users');
     return this.userRepository.find();
   }
 

@@ -9,10 +9,10 @@ type PasswordOmitUser = Omit<User, 'password'>;
 export class AppController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('test')
-  test(@Request() req: { user: PasswordOmitUser }) {
-    console.log(req.user);
-  }
+  // @Post('test')
+  // test(@Request() req: { user: PasswordOmitUser }) {
+  //   console.log(req.user);
+  // }
 
   @UseGuards(AuthGuard('local')) // passport-local戦略を付与する
   @Post('login')
