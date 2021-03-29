@@ -9,6 +9,8 @@
   "extensions": [
     "esbenp.prettier-vscode",
     "eamodio.gitlens",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "github.vscode-pull-request-github",
+    "msjsdiag.debugger-for-chrome"
   ]
 }

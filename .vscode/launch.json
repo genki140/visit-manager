@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
+    // Nest サーバーはデバッグと同時に起動
     {
       "name": "Nest Server",
       "type": "pwa-node",
@@ -10,39 +11,102 @@
       "runtimeArgs": ["run", "start:debug"],
       "internalConsoleOptions": "openOnSessionStart",
       "console": "internalConsole",
-      "outputCapture": "std"
+      "outputCapture": "std",
+      "attachSimplePort": 9239
     },
+
+    // {
+    //   // For server side rendering debug
+    //   "name": "Next Server",
+    //   "type": "node",
+    //   "request": "launch",
+    //   "runtimeExecutable": "npm",
+    //   "cwd": "${workspaceFolder}/frontend",
+    //   "runtimeArgs": ["run", "dev"],
+    //   "skipFiles": ["<node_internals>/**"],
+    //   "port": 9228,
+    //   "console": "internalConsole"
+    // },
     {
-      // For server side rendering debug
       "name": "Next Server",
-      "type": "node",
+      "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
       "cwd": "${workspaceFolder}/frontend",
       "runtimeArgs": ["run", "dev"],
-      "port": 9229,
-      "console": "internalConsole"
-      // "console": "integratedTerminal" // 内部のターミナルタブで起動します
+      "internalConsoleOptions": "openOnSessionStart",
+      "console": "internalConsole",
+      "outputCapture": "std",
+      "attachSimplePort": 9228
     },
 
+    // クライアントはサービスが動いてる状態でChromeを立ち上げてデバッグ
     {
-      // For client side rendering debug
-      "name": "Next Client",
       "type": "chrome",
       "request": "launch",
+      "name": "Next Client",
       "url": "http://localhost:3001",
       "webRoot": "${workspaceFolder}/frontend",
-      "sourceMapPathOverrides": {
-        "webpack:///./*": "${webRoot}/src/*"
-      }
+      "skipFiles": [
+        "${workspaceFolder}/frontend/node_modules/**/*.js",
+        "<node_internals>/**/*.js"
+      ]
     }
+
+    //   // For server side rendering debug
+    //   {
+    //     "type": "node", // 固定
+    //     "request": "attach", // 固定
+    //     "name": "Next: Node", // 好きな名前で
+    //     "port": 9229, // 3. のポートと合わせる
+    //     "address": "localhost", // 基本的に固定
+    //     "localRoot": "${workspaceFolder}", // 固定
+    //     "remoteRoot": "/src", // Docker内のモジュールのRootディレクトリ
+    //     "protocol": "inspector" // 固定
+    // },
+    // // For client side rendering debug
+    // {
+    //     "type": "chrome", // 固定 (ブラウザを変えたい場合は1.のインストールとともに変更してください
+    //     "request": "launch", // 固定
+    //     "name": "Next: Chrome", // 好きな名前で
+    //     "url": "http://localhost:3001", // DockerComponseのポートと、サービスのディレクトリなど、お好みでカスタマイズしてください
+    //     "webRoot": "${workspaceFolder}", // 固定
+    //     "sourceMapPathOverrides": { // 固定
+    //         "webpack:///./*": "${webRoot}/src/*"
+    //     }
+    // }
+
+    // {
+    //   // For server side rendering debug
+    //   "name": "Next Server",
+    //   "type": "node",
+    //   "request": "launch",
+    //   "runtimeExecutable": "npm",
+    //   "cwd": "${workspaceFolder}/frontend",
+    //   "runtimeArgs": ["run", "dev"],
+    //   "port": 9229,
+    //   "console": "internalConsole"
+    //   // "console": "integratedTerminal" // 内部のターミナルタブで起動します
+    // },
+
+    //   {
+    //     // For client side rendering debug
+    //     "name": "Next Client",
+    //     "type": "chrome",
+    //     "request": "launch",
+    //     "url": "http://localhost:3001",
+    //     "webRoot": "${workspaceFolder}/frontend",
+    //     "sourceMapPathOverrides": {
+    //       "webpack:///./*": "${webRoot}/src/*"
+    //     }
+    //   }
+    // ],
   ],
   "compounds": [
     {
-      "name": "Compound",
-      "configurations": ["Next Client"]
+      "name": " Debug Alls",
+      "configurations": ["Nest Server","Next Server","Next Client"]
     }
-  ]
 }
 
 // nextのデバッグ設定参考: https://ichiki.netlify.app/blog/20200113_nextjs_debug/

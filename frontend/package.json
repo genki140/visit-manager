@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {},
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect' next -p 3001",
+    "dev": "NODE_OPTIONS='--inspect=0.0.0.0:9228' next dev -p 3001",
     "build": "next build -p 3001",
     "start": "next start -p 3001",
     "type-check": "tsc"
