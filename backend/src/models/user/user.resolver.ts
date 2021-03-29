@@ -4,7 +4,6 @@ import { Args, GqlExecutionContext, ID, Mutation, Query, Resolver } from '@nestj
 import { CreateUserInput, User } from '@/models/user/user.model';
 import { UserService } from '@/models/user/user.service';
 import { AbilityTypes, RequiredAbilities, GqlAbilitiesGuard } from '@/auth/gql-abilities-guards';
-import { AuthGuard } from '@nestjs/passport';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -18,7 +17,7 @@ export class UserResolver {
   @Query(() => [User])
   @RequiredAbilities(AbilityTypes.Administrator)
   async users() {
-    await this.userService.findAll();
+    return await this.userService.findAll();
   }
 
   @Mutation(() => User)

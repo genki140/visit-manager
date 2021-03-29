@@ -2,6 +2,7 @@
   "name": "next-test",
   "version": "1.0.0",
   "description": "next-test",
+  "license": "MIT",
   "repository": {},
   "scripts": {
     "dev": "next -p 3001",
@@ -33,6 +34,5 @@
     "eslint-plugin-prettier": "^3.1.4",
     "prettier": "^2.1.2",
     "typescript": "4.0"
-  },
-  "license": "MIT"
+  }
 }
