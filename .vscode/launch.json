@@ -3,14 +3,46 @@
   "configurations": [
     {
       "name": "Nest Server",
-      "request": "launch",
       "type": "pwa-node",
+      "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start:debug"],
       "cwd": "${workspaceFolder}/backend",
+      "runtimeArgs": ["run", "start:debug"],
       "internalConsoleOptions": "openOnSessionStart",
       "console": "internalConsole",
       "outputCapture": "std"
+    },
+    {
+      // For server side rendering debug
+      "name": "Next Server",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "cwd": "${workspaceFolder}/frontend",
+      "runtimeArgs": ["run", "dev"],
+      "port": 9229,
+      "console": "internalConsole"
+      // "console": "integratedTerminal" // 内部のターミナルタブで起動します
+    },
+
+    {
+      // For client side rendering debug
+      "name": "Next Client",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3001",
+      "webRoot": "${workspaceFolder}/frontend",
+      "sourceMapPathOverrides": {
+        "webpack:///./*": "${webRoot}/src/*"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Compound",
+      "configurations": ["Next Client"]
     }
   ]
 }
+
+// nextのデバッグ設定参考: https://ichiki.netlify.app/blog/20200113_nextjs_debug/
