@@ -13,8 +13,8 @@ export class UserService {
 
   findOne = async (id: number) => this.userRepository.findOne(id);
 
-  async findOneWithAbilities(id: number) {
-    return this.userRepository.findOne({ where: { id: id }, relations: ['role', 'role.abilities'] });
+  async findByUsernameWithAbilities(username: string) {
+    return this.userRepository.findOne({ where: { username }, relations: ['role', 'role.abilities'] });
   }
 
   async findAll() {
@@ -26,12 +26,12 @@ export class UserService {
   }
 
   async findByUserId(userId: string) {
-    return await this.userRepository.findOne({ where: { userId: userId } });
+    return await this.userRepository.findOne({ where: { username: userId } });
   }
 
   async create(payload: CreateUserInput) {
     // 同名チェック
-    if ((await this.userRepository.count({ where: { userId: payload.userId } })) > 0) {
+    if ((await this.userRepository.count({ where: { username: payload.userId } })) > 0) {
       throw new Error('userId is already used.');
     }
     return await this.userRepository.save({ ...payload });

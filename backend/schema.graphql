@@ -46,7 +46,7 @@ type Role {
 
 type User {
   id: ID!
-  userId: String!
+  username: String!
   password: String!
   role: Role!
 }

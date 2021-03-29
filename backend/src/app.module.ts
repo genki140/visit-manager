@@ -13,7 +13,7 @@ import { AbilityModule } from '@/models/ability/ability.module';
 import { TaskContentModule } from '@/models/task-content/task-content.module';
 import { DateScalar } from '@/scalars/date.scalar';
 import { AuthModule } from './auth/auth.module';
-import { AppController } from './app.controller';
+import { AuthController } from './auth/auth.controller';
 
 type EnvironmentVariables = {
   DB_HOST: string;
@@ -51,9 +51,7 @@ type EnvironmentVariables = {
     AbilityModule,
     AuthModule,
   ],
-
-  controllers: [AppController],
-
+  controllers: [AuthController],
   providers: [DateScalar],
 })
 export class AppModule {}

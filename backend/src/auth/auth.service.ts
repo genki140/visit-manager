@@ -6,10 +6,10 @@ import { UserService } from '@/models/user/user.service';
 
 type PasswordOmitUser = Omit<User, 'password'>;
 
-interface JWTPayload {
-  userId: User['id'];
-  username: User['userId'];
-}
+// interface JWTPayload {
+//   userId: User['id'];
+//   username: User['username'];
+// }
 
 /**
  * @description Passportでは出来ない認証処理をするクラス
@@ -21,8 +21,8 @@ export class AuthService {
   public logonUserId = '';
 
   // ユーザーを認証する
-  async validateUser(username: string, password: string): Promise<PasswordOmitUser | null> {
-    const user = await this.usersService.findByUserId(username);
+  async validateUser(username: string, password: string): Promise<PasswordOmitUser | undefined> {
+    const user = await this.usersService.findByUsernameWithAbilities(username);
 
     // // DBに保存されているpasswordはハッシュ化されている事を想定しているので、
     // // bcryptなどを使ってパスワードを判定する
@@ -34,20 +34,20 @@ export class AuthService {
 
     if (user != null && user.password === password) {
       const { password, ...result } = user; // パスワード情報を外部に出さないようにする
-      this.logonUserId = user.userId;
+      this.logonUserId = user.username;
       return result;
     }
 
-    return null;
+    return undefined;
   }
 
   // jwt tokenを返す
   async login(user: PasswordOmitUser) {
     // jwtにつけるPayload情報
-    const payload: JWTPayload = { userId: user.id, username: user.userId };
+    // const payload: JWTPayload = { userId: user.id, username: user.username };
 
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(user),
     };
   }
 }

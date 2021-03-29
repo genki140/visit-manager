@@ -6,11 +6,13 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { User } from '@/models/user/user.model';
 
-// JwtについているPayload情報の型
-interface JWTPayload {
-  userId: User['id'];
-  username: User['userId'];
-}
+// // JwtについているPayload情報の型
+// interface JWTPayload {
+//   userId: User['id'];
+//   username: User['username'];
+// }
+
+type PasswordOmitUser = Omit<User, 'password'>;
 
 /**
  * @description JWTの認証処理を行うクラス
@@ -83,8 +85,8 @@ Kv3w3+N8MLQard8THBGklUjMQV+V+rqU4wche3HmNB1pa2PqcpcXS6KfS991V3q+
 
   // ここでPayloadを使ったバリデーション処理を実行できる
   // Payloadは、AuthService.login()で定義した値
-  async validate(payload: JWTPayload): Promise<JWTPayload> {
-    return { userId: payload.userId, username: payload.username };
+  async validate(payload: PasswordOmitUser): Promise<PasswordOmitUser> {
+    return payload; // { userId: payload.userId, username: payload.username };
   }
 }
 

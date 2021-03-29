@@ -3,7 +3,7 @@ import { Args, GqlExecutionContext, ID, Mutation, Query, Resolver } from '@nestj
 
 import { CreateUserInput, User } from '@/models/user/user.model';
 import { UserService } from '@/models/user/user.service';
-import { CurrentUserId, GqlAuthGuard } from '@/auth/graphql-guards';
+import { CurrentUser, GqlAuthGuard } from '@/auth/graphql-guards';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -16,10 +16,10 @@ export class UserResolver {
 
   @Query(() => [User])
   @UseGuards(GqlAuthGuard)
-  async users(@CurrentUserId() userId: number) {
+  async users(@CurrentUser() user: User) {
     // 権限確認テスト
-    const user = await this.userService.findOneWithAbilities(userId);
-    console.log(user?.role?.abilities);
+    // const user = await this.userService.findOneWithAbilities(userId);
+    console.log(user);
 
     return await this.userService.findAll();
   }

@@ -12,8 +12,8 @@ export class User {
 
   /** ユーザーID */
   @Field()
-  @Column({ name: 'user_id', length: 100 })
-  userId: string = '';
+  @Column({ length: 100 })
+  username: string = '';
 
   /** パスワード */
   @Field()
