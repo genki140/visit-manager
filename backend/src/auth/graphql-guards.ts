@@ -21,3 +21,6 @@ export const CurrentUserId = createParamDecorator((data: unknown, context: Execu
 // {
 //   "Authorization": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiZ2Vua2kxNDAiLCJpYXQiOjE2MTY5ODM5NjgsImV4cCI6MTYxNjk4NTE2OH0._7a8-yG4C7ZkED2OMsLGPo46NXtqyLdqOdachkjdVyI"
 // }
+
+// デコレーターでガードをかけるようにする方法は以下を参照。
+// https://qiita.com/kmatae/items/da60d82dac9164a3855e

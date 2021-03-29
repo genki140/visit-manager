@@ -34,10 +34,9 @@ enum Color {
   green
 }
 
-type User {
+type Ability {
   id: ID!
-  userId: String!
-  password: String!
+  name: String!
 }
 
 type Role {
@@ -45,9 +44,11 @@ type Role {
   name: String!
 }
 
-type Ability {
+type User {
   id: ID!
-  name: String!
+  userId: String!
+  password: String!
+  role: Role!
 }
 
 type Query {

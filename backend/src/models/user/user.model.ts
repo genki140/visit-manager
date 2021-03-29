@@ -1,6 +1,7 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Max, MaxLength, Min } from 'class-validator';
+import { Role } from '../role/role.model';
 
 @ObjectType()
 @Entity('users')
@@ -18,6 +19,11 @@ export class User {
   @Field()
   @Column({ length: 100 })
   password: string = '';
+
+  /** 役割 */
+  @Field(() => Role)
+  @ManyToOne(() => Role, (role) => role.users, { nullable: false })
+  role?: Role;
 }
 
 @InputType()

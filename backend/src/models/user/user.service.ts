@@ -13,6 +13,10 @@ export class UserService {
 
   findOne = async (id: number) => this.userRepository.findOne(id);
 
+  async findOneWithAbilities(id: number) {
+    return this.userRepository.findOne({ where: { id: id }, relations: ['role', 'role.abilities'] });
+  }
+
   async findAll() {
     return this.userRepository.find();
   }

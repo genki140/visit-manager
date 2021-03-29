@@ -5,7 +5,6 @@ import { CreateUserInput, User } from '@/models/user/user.model';
 import { UserService } from '@/models/user/user.service';
 import { CurrentUserId, GqlAuthGuard } from '@/auth/graphql-guards';
 
-
 @Resolver(() => User)
 export class UserResolver {
   constructor(@Inject(UserService) private userService: UserService) {}
@@ -17,8 +16,11 @@ export class UserResolver {
 
   @Query(() => [User])
   @UseGuards(GqlAuthGuard)
-  async users(@CurrentUserId() user: User) {
-    console.log(user);
+  async users(@CurrentUserId() userId: number) {
+    // 権限確認テスト
+    const user = await this.userService.findOneWithAbilities(userId);
+    console.log(user?.role?.abilities);
+
     return await this.userService.findAll();
   }
 
