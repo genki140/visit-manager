@@ -18,23 +18,23 @@ import { TaskContent } from '@/models/task-content/task-content.model';
 export class Task {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number = 0;
 
   @Field()
   @Column({ length: 100 })
-  title: string;
+  title: string = '';
 
   @Field()
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @Field()
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @Field(() => [TaskContent], { defaultValue: [] })
   @OneToMany(() => TaskContent, (taskContent) => taskContent.task)
-  taskContents: TaskContent[];
+  taskContents?: TaskContent[];
 
   @Field(() => [Category], { defaultValue: [] })
   @ManyToMany(() => Category, (category) => category.tasks)
@@ -49,11 +49,11 @@ export class Task {
       referencedColumnName: 'id',
     },
   })
-  categories: Category[];
+  categories?: Category[];
 }
 
 @InputType()
 export class CreateTaskInput {
-  @Field() title: string;
-  @Field(() => [ID]) categoryIds: number[];
+  @Field() title: string = '';
+  @Field(() => [ID]) categoryIds: number[] = [];
 }

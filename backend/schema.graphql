@@ -6,13 +6,8 @@ type TaskContent {
   id: ID!
   checked: Boolean!
   title: String!
-  createdAt: Date!
-  updatedAt: Date!
   task: Task!
 }
-
-"""Date custom scalar type"""
-scalar Date
 
 type Task {
   id: ID!
@@ -23,12 +18,13 @@ type Task {
   categories: [Category!]!
 }
 
+"""Date custom scalar type"""
+scalar Date
+
 type Category {
   id: ID!
   name: String!
   color: Color!
-  createdAt: Date!
-  updatedAt: Date!
   tasks: Task!
 }
 
@@ -83,33 +79,33 @@ type Mutation {
 }
 
 input CreateTaskInput {
-  title: String!
-  categoryIds: [ID!]!
+  title: String = ""
+  categoryIds: [ID!] = []
 }
 
 input CreateCategoryInput {
-  name: String!
+  name: String = ""
   color: Color!
 }
 
 input UpdateCategoryInput {
-  id: ID!
+  id: ID = 0
   name: String!
   color: Color!
 }
 
 input CreateTaskContentInput {
-  title: String!
-  taskId: ID!
+  title: String = ""
+  taskId: ID = 0
 }
 
 input UpdateTaskContentInput {
-  id: ID!
+  id: ID = 0
   checked: Boolean
   title: String
 }
 
 input CreateUserInput {
-  userId: String!
-  password: String!
+  userId: String = ""
+  password: String = ""
 }

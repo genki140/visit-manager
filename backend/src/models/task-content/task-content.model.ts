@@ -8,23 +8,23 @@ import { Task } from '@/models/task/task.model';
 export class TaskContent {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number = 0;
 
   @Field()
   @Column({ default: false })
-  checked: boolean;
+  checked: boolean = false;
 
   @Field()
   @Column()
-  title: string;
+  title: string = '';
 
-  @Field()
-  @CreateDateColumn()
-  createdAt: Date;
+  // @Field({ nullable: true })
+  // @CreateDateColumn()
+  // createdAt: Date | null = null;
 
-  @Field()
-  @UpdateDateColumn()
-  updatedAt: Date;
+  // @Field({ nullable: true })
+  // @UpdateDateColumn()
+  // updatedAt: Date | null = null;
 
   @Field(() => Task)
   @ManyToOne(() => Task, (task) => task.taskContents, {
@@ -32,18 +32,18 @@ export class TaskContent {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  task: Task;
+  task?: Task;
 }
 
 @InputType()
 export class CreateTaskContentInput {
-  @Field() title: string;
-  @Field(() => ID) taskId: number;
+  @Field() title: string = '';
+  @Field(() => ID) taskId: number = 0;
 }
 
 @InputType()
 export class UpdateTaskContentInput {
-  @Field(() => ID) id: number;
+  @Field(() => ID) id: number = 0;
   @Field({ nullable: true }) checked?: boolean;
   @Field({ nullable: true }) title?: string;
 }

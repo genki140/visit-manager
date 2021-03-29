@@ -32,7 +32,7 @@ export class AuthService {
     //   return result;
     // }
 
-    if (user != null) {
+    if (user != null && user.password === password) {
       const { password, ...result } = user; // パスワード情報を外部に出さないようにする
       this.logonUserId = user.userId;
       return result;

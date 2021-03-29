@@ -22,7 +22,7 @@ export class TaskService {
 
   async findAll(take?: number) {
     return this.taskRepository.find({
-      order: { createdAt: 'ASC' },
+      // order: { createdAt: 'ASC' },
       relations: ['taskContents', 'categories'],
       take: take,
     });

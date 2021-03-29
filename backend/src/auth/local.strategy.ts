@@ -22,7 +22,7 @@ export class LocalStrategy extends PassportStrategy(BaseLocalStrategy) {
     // 認証して結果を受け取る
     const user = await this.authService.validateUser(username, password);
 
-    if (!user) {
+    if (user == null) {
       throw new UnauthorizedException(); // 認証失敗
     }
 

@@ -16,38 +16,38 @@ registerEnumType(Color, { name: 'Color' });
 export class Category {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number = 0;
 
   @Field()
   @Column()
-  name: string;
+  name: string = '';
 
   @Field(() => Color)
   @Column({ type: 'enum', enum: Color })
-  color: Color;
+  color?: Color;
 
-  @Field()
-  @CreateDateColumn()
-  createdAt: Date;
+  // @Field()
+  // @CreateDateColumn()
+  // createdAt: Date | null = null;
 
-  @Field()
-  @UpdateDateColumn()
-  updatedAt: Date;
+  // @Field()
+  // @UpdateDateColumn()
+  // updatedAt: Date | null = null;
 
   @Field(() => Task, { defaultValue: [] })
   @ManyToMany(() => Task, (task) => task.categories)
-  tasks: Task[];
+  tasks?: Task[];
 }
 
 @InputType()
 export class CreateCategoryInput {
-  @Field() name: string;
-  @Field(() => Color) color: Color;
+  @Field() name: string = '';
+  @Field(() => Color) color?: Color;
 }
 
 @InputType()
 export class UpdateCategoryInput {
-  @Field(() => ID) id: number;
+  @Field(() => ID) id: number = 0;
   @Field() name?: string;
   @Field(() => Color) color?: Color;
 }

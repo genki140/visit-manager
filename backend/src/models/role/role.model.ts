@@ -6,10 +6,10 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class Role {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number = 0;
 
   // 役割名
   @Field()
   @Column({ length: 100 })
-  name: string;
+  name: string = '';
 }
