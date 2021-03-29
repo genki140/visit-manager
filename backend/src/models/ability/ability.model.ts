@@ -18,6 +18,3 @@ export class Ability {
   @ManyToMany(() => Role, (role) => role.abilities)
   roles?: Role[];
 }
-
-// 権限とIDのリスト
-// Administrator: 1

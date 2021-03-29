@@ -2,6 +2,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { User } from '@/models/user/user.model';
 import { AuthService } from './auth.service';
+import { NoRequiredAbility } from './gql-abilities-guards';
 
 type PasswordOmitUser = Omit<User, 'password'>;
 
@@ -10,6 +11,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(AuthGuard('local')) // passport-local戦略を付与する
+  @NoRequiredAbility()
   @Post('login')
   async login(@Request() req: { user: PasswordOmitUser }) {
     // LocalStrategy.validate()で認証して返した値がreq.userに入ってる

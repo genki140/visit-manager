@@ -3,6 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { APP_GUARD } from '@nestjs/core';
+
 // Import modules
 import { CategoryModule } from '@/models/category/category.module';
 import { TaskModule } from '@/models/task/task.module';
@@ -14,6 +16,7 @@ import { TaskContentModule } from '@/models/task-content/task-content.module';
 import { DateScalar } from '@/scalars/date.scalar';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
+import { GqlAbilitiesGuard } from './auth/gql-abilities-guards';
 
 type EnvironmentVariables = {
   DB_HOST: string;
@@ -52,6 +55,12 @@ type EnvironmentVariables = {
     AuthModule,
   ],
   controllers: [AuthController],
-  providers: [DateScalar],
+  providers: [
+    DateScalar,
+    {
+      provide: APP_GUARD,
+      useClass: GqlAbilitiesGuard,
+    },
+  ],
 })
 export class AppModule {}
