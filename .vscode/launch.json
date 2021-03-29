@@ -15,18 +15,6 @@
       "attachSimplePort": 9239
     },
 
-    // {
-    //   // For server side rendering debug
-    //   "name": "Next Server",
-    //   "type": "node",
-    //   "request": "launch",
-    //   "runtimeExecutable": "npm",
-    //   "cwd": "${workspaceFolder}/frontend",
-    //   "runtimeArgs": ["run", "dev"],
-    //   "skipFiles": ["<node_internals>/**"],
-    //   "port": 9228,
-    //   "console": "internalConsole"
-    // },
     {
       "name": "Next Server",
       "type": "pwa-node",
@@ -46,12 +34,25 @@
       "request": "launch",
       "name": "Next Client",
       "url": "http://localhost:3001",
-      "webRoot": "${workspaceFolder}/frontend",
-      "skipFiles": [
-        "${workspaceFolder}/frontend/node_modules/**/*.js",
-        "<node_internals>/**/*.js"
-      ]
+      "webRoot": "${workspaceFolder}/frontend"
+      // "skipFiles": [
+      //   "${workspaceFolder}/frontend/node_modules/**/*.js",
+      //   "<node_internals>/**/*.js"
+      // ],
     }
+
+    // {
+    //   // For server side rendering debug
+    //   "name": "Next Server",
+    //   "type": "node",
+    //   "request": "launch",
+    //   "runtimeExecutable": "npm",
+    //   "cwd": "${workspaceFolder}/frontend",
+    //   "runtimeArgs": ["run", "dev"],
+    //   "skipFiles": ["<node_internals>/**"],
+    //   "port": 9228,
+    //   "console": "internalConsole"
+    // },
 
     //   // For server side rendering debug
     //   {
@@ -104,9 +105,14 @@
   ],
   "compounds": [
     {
-      "name": " Debug Alls",
-      "configurations": ["Nest Server","Next Server","Next Client"]
+      "name": " Debug All",
+      "configurations": ["Nest Server", "Next Server", "Next Client"]
+    },
+    {
+      "name": " Debug Servers",
+      "configurations": ["Nest Server", "Next Server"]
     }
+  ]
 }
 
 // nextのデバッグ設定参考: https://ichiki.netlify.app/blog/20200113_nextjs_debug/

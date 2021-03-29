@@ -1,24 +1,45 @@
-# nest サンプルプロジェクト
+# Nest & Next サンプルプロジェクト
 
-使い方：
+## 使い方
 
-git clone で取得したフォルダを vscode で開き、remote development 拡張機能をインストールし、remote container で開く
+- git clone で取得したフォルダを vscode で開き、remote development 拡張機能をインストールし、remote container で開く。
 
-npm ci を実行
+- npm ci を実行
 
-デバッグタブから実行。以上
+- デバッグタブから「Debug All」を実行。
 
-## 目標
+## 構造の概要
 
-- クライアントとサーバーを同一 VSCode 上で開発。
+### API
 
-- Docker 上に Nest サーバー、Next クライアント、mySql、phpMyAdmin 全自動構築。（ソース管理に docker プロジェクトも入れたいがソースは別？用検討）
+Nest.js 上の Graphql で実装(/graphql)。ログインはコントローラで実装(/login)。
 
-- デバッグとホットリロードに対応させる。
+### DB
+
+typeORM でコードファースト実装。
+
+### クライアント
+
+Next.js で実装し、Nest.js の API へはプロキシで接続。つまりクライアントは複数の https へアクセスする必要がなく、運用が楽。
+
+###
+
+### ポート管理
+
+本当は環境変数に持たせたいが後回し。
+
+- フロントエンド：3001
+- バックエンド：3004
+- フロントエンドデバッグ：9228
+- バックエンドデバッグ：9239
+
+## やりたいことなど
 
 - モデル構造をサーバーとクライアントで共有（同一ファイルを参照できるのが理想）
 
-メモ：多分 1 つの docker で nest と next サーバー同時デバッグ実行する感じになる。
+## 使用ライブラリなど
+
+---
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
@@ -93,6 +114,8 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+---
 
 # TypeScript Next.js example
 
