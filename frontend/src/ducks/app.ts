@@ -16,9 +16,32 @@ export type AppState = {
 export const appInitialState: AppState = {
   isLoading: false,
   auth: {
-    token: '',
+    token: '', //とりあえずここに入れる。本当はクッキーとかに入れるべき
   },
 };
+
+// asyncLogin
+
+export interface asyncLoginProps {
+  username: string;
+  password: string;
+}
+export interface asyncLoginResult {
+  token: string;
+}
+
+export const asyncLogin = createAsyncThunk<asyncLoginResult, asyncLoginProps>(
+  typeName + '/asyncLogin',
+  async (props: asyncLoginProps): Promise<asyncLoginResult> => {
+    const result = await axios.post<{ access_token: string }>('/api/login', {
+      username: props.username,
+      password: props.password,
+    });
+    return { token: result.data.access_token };
+  },
+);
+
+// create slice
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
@@ -34,8 +57,13 @@ const appSlice = createSlice({
     },
   },
 
-  // 非同期実行時Loading状態を自動調整します
   extraReducers: (builder) => {
+    // ログイン成功時トークンを保存します
+    builder.addCase(asyncLogin.fulfilled, (state, action) => {
+      state.auth.token = action.payload.token;
+    });
+
+    // 非同期実行時Loading状態を自動調整します
     builder.addMatcher<PendingAction>(
       (action) => action.type.endsWith('/pending'),
       (state) => {
@@ -59,24 +87,3 @@ const appSlice = createSlice({
 export default appSlice;
 
 export const useAppState = () => useSelector((state: { app: AppState }) => state);
-
-// asyncLogin
-
-export interface asyncLoginProps {
-  username: string;
-  password: string;
-}
-export interface asyncLoginResult {
-  token: string;
-}
-
-export const asyncLogin = createAsyncThunk<asyncLoginResult, asyncLoginProps>(
-  typeName + '/asyncLogin',
-  async (props: asyncLoginProps): Promise<asyncLoginResult> => {
-    const result = await axios.post<{ access_token: string }>('/api/login', {
-      username: props.username,
-      password: props.password,
-    });
-    return { token: result.data.access_token };
-  },
-);

@@ -11,9 +11,9 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
 import { asyncLogin } from '@/ducks/app';
-import { AppDispatch } from '@/ducks/store';
+import { useAppDispatch } from '@/ducks/store';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const AboutPage = () => {
   const classes = useStyles();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -73,14 +73,15 @@ const AboutPage = () => {
             variant="contained"
             size="large"
             color="secondary"
-            onClick={() => {
-              dispatch(asyncLogin({ username, password }));
+            onClick={async () => {
+              let result = unwrapResult(await dispatch(asyncLogin({ username, password })));
             }}
           >
             Login
           </Button>
         </CardActions>
       </Card>
+      {process.env.TEST}
     </Layout>
   );
 };

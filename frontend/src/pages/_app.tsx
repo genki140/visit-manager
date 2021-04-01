@@ -5,11 +5,7 @@ import { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 
 // apollo
-import {
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-} from '@apollo/react-hooks';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/react-hooks';
 
 // material ui
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -20,29 +16,8 @@ import store from '@/ducks/store';
 import theme from '@/styles/theme';
 import React from 'react';
 
-// const IS_BROWSER = !!process.browser;
-
-// if (!IS_BROWSER) {
-//   // SSRのために必要？
-//   global.fetch = fetch;
-// }
-
-// const URI_ENDPOINT = 'http://localhost:3003/graphql';
-// function createClient(initialState?: any) {
-//   return new ApolloClient({
-//     connectToDevTools: IS_BROWSER,
-//     ssrMode: !IS_BROWSER,
-//     link: new HttpLink({
-//       uri: URI_ENDPOINT, // Server URL (must be absolute)
-//       credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
-//     }),
-//     cache: new InMemoryCache().restore(initialState || {}),
-//   });
-// }
-// const client = createClient();
-
 const client = new ApolloClient({
-  uri: 'http://localhost:3003/graphql',
+  uri: process.env.SITE_URL + (process.env.SITE_PORT ?? '' === '' ? '' : ':' + process.env.SITE_PORT) + '/graphql',
   cache: new InMemoryCache(),
 });
 

@@ -1,6 +1,6 @@
 import { Store, combineReducers } from 'redux';
 import logger from 'redux-logger';
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import counterSlice, { counterInitialState } from './counter';
 import appSlice, { appInitialState } from './app';
 import { useDispatch } from 'react-redux';
@@ -22,11 +22,15 @@ export type ReduxStore = Store<StoreState>;
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: [...getDefaultMiddleware(), logger],
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
   devTools: process.env.NODE_ENV !== 'production',
   preloadedState: initialState(),
 });
-// export type AppDispatch = typeof store.dispatch;
-// export const useDispatchEx = () => useDispatch<RootDispatch>();
+
+// 非同期のDispatchを正しく型処理するためのuseAppDispatch
+export type AppDispatch = typeof store.dispatch;
+export function useAppDispatch() {
+  return useDispatch<AppDispatch>();
+}
 
 export default store;

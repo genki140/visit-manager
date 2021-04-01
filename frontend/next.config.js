@@ -12,4 +12,9 @@ module.exports = {
     ];
     return result;
   },
+  env: {
+    // ここに書いたものはサーバークライアント両方から参照可能
+    SITE_URL: process.env.SITE_URL,
+    SITE_PORT: process.env.SITE_PORT,
+  },
 };

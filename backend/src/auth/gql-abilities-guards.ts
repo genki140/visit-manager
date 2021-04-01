@@ -19,14 +19,6 @@ export type AbilityTypes = typeof AbilityTypes[keyof typeof AbilityTypes];
 
 // graphqlへのアクセス時にトークンからユーザーIDを識別する
 
-// @Injectable()
-// export class GqlAuthGuard extends AuthGuard('jwt') {
-//   getRequest(context: ExecutionContext) {
-//     const ctx = GqlExecutionContext.create(context);
-//     return ctx.getContext().req;
-//   }
-// }
-
 @Injectable()
 export class GqlAbilitiesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
