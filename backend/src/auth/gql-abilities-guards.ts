@@ -4,7 +4,6 @@ import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import * as jwt from 'jsonwebtoken';
-import Enumerable from 'linq';
 
 // 権限のクラスを定義
 class AbilityType {
@@ -140,6 +139,13 @@ export const NoRequiredAbility = () => SetMetadata('noRequiredAbility', true);
 
 export const RequiredAbilities = (...requiredAbilities: AbilityType[]) =>
   SetMetadata('requiredAbilities', requiredAbilities);
+
+// postman
+
+// {
+// 	"username": "genki",
+// 	"password": "password"
+// }
 
 // graphqlのプレイグラウンドからは、ヘッダーに以下の様にトークンを入力して試験できる。
 // {

@@ -9,23 +9,19 @@ export type CounterState = {
   error: string;
 };
 
-export const initialState: CounterState = {
+export const counterInitialState: CounterState = {
   count: 0,
   loading: false,
   error: '',
 };
 
-const sleep = (microSecond: number) =>
-  new Promise((resolve) => setTimeout(resolve, microSecond));
+const sleep = (microSecond: number) => new Promise((resolve) => setTimeout(resolve, microSecond));
 
 export interface asyncIncrementCounterResult {
   value: number;
 }
 
-export const asyncIncrementCounter = createAsyncThunk<
-  asyncIncrementCounterResult,
-  number
->(
+export const asyncIncrementCounter = createAsyncThunk<asyncIncrementCounterResult, number>(
   typeName + '/asyncIncrementCounter',
   async (arg: number): Promise<asyncIncrementCounterResult> => {
     await sleep(1000);
@@ -42,7 +38,7 @@ export const asyncIncrementCounter = createAsyncThunk<
 
 const counterSlice = createSlice({
   name: typeName,
-  initialState,
+  initialState: counterInitialState,
   reducers: {
     incrementCounter: (state, action) => ({
       ...state,

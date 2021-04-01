@@ -13,13 +13,18 @@
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
     "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@react-google-maps/api": "^2.1.1",
     "@reduxjs/toolkit": "^1.5.0",
+    "axios": "^0.21.1",
     "graphql": "^15.5.0",
+    "linq": "^3.2.3",
     "next": "^10.0.9",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-redux": "^7.2.2",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "ts-nameof": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
@@ -27,6 +32,7 @@
     "@types/react-dom": "^16.9.4",
     "@types/react-redux": "^7.1.16",
     "@types/redux-logger": "^3.0.8",
+    "@types/ts-nameof": "^4.2.1",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
     "eslint": "^7.12.1",

@@ -1,14 +1,15 @@
 module.exports = {
   async rewrites() {
-    return [
+    const result = [
       {
-        source: '/login',
-        destination: 'http://localhost:3004/login', // Proxy to Backend
+        source: '/api/:path',
+        destination: process.env.SITE_URL + ':' + process.env.API_PORT + '/api/:path', // Proxy to Backend
       },
       {
         source: '/graphql',
-        destination: 'http://localhost:3004/graphql', // Proxy to Backend
+        destination: process.env.SITE_URL + ':' + process.env.API_PORT + '/' + 'graphql', // Proxy to Backend
       },
     ];
+    return result;
   },
 };

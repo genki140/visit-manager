@@ -18,6 +18,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // project
 import store from '@/ducks/store';
 import theme from '@/styles/theme';
+import React from 'react';
 
 // const IS_BROWSER = !!process.browser;
 
@@ -46,7 +47,14 @@ const client = new ApolloClient({
 });
 
 // エントリポイント。スタイルとストアの適用を行っている。
-const MyApp: React.FC<AppProps> = (props) => {
+const App: React.FC<AppProps> = (props) => {
+  React.useEffect(() => {
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles?.parentElement != null) {
+      jssStyles.parentElement.removeChild(jssStyles);
+    }
+  }, []);
+
   return (
     <MuiThemeProvider theme={theme}>
       <ApolloProvider client={client}>
@@ -58,4 +66,4 @@ const MyApp: React.FC<AppProps> = (props) => {
     </MuiThemeProvider>
   );
 };
-export default MyApp;
+export default App;

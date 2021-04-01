@@ -12,7 +12,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local')) // passport-local戦略を付与する
   @NoRequiredAbility()
-  @Post('login')
+  @Post('api/login')
   async login(@Request() req: { user: PasswordOmitUser }) {
     // LocalStrategy.validate()で認証して返した値がreq.userに入ってる
     // JwtToken を返す
