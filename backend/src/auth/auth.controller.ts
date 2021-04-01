@@ -26,6 +26,7 @@ export class AuthController {
       httpOnly: true,
       expires: expireDate,
     }); // クッキーに格納
+    response.statusCode = 200;
     return result;
   }
 

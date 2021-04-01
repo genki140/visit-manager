@@ -24,14 +24,6 @@ export class AuthService {
   async validateUser(username: string, password: string): Promise<PasswordOmitUser | undefined> {
     const user = await this.usersService.findByUsernameWithAbilities(username);
 
-    // // DBに保存されているpasswordはハッシュ化されている事を想定しているので、
-    // // bcryptなどを使ってパスワードを判定する
-    // if (user && bcrypt.compareSync(pass, user.password)) {
-    //   const { password, ...result } = user; // パスワード情報を外部に出さないようにする
-
-    //   return result;
-    // }
-
     if (user != null && user.password === password) {
       const { password, ...result } = user; // パスワード情報を外部に出さないようにする
       this.logonUserId = user.username;

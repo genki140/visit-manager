@@ -11,8 +11,9 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core';
-import { asyncLogin } from '@/ducks/app';
+import appSlice, { asyncLogin } from '@/ducks/app';
 import { useAppDispatch } from '@/ducks/store';
+import Router from 'next/router';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -74,14 +75,14 @@ const AboutPage = () => {
             size="large"
             color="secondary"
             onClick={async () => {
-              let result = unwrapResult(await dispatch(asyncLogin({ username, password })));
+              unwrapResult(await dispatch(asyncLogin({ username, password })));
+              Router.push('/');
             }}
           >
             Login
           </Button>
         </CardActions>
       </Card>
-      {process.env.TEST}
     </Layout>
   );
 };

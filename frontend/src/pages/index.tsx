@@ -1,8 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
 import Layout from '@/components/layout';
-import Counter from '@/components/counter';
-import Tasks from '@/components/Tasks';
 import Map from '@/components/map';
 
 const IndexPage = () => (

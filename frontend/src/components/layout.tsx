@@ -10,6 +10,7 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
+import Router from 'next/router';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AccountCircle, Settings } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
@@ -94,7 +95,7 @@ const Layout = ({ children, title = '既定値' }: { children: ReactNode; title:
             <IconButton color="inherit">
               <Settings />
             </IconButton>
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={() => Router.push('/login')}>
               <AccountCircle />
             </IconButton>
           </Toolbar>
