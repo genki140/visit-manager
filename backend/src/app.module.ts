@@ -30,7 +30,9 @@ type EnvironmentVariables = {
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }), // envファイルを読み込むために使用
-    GraphQLModule.forRoot({ autoSchemaFile: 'schema.graphql' }), //GraphQL
+    GraphQLModule.forRoot({
+      autoSchemaFile: 'schema.graphql',
+    }), //GraphQL
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

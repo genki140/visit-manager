@@ -1,9 +1,10 @@
 import { User } from '@/models/user/user.model';
-import { CanActivate, createParamDecorator, ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
+import { CanActivate, createParamDecorator, ExecutionContext, Injectable, Req, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import * as jwt from 'jsonwebtoken';
+import { Response, Request as exRequest } from 'express';
 
 // 権限のクラスを定義
 class AbilityType {
@@ -39,9 +40,13 @@ export class GqlAbilitiesGuard implements CanActivate {
         // GraphQLのforRootで「context: ({ req }) => ({ req }),」の定義が必要
         const ctx = GqlExecutionContext.create(context);
         const req = ctx.getContext().req;
+
+        // クッキーからトークンを取得
+        const token = req.cookies['access_token'] ?? '';
+
         // authorizationヘッダーからJWTトークンを取得する
-        const authToken = req.headers.authorization ?? '';
-        const jwtToken = authToken.substring(authToken.indexOf(' ') + 1);
+        // const authToken = req.headers.authorization ?? '';
+        const jwtToken = token; // authToken.substring(authToken.indexOf(' ') + 1);
         // JWTトークンを公開鍵で検証する
         jwt.verify(
           jwtToken,

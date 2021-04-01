@@ -8,16 +8,16 @@ const typeName = 'app';
 
 export type AppState = {
   isLoading: boolean;
-  auth: {
-    token: string; // 非ログイン時空欄
-  };
+  // auth: {
+  //   token: string; // 非ログイン時空欄
+  // };
 };
 
 export const appInitialState: AppState = {
   isLoading: false,
-  auth: {
-    token: '', //とりあえずここに入れる。本当はクッキーとかに入れるべき
-  },
+  // auth: {
+  //   token: '', //とりあえずここに入れる。本当はクッキーとかに入れるべき
+  // },
 };
 
 // asyncLogin
@@ -58,10 +58,10 @@ const appSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    // ログイン成功時トークンを保存します
-    builder.addCase(asyncLogin.fulfilled, (state, action) => {
-      state.auth.token = action.payload.token;
-    });
+    // // ログイン成功時トークンを保存します
+    // builder.addCase(asyncLogin.fulfilled, (state, action) => {
+    //   state.auth.token = action.payload.token;
+    // });
 
     // 非同期実行時Loading状態を自動調整します
     builder.addMatcher<PendingAction>(

@@ -17,7 +17,7 @@ import theme from '@/styles/theme';
 import React from 'react';
 
 const client = new ApolloClient({
-  uri: process.env.SITE_URL + (process.env.SITE_PORT ?? '' === '' ? '' : ':' + process.env.SITE_PORT) + '/graphql',
+  uri: process.env.SITE_URL + ((process.env.SITE_PORT ?? '') === '' ? '' : ':' + process.env.SITE_PORT) + '/graphql',
   cache: new InMemoryCache(),
 });
 

@@ -1,8 +1,10 @@
 import { AuthGuard } from '@nestjs/passport';
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, Request, Res, UseGuards } from '@nestjs/common';
 import { User } from '@/models/user/user.model';
 import { AuthService } from './auth.service';
 import { NoRequiredAbility } from './gql-abilities-guards';
+import { Response, Request as exRequest } from 'express';
+import { resourceLimits } from 'worker_threads';
 
 type PasswordOmitUser = Omit<User, 'password'>;
 
@@ -13,10 +15,18 @@ export class AuthController {
   @UseGuards(AuthGuard('local')) // passport-local戦略を付与する
   @NoRequiredAbility()
   @Post('api/login')
-  async login(@Request() req: { user: PasswordOmitUser }) {
+  async login(@Request() req: { user: PasswordOmitUser }, @Res({ passthrough: true }) response: Response) {
     // LocalStrategy.validate()で認証して返した値がreq.userに入ってる
+
     // JwtToken を返す
-    return this.authService.login(req.user);
+    const result = await this.authService.login(req.user);
+    let expireDate = new Date();
+    expireDate.setUTCMinutes(expireDate.getUTCMinutes() + 60 * 24 * 7);
+    response.cookie('access_token', result.access_token, {
+      httpOnly: true,
+      expires: expireDate,
+    }); // クッキーに格納
+    return result;
   }
 
   // /**

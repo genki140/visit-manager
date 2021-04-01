@@ -8,7 +8,7 @@
       "request": "launch",
       "runtimeExecutable": "npm",
       "cwd": "${workspaceFolder}/backend",
-      "runtimeArgs": ["run", "start:debug"],
+      "runtimeArgs": ["run", "debug"],
       "internalConsoleOptions": "openOnSessionStart",
       "console": "internalConsole",
       "outputCapture": "std",
