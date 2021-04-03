@@ -5,6 +5,7 @@ import {
   Backdrop,
   CircularProgress,
   Fab,
+  Grid,
   IconButton,
   makeStyles,
   Toolbar,
@@ -28,12 +29,34 @@ const useStyles = makeStyles((theme) => ({
   header: {
     gridRow: '1',
   },
+  // headerContent: {
+  //   display: 'grid',
+  //   gridTemplateColumns: '1fr auto',
+  //   border: '10px solid yellow',
+  // },
+  // headerLeft: {
+  //   gridColumn: '1',
+  //   border: '10px solid yellow',
+  //   display: 'flex',
+  // },
+  // headerRight: {
+  //   gridColumn: '2',
+  //   display: 'flex',
+  // },
+
+  toolbarButtons: {
+    marginLeft: 'auto',
+  },
   body: {
     gridRow: '2',
   },
   footer: {
     gridRow: '3',
   },
+
+  // border: {
+  //   border: '10px solid yellow',
+  // },
 
   text: {
     padding: theme.spacing(2, 2, 0),
@@ -92,12 +115,14 @@ const Layout = ({ children, title = '既定値' }: { children: ReactNode; title:
               <MenuIcon />
             </IconButton>
             <Typography variant="h6">{title}</Typography>
-            <IconButton color="inherit">
-              <Settings />
-            </IconButton>
-            <IconButton color="inherit" onClick={() => Router.push('/login')}>
-              <AccountCircle />
-            </IconButton>
+            <div className={classes.toolbarButtons}>
+              <IconButton color="inherit" onClick={() => Router.push('/settings')}>
+                <Settings />
+              </IconButton>
+              <IconButton color="inherit" onClick={() => Router.push('/login')}>
+                <AccountCircle />
+              </IconButton>
+            </div>
           </Toolbar>
         </AppBar>
       </header>

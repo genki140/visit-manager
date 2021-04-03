@@ -11,7 +11,7 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core';
-import appSlice, { asyncLogin } from '@/ducks/app';
+import { asyncLogin } from '@/ducks/app';
 import { useAppDispatch } from '@/ducks/store';
 import Router from 'next/router';
 import { unwrapResult } from '@reduxjs/toolkit';
