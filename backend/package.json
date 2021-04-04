@@ -34,6 +34,7 @@
     "class-validator": "^0.13.1",
     "cookie-parser": "^1.4.5",
     "graphql": "^15.5.0",
+    "graphql-parse-resolve-info": "^4.11.0",
     "graphql-tools": "^7.0.3",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
@@ -42,6 +43,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
+    "ts-nameof": "^5.0.0",
     "typeorm": "^0.2.31"
   },
   "devDependencies": {
@@ -55,6 +57,7 @@
     "@types/passport-jwt": "^3.0.5",
     "@types/passport-local": "^1.0.33",
     "@types/supertest": "^2.0.10",
+    "@types/ts-nameof": "^4.2.1",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
     "eslint": "^7.12.1",

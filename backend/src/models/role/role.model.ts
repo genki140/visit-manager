@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Ability } from '../ability/ability.model';
@@ -16,10 +17,12 @@ export class Role {
   name: string = '';
 
   /** 所属ユーザー */
+  // @Field(() => [User])
   @OneToMany(() => User, (user) => user.role)
   users?: User[];
 
   /** 権限リスト */
+  @Field(() => [Ability])
   @ManyToMany(() => Ability, (ability) => ability.roles)
   @JoinTable({
     name: 'role_abilities',

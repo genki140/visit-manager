@@ -1,6 +1,6 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 
 import { CreateUserInput, User } from './user.model';
 
@@ -11,6 +11,14 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async find(ids?: number[], options?: FindManyOptions<User>) {
+    if (ids == null) {
+      return this.userRepository.find(options);
+    } else {
+      return this.userRepository.findByIds(ids, options);
+    }
+  }
+
   findOne = async (id: number) => this.userRepository.findOne(id);
 
   async findByUsernameWithAbilities(username: string) {
@@ -18,7 +26,7 @@ export class UserService {
   }
 
   async findAll() {
-    return this.userRepository.find();
+    return this.userRepository.find({ relations: ['role', 'role.abilities'] });
   }
 
   async findByIds(ids: number[]) {

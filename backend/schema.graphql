@@ -42,13 +42,14 @@ type Ability {
 type Role {
   id: ID!
   name: String!
+  abilities: [Ability!]!
 }
 
 type User {
   id: ID!
   username: String!
   password: String!
-  role: Role!
+  role: Role
 }
 
 type Query {
@@ -58,9 +59,8 @@ type Query {
   categories: [Role!]!
   taskContent(id: ID!): TaskContent
   taskContents: [TaskContent!]!
-  user(id: ID!): User
-  users: [User!]!
-  Role(id: ID!): Role
+  users(ids: [ID!]): [User!]!
+  role(id: ID!): Role
   ability(id: ID!): Ability
   abilities: [Ability!]!
 }

@@ -20,7 +20,7 @@ export class AuthController {
 
     // JwtToken を返す
     const result = await this.authService.login(req.user);
-    let expireDate = new Date();
+    const expireDate = new Date();
     expireDate.setUTCMinutes(expireDate.getUTCMinutes() + 60 * 24 * 7);
     response.cookie('access_token', result.access_token, {
       httpOnly: true,

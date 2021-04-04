@@ -137,7 +137,7 @@ export type Query = {
   taskContents: Array<TaskContent>;
   user?: Maybe<User>;
   users: Array<User>;
-  Role?: Maybe<Role>;
+  role?: Maybe<Role>;
   ability?: Maybe<Ability>;
   abilities: Array<Ability>;
 };
@@ -181,6 +181,8 @@ export type Role = {
   __typename?: 'Role';
   id: Scalars['ID'];
   name: Scalars['String'];
+  users: Array<User>;
+  abilities: Array<Ability>;
 };
 
 export type Task = {
@@ -232,25 +234,18 @@ export type GetTasksQuery = (
   )> }
 );
 
-export type Test2QueryVariables = Exact<{ [key: string]: never; }>;
+export type GetUserSettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Test2Query = (
+export type GetUserSettingsQuery = (
   { __typename?: 'Query' }
   & { users: Array<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'password'>
-  )> }
-);
-
-export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetUsersQuery = (
-  { __typename?: 'Query' }
-  & { users: Array<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'password'>
+    & Pick<User, 'id' | 'username'>
+    & { role: (
+      { __typename?: 'Role' }
+      & Pick<Role, 'id' | 'name'>
+    ) }
   )> }
 );
 
@@ -290,75 +285,42 @@ export function useGetTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetTasksQueryHookResult = ReturnType<typeof useGetTasksQuery>;
 export type GetTasksLazyQueryHookResult = ReturnType<typeof useGetTasksLazyQuery>;
 export type GetTasksQueryResult = Apollo.QueryResult<GetTasksQuery, GetTasksQueryVariables>;
-export const Test2Document = gql`
-    query Test2 {
-  users {
-    id
-    password
-    password
-  }
-}
-    `;
-
-/**
- * __useTest2Query__
- *
- * To run a query within a React component, call `useTest2Query` and pass it any options that fit your needs.
- * When your component renders, `useTest2Query` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useTest2Query({
- *   variables: {
- *   },
- * });
- */
-export function useTest2Query(baseOptions?: Apollo.QueryHookOptions<Test2Query, Test2QueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<Test2Query, Test2QueryVariables>(Test2Document, options);
-      }
-export function useTest2LazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Test2Query, Test2QueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<Test2Query, Test2QueryVariables>(Test2Document, options);
-        }
-export type Test2QueryHookResult = ReturnType<typeof useTest2Query>;
-export type Test2LazyQueryHookResult = ReturnType<typeof useTest2LazyQuery>;
-export type Test2QueryResult = Apollo.QueryResult<Test2Query, Test2QueryVariables>;
-export const GetUsersDocument = gql`
-    query GetUsers {
+export const GetUserSettingsDocument = gql`
+    query GetUserSettings {
   users {
     id
     username
-    password
+    role {
+      id
+      name
+    }
   }
 }
     `;
 
 /**
- * __useGetUsersQuery__
+ * __useGetUserSettingsQuery__
  *
- * To run a query within a React component, call `useGetUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetUserSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUsersQuery({
+ * const { data, loading, error } = useGetUserSettingsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+export function useGetUserSettingsQuery(baseOptions?: Apollo.QueryHookOptions<GetUserSettingsQuery, GetUserSettingsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+        return Apollo.useQuery<GetUserSettingsQuery, GetUserSettingsQueryVariables>(GetUserSettingsDocument, options);
       }
-export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+export function useGetUserSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserSettingsQuery, GetUserSettingsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+          return Apollo.useLazyQuery<GetUserSettingsQuery, GetUserSettingsQueryVariables>(GetUserSettingsDocument, options);
         }
-export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
-export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
-export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
+export type GetUserSettingsQueryHookResult = ReturnType<typeof useGetUserSettingsQuery>;
+export type GetUserSettingsLazyQueryHookResult = ReturnType<typeof useGetUserSettingsLazyQuery>;
+export type GetUserSettingsQueryResult = Apollo.QueryResult<GetUserSettingsQuery, GetUserSettingsQueryVariables>;

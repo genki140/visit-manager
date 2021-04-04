@@ -9,7 +9,7 @@ export class RoleResolver {
   constructor(@Inject(RoleService) private roleService: RoleService) {}
 
   @Query(() => Role, { nullable: true })
-  async Role(@Args('id', { type: () => ID }) id: number) {
+  async role(@Args('id', { type: () => ID }) id: number) {
     return await this.roleService.findOne(id);
   }
 

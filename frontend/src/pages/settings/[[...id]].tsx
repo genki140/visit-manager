@@ -39,7 +39,7 @@ const SettingsPage = () => {
     <Layout title={setting.title}>
       <Tabs value={settingIndex} aria-label="simple tabs example">
         {settings.map((x) => (
-          <Link href="/settings" as={'/settings' + (x.url === '' ? '' : '/' + x.url)}>
+          <Link href="/settings" as={'/settings' + (x.url === '' ? '' : '/' + x.url)} key={x.url}>
             <Tab label={x.title} />
           </Link>
         ))}

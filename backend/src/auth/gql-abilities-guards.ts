@@ -26,6 +26,9 @@ export class GqlAbilitiesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): Promise<boolean> {
     return new Promise((resolve, reject) => {
+      // デバッグ
+      resolve(true);
+
       // SetMetadataのrolesに定義されたロール値を取得する
       const requiredAbilities = this.reflector.get<AbilityType[]>('requiredAbilities', context.getHandler());
       // ロール値が取得できなければ何も許可しない(明示的に許可されていればOKとする)

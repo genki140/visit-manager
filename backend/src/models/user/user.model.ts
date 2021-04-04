@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Max, MaxLength, Min } from 'class-validator';
@@ -21,7 +22,7 @@ export class User {
   password: string = '';
 
   /** 役割 */
-  @Field(() => Role)
+  @Field(() => Role, { nullable: true })
   @ManyToOne(() => Role, (role) => role.users, { nullable: false })
   role?: Role;
 }
