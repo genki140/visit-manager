@@ -8,8 +8,7 @@
     "dev": "NODE_OPTIONS='--inspect=0.0.0.0:9228' next dev -p 3001",
     "build": "next build -p 3001",
     "start": "next start -p 3001",
-    "type-check": "tsc",
-    "apollo:codegen": "apollo client:codegen --target=typescript --globalTypesFile=src/types/globalTypes.ts"
+    "type-check": "tsc"
   },
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
@@ -29,6 +28,12 @@
     "ts-nameof": "^5.0.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.21.3",
+    "@graphql-codegen/introspection": "^1.18.1",
+    "@graphql-codegen/typescript": "^1.21.1",
+    "@graphql-codegen/typescript-operations": "^1.17.15",
+    "@graphql-codegen/typescript-react-apollo": "^2.2.3",
+    "@graphql-codegen/typescript-resolvers": "^1.19.0",
     "@types/node": "^12.12.21",
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",

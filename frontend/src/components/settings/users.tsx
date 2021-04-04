@@ -1,10 +1,20 @@
 import React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import { gql, useQuery } from '@apollo/react-hooks';
+
+export const USERS = gql`
+  query Users {
+    users {
+      id
+      username
+      password
+    }
+  }
+`;
 
 const UserSettings = () => {
-  <div>{/* <DataGrid>
+  const { loading, error, data } = useQuery<Users>(USERS);
 
-</DataGrid> */}</div>;
+  return <div>ああああああああああああああああああああああ</div>;
 };
 
 export default UserSettings;

@@ -1,0 +1,28 @@
+schema: '../backend/schema.graphql'
+generates:
+  ./src/@types/types.d.ts:
+    plugins:
+      - typescript
+# overwrite: true
+# schema:
+#   - ../backend/schema.graphql
+# documents:
+#   - ./graphql/queries/*.graphql
+#   - ./graphql/mutations/*.graphql
+# generates:
+#   ./server/gen/graphql-resolver-types.ts:
+#     plugins:
+#       - typescript
+#       - typescript-resolvers
+#   ./client/gen/graphql-client-api.tsx:
+#     plugins:
+#       - typescript
+#       - typescript-operations
+#       - typescript-react-apollo
+#     config:
+#       withComponent: false
+#       withHooks: true
+#       withHOC: false
+#   ./graphql/schema.json:
+#     plugins:
+#       - introspection
