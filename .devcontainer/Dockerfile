@@ -18,14 +18,13 @@ RUN apt update && \
     # npm ci && \
     # cd ../frontend && \
     # npm ci
-
-
     # ローカルボリュームからのコピーコマンド
+    mkdir /home/project -p && \
     echo "if [ -e /home/project/README.md ]; then" >> /usr/local/bin/init && \
     echo "echo Environment is already initialized." >> /usr/local/bin/init && \
     echo "exit 1" >> /usr/local/bin/init && \
     echo "fi" >> /usr/local/bin/init && \
-    echo "cp -r /home/hostfiles /home/project" >> /usr/local/bin/init && \
+    echo "cp -r /home/hostfiles/project /home" >> /usr/local/bin/init && \
     echo "cd /project" >> /usr/local/bin/init && \
     echo "git checkout ." >> /usr/local/bin/init && \
     echo "echo Initialize environment." >> /usr/local/bin/init && \

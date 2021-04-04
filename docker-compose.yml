@@ -8,7 +8,7 @@ services:
       dockerfile: ./.devcontainer/Dockerfile
     image: nest-next-test:1.0
     volumes:
-      - .:/home/hostfiles
+      - .:/home/hostfiles/project
 
     tty: true
     ports:
