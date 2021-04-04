@@ -12,5 +12,6 @@
     "dbaeumer.vscode-eslint",
     "github.vscode-pull-request-github",
     "msjsdiag.debugger-for-chrome"
+    // "apollographql.vscode-apollo"
   ]
 }

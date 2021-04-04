@@ -5,8 +5,9 @@ import Layout from '@/components/layout';
 import MainSettings from '@/components/settings/main';
 import UserSettings from '@/components/settings/users';
 import ErrorPage from 'next/error';
+import Link from 'next/link';
 
-// settings以降の存在する全てのパスに対応する。
+// ファイル名[[...id]].tsxは、settings以降の存在する全てのパスに対応する。
 
 // const useStyles = makeStyles((theme) => ({}));
 
@@ -35,15 +36,12 @@ const SettingsPage = () => {
   const setting = settings[settingIndex];
 
   return (
-    <Layout title="設定インデックス">
+    <Layout title={setting.title}>
       <Tabs value={settingIndex} aria-label="simple tabs example">
         {settings.map((x) => (
-          <Tab
-            label={x.title}
-            onClick={() => {
-              router.push('/settings', '/settings' + (x.url === '' ? '' : '/' + x.url));
-            }}
-          />
+          <Link href="/settings" as={'/settings' + (x.url === '' ? '' : '/' + x.url)}>
+            <Tab label={x.title} />
+          </Link>
         ))}
       </Tabs>
       {setting.component()}

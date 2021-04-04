@@ -5,19 +5,18 @@ import {
   Backdrop,
   CircularProgress,
   Fab,
-  Grid,
   IconButton,
   makeStyles,
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import Router from 'next/router';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AccountCircle, Settings } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { useAppState } from '@/ducks/app';
+import Link from 'next/link';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -116,12 +115,16 @@ const Layout = ({ children, title = '既定値' }: { children: ReactNode; title:
             </IconButton>
             <Typography variant="h6">{title}</Typography>
             <div className={classes.toolbarButtons}>
-              <IconButton color="inherit" onClick={() => Router.push('/settings')}>
-                <Settings />
-              </IconButton>
-              <IconButton color="inherit" onClick={() => Router.push('/login')}>
-                <AccountCircle />
-              </IconButton>
+              <Link href="/settings">
+                <IconButton color="inherit">
+                  <Settings />
+                </IconButton>
+              </Link>
+              <Link href="/login">
+                <IconButton color="inherit">
+                  <AccountCircle />
+                </IconButton>
+              </Link>
             </div>
           </Toolbar>
         </AppBar>
