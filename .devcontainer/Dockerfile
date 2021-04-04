@@ -25,7 +25,7 @@ RUN apt update && \
     echo "exit 1" >> /usr/local/bin/init && \
     echo "fi" >> /usr/local/bin/init && \
     echo "cp -r /home/hostfiles/project /home" >> /usr/local/bin/init && \
-    echo "cd /project" >> /usr/local/bin/init && \
+    echo "cd /home/project" >> /usr/local/bin/init && \
     echo "git checkout ." >> /usr/local/bin/init && \
     echo "echo Initialize environment." >> /usr/local/bin/init && \
     chmod a+x /usr/local/bin/init
