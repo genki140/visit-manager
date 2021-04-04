@@ -11,7 +11,8 @@
     "eamodio.gitlens",
     "dbaeumer.vscode-eslint",
     "github.vscode-pull-request-github",
-    "msjsdiag.debugger-for-chrome"
-    // "apollographql.vscode-apollo"
+    "msjsdiag.debugger-for-chrome",
+    "mhutchie.git-graph",
+    "apollographql.vscode-apollo"
   ]
 }

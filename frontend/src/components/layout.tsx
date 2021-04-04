@@ -97,7 +97,7 @@ const Layout = ({ children, title = '既定値' }: { children: ReactNode; title:
 
   return (
     <div className={classes.container}>
-      <Backdrop className={classes.backdrop} open={app.isLoading}>
+      <Backdrop className={classes.backdrop} open={app.loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
 

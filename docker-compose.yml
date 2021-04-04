@@ -1,9 +1,15 @@
-version: '3'
+version: "3"
 
 services:
   # Application
   web:
-    build: ./
+    build:
+      context: ./
+      dockerfile: ./.devcontainer/Dockerfile
+    image: nest-next-test:1.0
+    volumes:
+      - .:/home/hostfiles
+
     tty: true
     ports:
       - 3333-3339:3000
@@ -16,7 +22,7 @@ services:
       MYSQL_DATABASE: database
       MYSQL_USER: username
       MYSQL_PASSWORD: password
-      TZ: 'Asia/Tokyo'
+      TZ: "Asia/Tokyo"
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./docker/db:/docker-entrypoint-initdb.d

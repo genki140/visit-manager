@@ -7,14 +7,14 @@ import { useSelector } from 'react-redux';
 const typeName = 'app';
 
 export type AppState = {
-  isLoading: boolean;
+  loading: boolean;
   // auth: {
   //   token: string; // 非ログイン時空欄
   // };
 };
 
 export const appInitialState: AppState = {
-  isLoading: false,
+  loading: false,
   // auth: {
   //   token: '', //とりあえずここに入れる。本当はクッキーとかに入れるべき
   // },
@@ -53,7 +53,7 @@ const appSlice = createSlice({
   initialState: appInitialState,
   reducers: {
     setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
+      state.loading = action.payload;
     },
   },
 
@@ -67,19 +67,19 @@ const appSlice = createSlice({
     builder.addMatcher<PendingAction>(
       (action) => action.type.endsWith('/pending'),
       (state) => {
-        state.isLoading = true;
+        state.loading = true;
       },
     );
     builder.addMatcher<RejectedAction>(
       (action) => action.type.endsWith('/rejected'),
       (state) => {
-        state.isLoading = false;
+        state.loading = false;
       },
     );
     builder.addMatcher<FulfilledAction>(
       (action) => action.type.endsWith('/fulfilled'),
       (state) => {
-        state.isLoading = false;
+        state.loading = false;
       },
     );
   },

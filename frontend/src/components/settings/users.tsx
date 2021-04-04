@@ -1,8 +1,9 @@
 import React from 'react';
-import { gql, useQuery } from '@apollo/react-hooks';
+import { gql } from '@apollo/react-hooks';
+import { useGetUsersQuery } from '@/types/graphql';
 
 export const USERS = gql`
-  query Users {
+  query GetUsers {
     users {
       id
       username
@@ -12,9 +13,13 @@ export const USERS = gql`
 `;
 
 const UserSettings = () => {
-  const { loading, error, data } = useQuery<Users>(USERS);
+  const { loading, error, data } = useGetUsersQuery();
 
-  return <div>ああああああああああああああああああああああ</div>;
+  return loading
+    ? 'loading'
+    : error != null
+    ? 'error:' + error.message
+    : (data?.users ?? []).map((x) => <div key={x.id}>{x.username}</div>);
 };
 
 export default UserSettings;

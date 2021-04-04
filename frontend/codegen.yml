@@ -1,8 +1,15 @@
+# 本ファイルは graphql-codegen 用の設定ファイル。
+# npm run gen で必要なファイルの生成を行う。
+
 schema: '../backend/schema.graphql'
+documents:
+  - ./src/**/*.tsx
 generates:
-  ./src/@types/types.d.ts:
+  ./src/types/graphql.ts:
     plugins:
       - typescript
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
 # overwrite: true
 # schema:
 #   - ../backend/schema.graphql

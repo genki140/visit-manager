@@ -4,9 +4,17 @@
 
 - git clone で取得したフォルダを vscode で開き、remote development 拡張機能をインストールし、remote container で開く。
 
+- init を実行しソースファイルを取得
+
 - npm ci を実行
 
 - デバッグタブから「Debug All」を実行。
+
+## DB 構造変更
+
+コードファースト開発のため、バックエンドのモデル、サービス、リゾルバ―を書き換える。
+
+クライアントは npm run gen で graphql 用のタイプを自動生成可能。
 
 ## 構造の概要
 
