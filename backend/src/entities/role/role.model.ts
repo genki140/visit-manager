@@ -2,6 +2,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Ability } from '../ability/ability.model';
+import { RoledUser } from '../roled-user/roled-user.model';
 import { User } from '../user/user.model';
 
 // 役割テーブル。これは組織ごとに変化せず共通とする
@@ -18,10 +19,10 @@ export class Role {
   @Column({ length: 100 })
   name: string = '';
 
-  /** 所属ユーザー */
-  // @Field(() => [User])
-  @OneToMany(() => User, (user) => user.role)
-  users?: User[];
+  /** ユーザー */
+  @Field(() => [RoledUser])
+  @ManyToMany(() => RoledUser, (roledUser) => roledUser.roles)
+  roledUser?: RoledUser[];
 
   /** 権限リスト */
   @Field(() => [Ability])

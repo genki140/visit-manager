@@ -18,24 +18,37 @@ export class UserResolver {
   /** ユーザー一覧を権限情報と共に取得します */
   @Query(() => [User])
   @RequiredAbilities(AbilityTypes.Administrator)
-  async users(@Args('ids', { type: () => [ID], nullable: true }) ids: number[], @Info() info: GraphQLResolveInfo) {
+  async users(
+    @Args('ids', { type: () => [ID], nullable: true, defaultValue: null }) ids: number[] | null,
+    @Info() info: GraphQLResolveInfo,
+  ) {
     // クエリにリレーションオブジェクトが指定されている場合にのみリレーションを設定（もうちょっと簡略化できそう）
     const relations: string[] = [];
     const parsedInfo = parseResolveInfo(info) as any;
-    if (parsedInfo.fieldsByTypeName.User.role != null) {
-      relations.push('role');
-    }
-    if (parsedInfo.fieldsByTypeName.User.role?.fieldsByTypeName.Role.abilities != null) {
-      relations.push('role.abilities');
-    }
+
+    // console.log(parsedInfo);
+    // console.log(ids);
+
+    // if (parsedInfo.fieldsByTypeName.User.role != null) {
+    //   relations.push('role');
+    // }
+    // if (parsedInfo.fieldsByTypeName.User.role?.fieldsByTypeName.Role.abilities != null) {
+    //   relations.push('role.abilities');
+    // }
+
+    // とりあえず
+    relations.push('roledUsers');
+    relations.push('roledUsers.roles');
+    relations.push('roledUsers.roles.abilities');
+    relations.push('roledUsers.organization');
 
     // // 以下は理想
     // const relationsTest = GetGraphqlQueryRelations([{type:'Role',path:'role'},{type:'Ability',path:'role.Abilities'}]);
 
     // console.log(relations);
 
-    const result = await this.userService.find(ids, { relations: relations });
-    if (result.length !== ids.length) {
+    const result = await this.userService.find(ids ?? undefined, { relations: relations });
+    if (ids != null && result.length !== ids.length) {
       throw new Error('Some IDs were not found.');
     }
     return result;

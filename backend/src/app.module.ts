@@ -6,18 +6,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 
 // Import modules
-import { CategoryModule } from '@/entities/category/category.module';
-import { TaskModule } from '@/entities/task/task.module';
 import { UserModule } from '@/entities/user/user.module';
+import { OrganizationModule } from './entities/organization/organization.module';
+import { RoledUserModule } from './entities/roled-user/roled-user.module';
 import { RoleModule } from '@/entities/role/role.module';
 import { AbilityModule } from '@/entities/ability/ability.module';
 
-import { TaskContentModule } from '@/entities/task-content/task-content.module';
 import { DateScalar } from '@/scalars/date.scalar';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { GqlAbilitiesGuard } from './auth/gql-abilities-guards';
-import { OrganizationModule } from './entities/organization/organization.module';
 
 type EnvironmentVariables = {
   DB_HOST: string;
@@ -49,18 +47,16 @@ type EnvironmentVariables = {
         synchronize: true,
       }),
     }),
-    TaskModule,
-    TaskContentModule,
-    CategoryModule,
     UserModule,
     RoleModule,
     AbilityModule,
     AuthModule,
     OrganizationModule,
+    RoledUserModule,
   ],
   controllers: [AuthController],
   providers: [
-    DateScalar,
+    // DateScalar,
     {
       provide: APP_GUARD,
       useClass: GqlAbilitiesGuard,

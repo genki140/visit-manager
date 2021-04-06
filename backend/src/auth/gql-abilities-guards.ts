@@ -112,12 +112,11 @@ Kv3w3+N8MLQard8THBGklUjMQV+V+rqU4wche3HmNB1pa2PqcpcXS6KfS991V3q+
             if (err) {
               reject(err);
             } else {
-              // ユーザのロールがGuardで設定されているロールをすべて持っているかを検証する
-              const userAbilities = (payload as User)?.role?.abilities ?? [];
-              const canAccess = requiredAbilities.every((x) => userAbilities.some((y) => y.id === x.id));
-              // console.log(userAbilities);
-              // console.log(requiredAbilities);
-              resolve(canAccess);
+              // 現在デバッグでログインしていないため後回し（カレント組織ベースで処理する必要アリ）
+              // // ユーザのロールがGuardで設定されているロールをすべて持っているかを検証する
+              // const userAbilities = (payload as User)?.role?.abilities ?? [];
+              // const canAccess = requiredAbilities.every((x) => userAbilities.some((y) => y.id === x.id));
+              // resolve(canAccess);
             }
           },
         );
@@ -137,18 +136,6 @@ export const NoRequiredAbility = () => SetMetadata('noRequiredAbility', true);
 
 export const RequiredAbilities = (...requiredAbilities: AbilityType[]) =>
   SetMetadata('requiredAbilities', requiredAbilities);
-
-// postman
-
-// {
-// 	"username": "genki",
-// 	"password": "password"
-// }
-
-// graphqlのプレイグラウンドからは、ヘッダーに以下の様にトークンを入力して試験できる。
-// {
-//   "Authorization": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiZ2Vua2kxNDAiLCJpYXQiOjE2MTY5ODM5NjgsImV4cCI6MTYxNjk4NTE2OH0._7a8-yG4C7ZkED2OMsLGPo46NXtqyLdqOdachkjdVyI"
-// }
 
 // デコレーターでガードをかけるようにする方法は以下を参照。
 // https://qiita.com/kmatae/items/da60d82dac9164a3855e

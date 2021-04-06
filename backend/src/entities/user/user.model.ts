@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { MaxLength } from 'class-validator';
 import { Role } from '../role/role.model';
+import { Organization } from '../organization/organization.model';
+import { RoledUser } from '../roled-user/roled-user.model';
 
 @ObjectType()
 @Entity('users')
@@ -21,10 +23,15 @@ export class User {
   @Column({ length: 100 })
   password: string = '';
 
+  /** 名前 */
+  @Field()
+  @Column({ length: 100 })
+  name: string = '';
+
   /** 役割 */
-  @Field(() => Role, { nullable: true })
-  @ManyToOne(() => Role, (role) => role.users, { nullable: false })
-  role?: Role;
+  @Field(() => [RoledUser])
+  @OneToMany(() => RoledUser, (roledUser) => roledUser.user)
+  roledUsers?: RoledUser[];
 }
 
 @InputType()

@@ -2,36 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type TaskContent {
-  id: ID!
-  checked: Boolean!
-  title: String!
-  task: Task!
-}
-
-type Task {
-  id: ID!
-  title: String!
-  createdAt: Date!
-  updatedAt: Date!
-  taskContents: [TaskContent!]!
-  categories: [Category!]!
-}
-
-"""Date custom scalar type"""
-scalar Date
-
-type Category {
+type Organization {
   id: ID!
   name: String!
-  color: Color!
-  tasks: Task!
-}
-
-enum Color {
-  red
-  blue
-  green
+  userOrganizations: [RoledUser!]!
 }
 
 type Ability {
@@ -42,68 +16,37 @@ type Ability {
 type Role {
   id: ID!
   name: String!
+  roledUser: [RoledUser!]!
   abilities: [Ability!]!
+}
+
+type RoledUser {
+  id: ID!
+  organization: Organization!
+  user: User!
+  roles: [Role!]!
 }
 
 type User {
   id: ID!
   username: String!
   password: String!
-  role: Role
+  name: String!
+  roledUsers: [RoledUser!]!
 }
 
 type Query {
-  task(id: ID!): Task
-  tasks(take: Int): [Task!]!
-  category(id: ID!): Category
-  categories: [Role!]!
-  taskContent(id: ID!): TaskContent
-  taskContents: [TaskContent!]!
-  users(ids: [ID!]): [User!]!
+  users(ids: [ID!] = null): [User!]!
   role(id: ID!): Role
+  categories: [Role!]!
   ability(id: ID!): Ability
   abilities: [Ability!]!
 }
 
 type Mutation {
-  createTask(task: CreateTaskInput!): Task!
-  deleteTask(id: ID!): Task
-  createCategory(category: CreateCategoryInput!): Category!
-  updateCategory(category: UpdateCategoryInput!): Category!
-  deleteCategory(id: ID!): Category
-  createTaskContent(taskContent: CreateTaskContentInput!): TaskContent!
-  updateTaskContent(taskContent: UpdateTaskContentInput!): TaskContent!
-  deleteTaskContent(id: ID!): TaskContent
   createUser(user: CreateUserInput!): User!
   deleteUser(id: ID!): Ability
   deleteRole(id: ID!): Role
-}
-
-input CreateTaskInput {
-  title: String = ""
-  categoryIds: [ID!] = []
-}
-
-input CreateCategoryInput {
-  name: String = ""
-  color: Color!
-}
-
-input UpdateCategoryInput {
-  id: ID = 0
-  name: String!
-  color: Color!
-}
-
-input CreateTaskContentInput {
-  title: String = ""
-  taskId: ID = 0
-}
-
-input UpdateTaskContentInput {
-  id: ID = 0
-  checked: Boolean
-  title: String
 }
 
 input CreateUserInput {
