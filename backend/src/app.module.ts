@@ -6,17 +6,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 
 // Import modules
-import { CategoryModule } from '@/models/category/category.module';
-import { TaskModule } from '@/models/task/task.module';
-import { UserModule } from '@/models/user/user.module';
-import { RoleModule } from '@/models/role/role.module';
-import { AbilityModule } from '@/models/ability/ability.module';
+import { CategoryModule } from '@/entities/category/category.module';
+import { TaskModule } from '@/entities/task/task.module';
+import { UserModule } from '@/entities/user/user.module';
+import { RoleModule } from '@/entities/role/role.module';
+import { AbilityModule } from '@/entities/ability/ability.module';
 
-import { TaskContentModule } from '@/models/task-content/task-content.module';
+import { TaskContentModule } from '@/entities/task-content/task-content.module';
 import { DateScalar } from '@/scalars/date.scalar';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { GqlAbilitiesGuard } from './auth/gql-abilities-guards';
+import { OrganizationModule } from './entities/organization/organization.module';
 
 type EnvironmentVariables = {
   DB_HOST: string;
@@ -55,6 +56,7 @@ type EnvironmentVariables = {
     RoleModule,
     AbilityModule,
     AuthModule,
+    OrganizationModule,
   ],
   controllers: [AuthController],
   providers: [

@@ -1,10 +1,9 @@
 import { AuthGuard } from '@nestjs/passport';
-import { Controller, Get, Post, Req, Request, Res, UseGuards } from '@nestjs/common';
-import { User } from '@/models/user/user.model';
+import { Controller, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { User } from '@/entities/user/user.model';
 import { AuthService } from './auth.service';
 import { NoRequiredAbility } from './gql-abilities-guards';
-import { Response, Request as exRequest } from 'express';
-import { resourceLimits } from 'worker_threads';
+import { Response } from 'express';
 
 type PasswordOmitUser = Omit<User, 'password'>;
 
@@ -29,15 +28,4 @@ export class AuthController {
     response.statusCode = 200;
     return result;
   }
-
-  // /**
-  //  * @description JWT認証を用いたサンプルAPI
-  //  */
-  // @UseGuards(AuthGuard('jwt')) // passport-jwt戦略を付与する
-  // @Get('profile')
-  // getProfile(@Request() req: { user: PasswordOmitUser }) {
-  //   // JwtStrategy.validate()で認証して返した値がreq.userに入ってる
-  //   // 認証に成功したユーザーの情報を返す
-  //   return req.user;
-  // }
 }

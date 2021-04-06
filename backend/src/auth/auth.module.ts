@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 // Strategyクラス
 // import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
-import { UserModule } from '@/models/user/user.module';
+import { UserModule } from '@/entities/user/user.module';
 
 @Module({
   imports: [
@@ -17,6 +17,7 @@ import { UserModule } from '@/models/user/user.module';
 
     // JWTを使うための設定をしている
     JwtModule.registerAsync({
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       useFactory: async (configService: ConfigService) => {
         return {
           // envファイルから秘密鍵を渡す
@@ -78,7 +79,7 @@ Kv3w3+N8MLQard8THBGklUjMQV+V+rqU4wche3HmNB1pa2PqcpcXS6KfS991V3q+
             // 有効期間を設定
             // 指定する値は以下を参照
             // https://github.com/vercel/ms
-            expiresIn: '1200s',
+            expiresIn: '7 days', // '1200s', //20分
           },
         };
       },

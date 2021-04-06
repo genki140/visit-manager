@@ -1,8 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { Role } from '@/models/role/role.model';
-import { RoleService } from '@/models/role/role.service';
+import { Role } from '@/entities/role/role.model';
+import { RoleService } from '@/entities/role/role.service';
 
 @Resolver(() => Role)
 export class RoleResolver {

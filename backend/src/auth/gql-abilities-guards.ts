@@ -1,10 +1,8 @@
-import { User } from '@/models/user/user.model';
-import { CanActivate, createParamDecorator, ExecutionContext, Injectable, Req, SetMetadata } from '@nestjs/common';
+import { User } from '@/entities/user/user.model';
+import { CanActivate, ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { AuthGuard } from '@nestjs/passport';
 import * as jwt from 'jsonwebtoken';
-import { Response, Request as exRequest } from 'express';
 
 // 権限のクラスを定義
 class AbilityType {

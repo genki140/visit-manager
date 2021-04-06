@@ -1,8 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { CreateTaskInput, Task } from '@/models/task/task.model';
-import { TaskService } from '@/models/task/task.service';
+import { CreateTaskInput, Task } from '@/entities/task/task.model';
+import { TaskService } from '@/entities/task/task.service';
 
 @Resolver(() => Task)
 export class TaskResolver {

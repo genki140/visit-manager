@@ -1,7 +1,7 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { Task } from '@/models/task/task.model';
+import { Task } from '@/entities/task/task.model';
 
 @ObjectType()
 @Entity('task_contents')

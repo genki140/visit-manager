@@ -1,8 +1,8 @@
 import { createParamDecorator, ExecutionContext, Inject } from '@nestjs/common';
 import { Args, Context, GqlExecutionContext, ID, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { CreateUserInput, User } from '@/models/user/user.model';
-import { UserService } from '@/models/user/user.service';
+import { CreateUserInput, User } from '@/entities/user/user.model';
+import { UserService } from '@/entities/user/user.service';
 import { AbilityTypes, RequiredAbilities } from '@/auth/gql-abilities-guards';
 import { FieldNode, GraphQLResolveInfo, SelectionSetNode } from 'graphql';
 import { parseResolveInfo } from 'graphql-parse-resolve-info';

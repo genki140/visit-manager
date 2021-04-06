@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { CreateTaskInput, Task } from './task.model';
 
-import { CategoryService } from '@/models/category/category.service';
+import { CategoryService } from '@/entities/category/category.service';
 
 @Injectable()
 export class TaskService {

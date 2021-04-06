@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, InputType, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Task } from '@/models/task/task.model';
+import { Task } from '@/entities/task/task.model';
 
 export enum Color {
   red = 'red',

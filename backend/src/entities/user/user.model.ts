@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Max, MaxLength, Min } from 'class-validator';
+import { MaxLength } from 'class-validator';
 import { Role } from '../role/role.model';
 
 @ObjectType()

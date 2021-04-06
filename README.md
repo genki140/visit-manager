@@ -14,6 +14,10 @@
 
 コードファースト開発のため、バックエンドのモデル、サービス、リゾルバ―を書き換える。
 
+npx nest g mo models/organization
+npx nest g s models/organization
+npx nest g r models/organization
+
 クライアントは npm run gen で graphql 用のタイプを自動生成可能。
 
 ## 構造の概要

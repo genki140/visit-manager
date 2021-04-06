@@ -1,8 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { Category, CreateCategoryInput, UpdateCategoryInput } from '@/models/category/category.model';
-import { CategoryService } from '@/models/category/category.service';
+import { Category, CreateCategoryInput, UpdateCategoryInput } from '@/entities/category/category.model';
+import { CategoryService } from '@/entities/category/category.service';
 
 @Resolver(() => Category)
 export class CategoryResolver {

@@ -1,8 +1,8 @@
 // import bcrypt = require('bcrypt');
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
-import { User } from '@/models/user/user.model';
-import { UserService } from '@/models/user/user.service';
+import { User } from '@/entities/user/user.model';
+import { UserService } from '@/entities/user/user.service';
 
 type PasswordOmitUser = Omit<User, 'password'>;
 
@@ -25,6 +25,7 @@ export class AuthService {
     const user = await this.usersService.findByUsernameWithAbilities(username);
 
     if (user != null && user.password === password) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user; // パスワード情報を外部に出さないようにする
       this.logonUserId = user.username;
       return result;

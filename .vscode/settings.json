@@ -2,5 +2,10 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "files.eol": "\n",
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "files.exclude": {
+    "**/node_modules/": true,
+    "backend/dist/": true,
+    "frontend/.next/": true
+  }
 }

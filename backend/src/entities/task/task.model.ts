@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import {
   Column,
@@ -10,8 +11,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Category } from '@/models/category/category.model';
-import { TaskContent } from '@/models/task-content/task-content.model';
+import { Category } from '@/entities/category/category.model';
+import { TaskContent } from '@/entities/task-content/task-content.model';
 
 @ObjectType()
 @Entity('tasks')

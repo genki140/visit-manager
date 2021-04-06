@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CreateTaskContentInput, TaskContent, UpdateTaskContentInput } from './task-content.model';
-import { TaskService } from '@/models/task/task.service';
+import { TaskService } from '@/entities/task/task.service';
 
 @Injectable()
 export class TaskContentService {

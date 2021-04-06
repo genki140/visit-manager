@@ -4,7 +4,7 @@ import { Strategy as BaseLocalStrategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { User } from '@/models/user/user.model';
+import { User } from '@/entities/user/user.model';
 
 type PasswordOmitUser = Omit<User, 'password'>;
 

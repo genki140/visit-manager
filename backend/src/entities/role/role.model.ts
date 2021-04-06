@@ -4,6 +4,8 @@ import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColum
 import { Ability } from '../ability/ability.model';
 import { User } from '../user/user.model';
 
+// 役割テーブル。これは組織ごとに変化せず共通とする
+
 @ObjectType()
 @Entity('roles')
 export class Role {
@@ -35,16 +37,5 @@ export class Role {
       referencedColumnName: 'id',
     },
   })
-  // @JoinTable({
-  //   name: 'junction',
-  //   joinColumn: {
-  //     name: 'entity_a_id',
-  //     referencedColumnName: 'id',
-  //   },
-  //   inverseJoinColumn: {
-  //     name: 'entity_b_id',
-  //     referencedColumnName: 'id',
-  //   },
-  // })
   abilities?: Ability[];
 }
