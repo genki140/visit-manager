@@ -10,13 +10,15 @@
 
 - デバッグタブから「Debug All」を実行。
 
-## DB 構造変更
+## DB 構造変更等
 
 コードファースト開発のため、バックエンドのモデル、サービス、リゾルバ―を書き換える。
-
 npx nest g mo entities/name
-npx nest g s entities/name
-npx nest g r entities/name
+npx nest g s entities/name (service が必要なら)
+npx nest g r entities/name (resolver が必要なら)
+(.model.ts も作成)
+
+今のところ、サーバー側で自動的に DB マイグレーションが走る。
 
 クライアントは npm run gen で graphql 用のタイプを自動生成可能。
 

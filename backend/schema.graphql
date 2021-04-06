@@ -29,11 +29,15 @@ type RoledUser {
 
 type User {
   id: ID!
+  createdAt: Date!
   username: String!
   password: String!
   name: String!
   roledUsers: [RoledUser!]!
 }
+
+"""Date custom scalar type"""
+scalar Date
 
 type Query {
   users(ids: [ID!] = null): [User!]!

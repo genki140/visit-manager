@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { MaxLength } from 'class-validator';
 import { Role } from '../role/role.model';
 import { Organization } from '../organization/organization.model';
@@ -12,6 +12,10 @@ export class User {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number = 0;
+
+  @Field()
+  @CreateDateColumn()
+  createdAt?: Date;
 
   /** ユーザーID */
   @Field()

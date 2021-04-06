@@ -56,7 +56,7 @@ type EnvironmentVariables = {
   ],
   controllers: [AuthController],
   providers: [
-    // DateScalar,
+    DateScalar,
     {
       provide: APP_GUARD,
       useClass: GqlAbilitiesGuard,

@@ -6,10 +6,6 @@ export const USERS = gql`
     users {
       id
       username
-      role {
-        id
-        name
-      }
     }
   }
 `;
