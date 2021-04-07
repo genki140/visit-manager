@@ -1,26 +1,32 @@
-import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+// import先が'passport-local'では無い事に注意！
+import { ExtractJwt, Strategy as BaseJwtStrategy } from 'passport-jwt';
+
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PassportModule } from '@nestjs/passport';
+import { PassportStrategy } from '@nestjs/passport';
+import { Request } from 'express';
+import { JwtPayload } from './auth.service';
 
-import { AuthService } from './auth.service';
+// cookie
+// https://wanago.io/2020/05/25/api-nestjs-authenticating-users-bcrypt-passport-jwt-cookies/
 
-// Strategyクラス
-import { LocalStrategy } from './local.strategy';
-import { UserModule } from '@/entities/user/user.module';
-import { JwtStrategy } from './jwt.strategy';
-
-@Module({
-  imports: [
-    UserModule,
-    PassportModule,
-    // JWTを使うための設定をしている
-    JwtModule.registerAsync({
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      useFactory: async (configService: ConfigService) => {
-        return {
-          // envファイルから秘密鍵を渡す
-          secret: `-----BEGIN RSA PRIVATE KEY-----
+/**
+ * @description JWTの認証処理を行うクラス
+ */
+@Injectable()
+export class JwtStrategy extends PassportStrategy(BaseJwtStrategy) {
+  constructor(private readonly configService: ConfigService) {
+    super({
+      // クッキーからトークンを読み込む関数を返す
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request: Request) => {
+          return request?.cookies?.access_token;
+        },
+      ]),
+      // 有効期間を無視するかどうか
+      ignoreExpiration: false,
+      // envファイルから秘密鍵を渡す
+      secretOrKey: `-----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-128-CBC,3703F2E32E5ACD29B74F61707732D67E
 
@@ -74,18 +80,17 @@ bcqcDrtXyud96g2p0HncoqSvcsslN2RvMxhYQBAOnj8L11C8QaQCLC3cHHZhjR+Z
 oUSEhAxkMtTDAfXVV5lOB7aWbWRD276pM4xBo3+4GmwGH7fOikqx1a0F8OaPnpsN
 Kv3w3+N8MLQard8THBGklUjMQV+V+rqU4wche3HmNB1pa2PqcpcXS6KfS991V3q+
 -----END RSA PRIVATE KEY-----`,
-          signOptions: {
-            // 有効期間を設定
-            // 指定する値は以下を参照
-            // https://github.com/vercel/ms
-            expiresIn: '7 days', // '1200s', //20分
-          },
-        };
-      },
-      inject: [ConfigService], // useFactoryで使う為にConfigServiceを注入する
-    }),
-  ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService],
-})
-export class AuthModule {}
+    });
+  }
+
+  // ここでPayloadを使ったバリデーション処理を実行できる
+  // Payloadは、AuthService.login()で定義した値
+  async validate(payload: JwtPayload): Promise<JwtPayload> {
+    console.log('jwtValidate');
+    console.log(payload);
+    return { username: payload.username };
+  }
+}
+
+//パブリックキーは以下の
+//ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDa8aqKdU8gj9kinXU+jeLF9QHH2LsGXnMHjr294u/PA2XwM7MCGAG3cTPMhlb1Z4dWGPDfEzWv3FzPjCDJj/ihoZN91bYMsU77UdyWQ4A25ndKEYBaKcEQf2UvYuePfgEaTqfj+w0D3Kwpjn6SgeGo89wsjPbGXXUuuUMUF1DLT1pbkaEekmYTiwi3nuNRhPcmJmduU+LPRamxNOhILrB9/qZnExZUFmke3+HVYBOL/cHdaXW/ikT8aJSYAYs7XculjqzEqRYVLdf6nsquRA4R3YEL2vnA9zJnCsaENgKqqPhDyoIpIijQeAR3IpMqS4IMaSEnsW7g6NxLoM3O8ujWAx4roLKTtN1W+pyq48PMNqD2TMY7qEtC4eJybB27b2i0WHpqiiCssmhKOX5avNQr/OKA4L2x6SLru60k8epZ+xee9YsaxIJe9l0VyT9daJJxw0RI4tzoIlf5UwL3XvLirs2CCgevWGr8dV1qK4/uy0usdx2D1Jh114+D5Ifdr5FtUB96+uGVPuTzOSstHCxpts/gyh0minX2LJtNrSBTJmpy2RbSbSlE3JG4kmYWcAexJVc7ZjbwHhv2Ml6bAUxKxAixHDW7oiAnbfpTcueB9YyyT8gtxrT87eifNLOnocatfb2ycP7Xeb8iFGzNhQs8rGNySTG9ahS3eCwxOXGouQ== root@524530b037fe

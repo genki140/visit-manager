@@ -5,8 +5,8 @@ import { CreateUserInput, User } from '@/entities/user/user.model';
 import { UserService } from '@/entities/user/user.service';
 import { FieldNode, GraphQLResolveInfo, SelectionSetNode } from 'graphql';
 import { parseResolveInfo } from 'graphql-parse-resolve-info';
-import { AbilityTypes, CurrentUser, JwtStrategy, RequiredAbilities } from '@/auth/auth.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 
 // export const CustomDecorator = createParamDecorator((data: unknown, ctx: ExecutionContext) =>
 //   GqlExecutionContext.create(ctx).getContext(),
@@ -17,7 +17,7 @@ export class UserResolver {
   constructor(@Inject(UserService) private userService: UserService) {}
 
   /** ユーザー一覧を権限情報と共に取得します */
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(GqlAuthGuard)
   // @UseGuards(JwtStrategy)
   @Query(() => [User])
   // @RequiredAbilities(AbilityTypes.Administrator)
@@ -26,6 +26,7 @@ export class UserResolver {
     @Args('ids', { type: () => [ID], nullable: true, defaultValue: null }) ids: number[] | null,
     // @Info() info: GraphQLResolveInfo,
     // @Request() req: any,
+    @CurrentUser() currentUser: any,
   ) {
     // RequiredAbilities([AbilityTypes.Administrator], currentUser, organizationId);
 
@@ -33,8 +34,8 @@ export class UserResolver {
     const relations: string[] = [];
     // const parsedInfo = parseResolveInfo(info) as any;
 
-    console.log('users.req');
-    // console.log(req);
+    console.log('currentUser');
+    console.log(currentUser);
 
     // console.log(parsedInfo);
     // console.log(ids);
