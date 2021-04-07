@@ -13,15 +13,19 @@ export class Organization {
   @PrimaryGeneratedColumn()
   id: number = 0;
 
-  /** 組織名 */
+  /** 組織名(URLに含まれるため重複できない) */
   @Field()
   @Column({ length: 100 })
   name: string = '';
 
+  @Field()
+  @Column({ length: 100 })
+  test: string = '';
+
   /** ユーザーとのリレーション */
   @Field(() => [RoledUser])
-  @OneToMany(() => RoledUser, (userOrganization) => userOrganization.organization)
-  userOrganizations?: RoledUser[];
+  @OneToMany(() => RoledUser, (roledUser) => roledUser.organization)
+  roledUsers?: RoledUser[];
 
   // /** ユーザー */
   // @Field(() => [User])

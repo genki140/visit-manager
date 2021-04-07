@@ -5,7 +5,6 @@ export const USERS = gql`
   query GetUserSettings {
     users {
       id
-      username
     }
   }
 `;

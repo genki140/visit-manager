@@ -15,7 +15,7 @@ export class RoledUser {
 
   /** 組織 */
   @Field(() => Organization)
-  @ManyToOne(() => Organization, (organization) => organization.userOrganizations, { nullable: false })
+  @ManyToOne(() => Organization, (organization) => organization.roledUsers, { nullable: false })
   organization?: Organization;
 
   /** ユーザー */

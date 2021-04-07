@@ -5,7 +5,8 @@
 type Organization {
   id: ID!
   name: String!
-  userOrganizations: [RoledUser!]!
+  test: String!
+  roledUsers: [RoledUser!]!
 }
 
 type Ability {
@@ -45,6 +46,7 @@ type Query {
   categories: [Role!]!
   ability(id: ID!): Ability
   abilities: [Ability!]!
+  organizations(ids: [ID!] = null): [Organization!]!
 }
 
 type Mutation {

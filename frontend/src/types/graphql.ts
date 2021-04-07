@@ -54,7 +54,7 @@ export type Organization = {
   __typename?: 'Organization';
   id: Scalars['ID'];
   name: Scalars['String'];
-  userOrganizations: Array<RoledUser>;
+  roledUsers: Array<RoledUser>;
 };
 
 export type Query = {
@@ -64,6 +64,7 @@ export type Query = {
   categories: Array<Role>;
   ability?: Maybe<Ability>;
   abilities: Array<Ability>;
+  organizations: Array<Organization>;
 };
 
 
@@ -79,6 +80,11 @@ export type QueryRoleArgs = {
 
 export type QueryAbilityArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryOrganizationsArgs = {
+  ids?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type Role = {
@@ -114,7 +120,18 @@ export type GetUserSettingsQuery = (
   { __typename?: 'Query' }
   & { users: Array<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'username'>
+    & Pick<User, 'id'>
+  )> }
+);
+
+export type GetOrganizationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetOrganizationsQuery = (
+  { __typename?: 'Query' }
+  & { organizations: Array<(
+    { __typename?: 'Organization' }
+    & Pick<Organization, 'id' | 'name'>
   )> }
 );
 
@@ -123,7 +140,6 @@ export const GetUserSettingsDocument = gql`
     query GetUserSettings {
   users {
     id
-    username
   }
 }
     `;
@@ -154,3 +170,38 @@ export function useGetUserSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetUserSettingsQueryHookResult = ReturnType<typeof useGetUserSettingsQuery>;
 export type GetUserSettingsLazyQueryHookResult = ReturnType<typeof useGetUserSettingsLazyQuery>;
 export type GetUserSettingsQueryResult = Apollo.QueryResult<GetUserSettingsQuery, GetUserSettingsQueryVariables>;
+export const GetOrganizationsDocument = gql`
+    query GetOrganizations {
+  organizations {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetOrganizationsQuery__
+ *
+ * To run a query within a React component, call `useGetOrganizationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrganizationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrganizationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetOrganizationsQuery(baseOptions?: Apollo.QueryHookOptions<GetOrganizationsQuery, GetOrganizationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrganizationsQuery, GetOrganizationsQueryVariables>(GetOrganizationsDocument, options);
+      }
+export function useGetOrganizationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationsQuery, GetOrganizationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrganizationsQuery, GetOrganizationsQueryVariables>(GetOrganizationsDocument, options);
+        }
+export type GetOrganizationsQueryHookResult = ReturnType<typeof useGetOrganizationsQuery>;
+export type GetOrganizationsLazyQueryHookResult = ReturnType<typeof useGetOrganizationsLazyQuery>;
+export type GetOrganizationsQueryResult = Apollo.QueryResult<GetOrganizationsQuery, GetOrganizationsQueryVariables>;
