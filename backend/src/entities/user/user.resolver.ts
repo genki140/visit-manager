@@ -1,11 +1,12 @@
-import { createParamDecorator, ExecutionContext, Inject } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext, Inject, UseGuards, Request } from '@nestjs/common';
 import { Args, Context, GqlExecutionContext, ID, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CreateUserInput, User } from '@/entities/user/user.model';
 import { UserService } from '@/entities/user/user.service';
-import { AbilityTypes, RequiredAbilities } from '@/auth/gql-abilities-guards';
 import { FieldNode, GraphQLResolveInfo, SelectionSetNode } from 'graphql';
 import { parseResolveInfo } from 'graphql-parse-resolve-info';
+import { AbilityTypes, CurrentUser, JwtStrategy, RequiredAbilities } from '@/auth/auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 // export const CustomDecorator = createParamDecorator((data: unknown, ctx: ExecutionContext) =>
 //   GqlExecutionContext.create(ctx).getContext(),
@@ -16,15 +17,24 @@ export class UserResolver {
   constructor(@Inject(UserService) private userService: UserService) {}
 
   /** ユーザー一覧を権限情報と共に取得します */
+  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtStrategy)
   @Query(() => [User])
-  @RequiredAbilities(AbilityTypes.Administrator)
+  // @RequiredAbilities(AbilityTypes.Administrator)
   async users(
+    @Args('organizationId', { type: () => [ID] }) organizationId: string,
     @Args('ids', { type: () => [ID], nullable: true, defaultValue: null }) ids: number[] | null,
     @Info() info: GraphQLResolveInfo,
+    @Request() req: any,
   ) {
+    // RequiredAbilities([AbilityTypes.Administrator], currentUser, organizationId);
+
     // クエリにリレーションオブジェクトが指定されている場合にのみリレーションを設定（もうちょっと簡略化できそう）
     const relations: string[] = [];
     const parsedInfo = parseResolveInfo(info) as any;
+
+    console.log('users.req');
+    console.log(req);
 
     // console.log(parsedInfo);
     // console.log(ids);

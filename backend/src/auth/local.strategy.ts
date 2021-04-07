@@ -6,8 +6,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from '@/entities/user/user.model';
 
-type PasswordOmitUser = Omit<User, 'password'>;
-
 /**
  * @description usernameとpasswordを使った認証処理を行うクラス
  */
@@ -18,14 +16,12 @@ export class LocalStrategy extends PassportStrategy(BaseLocalStrategy) {
   }
 
   // passport-localは、デフォルトで username と password をパラメーターで受け取る
-  async validate(username: string, password: string): Promise<PasswordOmitUser> {
+  async validate(username: string, password: string): Promise<User> {
     // 認証して結果を受け取る
     const user = await this.authService.validateUser(username, password);
-
     if (user == null) {
       throw new UnauthorizedException(); // 認証失敗
     }
-
     return user;
   }
 }

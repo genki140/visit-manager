@@ -15,7 +15,6 @@ import { AbilityModule } from '@/entities/ability/ability.module';
 import { DateScalar } from '@/scalars/date.scalar';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
-import { GqlAbilitiesGuard } from './auth/gql-abilities-guards';
 
 type EnvironmentVariables = {
   DB_HOST: string;
@@ -57,10 +56,10 @@ type EnvironmentVariables = {
   controllers: [AuthController],
   providers: [
     DateScalar,
-    {
-      provide: APP_GUARD,
-      useClass: GqlAbilitiesGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuard,
+    // },
   ],
 })
 export class AppModule {}

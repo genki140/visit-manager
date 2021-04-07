@@ -6,15 +6,14 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 
 // Strategyクラス
-// import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { UserModule } from '@/entities/user/user.module';
+import { JwtStrategy } from './auth.guard';
 
 @Module({
   imports: [
     UserModule,
     PassportModule,
-
     // JWTを使うための設定をしている
     JwtModule.registerAsync({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -86,8 +85,7 @@ Kv3w3+N8MLQard8THBGklUjMQV+V+rqU4wche3HmNB1pa2PqcpcXS6KfS991V3q+
       inject: [ConfigService], // useFactoryで使う為にConfigServiceを注入する
     }),
   ],
-  // providers: [AuthService, LocalStrategy, JwtStrategy],
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -10,6 +10,12 @@
 
 - デバッグタブから「Debug All」を実行。
 
+## デバッグ
+
+/login からログイン後、/graphql にアクセスして graphql をテストするには、graphql 画面の settings の設定を以下のように変更する
+
+"request.credentials": "include",
+
 ## DB 構造変更等
 
 コードファースト開発のため、バックエンドのモデル、サービス、リゾルバ―を書き換える。

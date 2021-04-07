@@ -19,23 +19,23 @@ export class UserService {
     }
   }
 
-  findOne = async (id: number) => this.userRepository.findOne(id);
+  // findOne = async (id: number) => this.userRepository.findOne(id);
 
-  async findByUsernameWithAbilities(username: string) {
-    return this.userRepository.findOne({ where: { username }, relations: ['role', 'role.abilities'] });
-  }
+  // async findByUsernameWithAbilities(username: string) {
+  //   return this.userRepository.findOne({ where: { username }, relations: ['role', 'role.abilities'] });
+  // }
 
-  async findAll() {
-    return this.userRepository.find({ relations: ['role', 'role.abilities'] });
-  }
+  // async findAll() {
+  //   return this.userRepository.find({ relations: ['role', 'role.abilities'] });
+  // }
 
-  async findByIds(ids: number[]) {
-    return this.userRepository.findByIds(ids);
-  }
+  // async findByIds(ids: number[]) {
+  //   return this.userRepository.findByIds(ids);
+  // }
 
-  async findByUserId(userId: string) {
-    return await this.userRepository.findOne({ where: { username: userId } });
-  }
+  // async findByUserId(userId: string) {
+  //   return await this.userRepository.findOne({ where: { username: userId } });
+  // }
 
   async create(payload: CreateUserInput) {
     // 同名チェック
@@ -47,6 +47,5 @@ export class UserService {
 
   async delete(id: number) {
     await this.userRepository.delete(id);
-    return await this.findOne(id);
   }
 }
