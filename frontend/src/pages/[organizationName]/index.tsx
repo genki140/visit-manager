@@ -1,19 +1,11 @@
 import React, { ReactNode } from 'react';
-import {
-  Backdrop,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  CircularProgress,
-  StyledProps,
-  Typography,
-} from '@material-ui/core';
+import { Backdrop, Button, Card, CardActionArea, CardContent, CircularProgress, Typography } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import Layout from '@/components/layout';
 import Link from 'next/link';
 import { ApolloError, gql } from '@apollo/react-hooks';
 import { useGetOrganizationsQuery } from '@/types/graphql';
+import { StyledProps } from '@/types/styled-props';
 
 // ページ情報が取得できなければエラー
 const organizationsGql = gql`
@@ -21,24 +13,27 @@ const organizationsGql = gql`
     organizations {
       id
       name
+      roledUsers {
+        roles {
+          name
+          abilities {
+            name
+          }
+        }
+      }
     }
   }
 `;
 
-const LoadingContainer = ({
-  children,
-  loading,
-  error,
-  ...rest
-}: { children: ReactNode; loading: boolean; error?: ApolloError } & StyledProps) => {
+const LoadingContainer = (props: { children: ReactNode; loading: boolean; error?: ApolloError } & StyledProps) => {
   return (
-    <div {...rest}>
-      {loading ? (
-        <Backdrop open={loading}>
+    <div className={props.className}>
+      {props.loading ? (
+        <Backdrop open={props.loading}>
           <CircularProgress color="inherit" />
         </Backdrop>
       ) : (
-        <div>{children}</div>
+        <div>{props.children}</div>
       )}
 
       {/* {

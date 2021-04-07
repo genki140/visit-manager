@@ -9,7 +9,7 @@
     "build": "next build -p 3001",
     "start": "next start -p 3001",
     "type-check": "tsc",
-    "gen": "graphql-codegen --config codegen.yml"
+    "gen": "graphql-codegen"
   },
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",

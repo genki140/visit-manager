@@ -132,6 +132,17 @@ export type GetOrganizationsQuery = (
   & { organizations: Array<(
     { __typename?: 'Organization' }
     & Pick<Organization, 'id' | 'name'>
+    & { roledUsers: Array<(
+      { __typename?: 'RoledUser' }
+      & { roles: Array<(
+        { __typename?: 'Role' }
+        & Pick<Role, 'name'>
+        & { abilities: Array<(
+          { __typename?: 'Ability' }
+          & Pick<Ability, 'name'>
+        )> }
+      )> }
+    )> }
   )> }
 );
 
@@ -175,6 +186,14 @@ export const GetOrganizationsDocument = gql`
   organizations {
     id
     name
+    roledUsers {
+      roles {
+        name
+        abilities {
+          name
+        }
+      }
+    }
   }
 }
     `;

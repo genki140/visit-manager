@@ -5,7 +5,6 @@
 type Organization {
   id: ID!
   name: String!
-  test: String!
   roledUsers: [RoledUser!]!
 }
 

@@ -7,5 +7,6 @@
     "**/node_modules/": true,
     "backend/dist/": true,
     "frontend/.next/": true
-  }
+  },
+  "graphql-config.load.rootDir": "./frontend"
 }

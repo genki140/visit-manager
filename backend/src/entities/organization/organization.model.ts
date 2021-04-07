@@ -18,10 +18,6 @@ export class Organization {
   @Column({ length: 100 })
   name: string = '';
 
-  @Field()
-  @Column({ length: 100 })
-  test: string = '';
-
   /** ユーザーとのリレーション */
   @Field(() => [RoledUser])
   @OneToMany(() => RoledUser, (roledUser) => roledUser.organization)
