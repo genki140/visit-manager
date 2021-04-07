@@ -1,13 +1,13 @@
 import React from 'react';
 import { gql } from '@apollo/react-hooks';
 
-export const USERS = gql`
-  query GetUserSettings {
-    users {
-      id
-    }
-  }
-`;
+// export const USERS = gql`
+//   query GetUserSettings {
+//     users {
+//       id
+//     }
+//   }
+// `;
 
 const UserSettings = () => {
   //   const { loading, error, data } = useGetUsersQuery;

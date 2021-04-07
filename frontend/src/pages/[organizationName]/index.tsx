@@ -6,62 +6,42 @@ import Link from 'next/link';
 import { ApolloError, gql } from '@apollo/react-hooks';
 import { useGetOrganizationsQuery } from '@/types/graphql';
 import { StyledProps } from '@/types/styled-props';
+import LoadingContainer from '@/components/loading-container';
 
-// ページ情報が取得できなければエラー
-const organizationsGql = gql`
-  query GetOrganizations {
-    organizations {
-      id
-      name
-      roledUsers {
-        roles {
-          name
-          abilities {
-            name
-          }
-        }
-      }
-    }
-  }
-`;
-
-const LoadingContainer = (props: { children: ReactNode; loading: boolean; error?: ApolloError } & StyledProps) => {
-  return (
-    <div className={props.className}>
-      {props.loading ? (
-        <Backdrop open={props.loading}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      ) : (
-        <div>{props.children}</div>
-      )}
-
-      {/* {
-        loading ? 
-      <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop> : error != null ? <ErrorPage
-      {children} */}
-    </div>
-  );
-};
+// // ページ情報が取得できなければエラー
+// const organizationsGql = gql`
+//   query GetOrganizations {
+//     organizations {
+//       id
+//       name
+//       roledUsers {
+//         roles {
+//           name
+//           abilities {
+//             name
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;
 
 /** 組織ルートページ */
 const Page = () => {
   const router = useRouter();
   const organizationName = (router.query.organizationName ?? '').toString();
   const organizationPath = organizationName === '' ? '' : '/' + organizationName;
-  const { loading, error, data } = useGetOrganizationsQuery();
+  // const { loading, error, data } = useGetOrganizationsQuery();
 
   return (
     <Layout title={organizationName}>
       <div>ここは組織のルートページ。 自分が保持している区域の一覧を表示する。</div>
 
-      <LoadingContainer loading={loading} error={error}>
+      {/* <LoadingContainer loading={loading} error={error}>
         {data?.organizations.map((x) => (
           <div>{x.name}</div>
         ))}
-      </LoadingContainer>
+      </LoadingContainer> */}
 
       <Link href={organizationPath + '/A-1'}>
         <Button variant="contained" color="primary">

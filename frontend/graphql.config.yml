@@ -1,6 +1,7 @@
 schema: ../backend/schema.graphql
 documents:
   - ./src/**/*.{graphql,js,ts,jsx,tsx}
+  - '!./src/types/graphql.ts'
 extensions:
   codegen:
     generates:

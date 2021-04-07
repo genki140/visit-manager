@@ -70,6 +70,7 @@ export type Query = {
 
 export type QueryUsersArgs = {
   ids?: Maybe<Array<Scalars['ID']>>;
+  organizationId: Array<Scalars['ID']>;
 };
 
 
@@ -80,11 +81,6 @@ export type QueryRoleArgs = {
 
 export type QueryAbilityArgs = {
   id: Scalars['ID'];
-};
-
-
-export type QueryOrganizationsArgs = {
-  ids?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type Role = {
@@ -113,17 +109,6 @@ export type User = {
   roledUsers: Array<RoledUser>;
 };
 
-export type GetUserSettingsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetUserSettingsQuery = (
-  { __typename?: 'Query' }
-  & { users: Array<(
-    { __typename?: 'User' }
-    & Pick<User, 'id'>
-  )> }
-);
-
 export type GetOrganizationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -132,68 +117,15 @@ export type GetOrganizationsQuery = (
   & { organizations: Array<(
     { __typename?: 'Organization' }
     & Pick<Organization, 'id' | 'name'>
-    & { roledUsers: Array<(
-      { __typename?: 'RoledUser' }
-      & { roles: Array<(
-        { __typename?: 'Role' }
-        & Pick<Role, 'name'>
-        & { abilities: Array<(
-          { __typename?: 'Ability' }
-          & Pick<Ability, 'name'>
-        )> }
-      )> }
-    )> }
   )> }
 );
 
 
-export const GetUserSettingsDocument = gql`
-    query GetUserSettings {
-  users {
-    id
-  }
-}
-    `;
-
-/**
- * __useGetUserSettingsQuery__
- *
- * To run a query within a React component, call `useGetUserSettingsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUserSettingsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetUserSettingsQuery(baseOptions?: Apollo.QueryHookOptions<GetUserSettingsQuery, GetUserSettingsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserSettingsQuery, GetUserSettingsQueryVariables>(GetUserSettingsDocument, options);
-      }
-export function useGetUserSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserSettingsQuery, GetUserSettingsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserSettingsQuery, GetUserSettingsQueryVariables>(GetUserSettingsDocument, options);
-        }
-export type GetUserSettingsQueryHookResult = ReturnType<typeof useGetUserSettingsQuery>;
-export type GetUserSettingsLazyQueryHookResult = ReturnType<typeof useGetUserSettingsLazyQuery>;
-export type GetUserSettingsQueryResult = Apollo.QueryResult<GetUserSettingsQuery, GetUserSettingsQueryVariables>;
 export const GetOrganizationsDocument = gql`
     query GetOrganizations {
   organizations {
     id
     name
-    roledUsers {
-      roles {
-        name
-        abilities {
-          name
-        }
-      }
-    }
   }
 }
     `;
