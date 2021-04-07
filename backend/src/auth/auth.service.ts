@@ -4,6 +4,10 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@/entities/user/user.model';
 import { UserService } from '@/entities/user/user.service';
 
+export interface JwtPayload {
+  username: string;
+}
+
 /**
  * @description Passportでは出来ない認証処理をするクラス
  */
@@ -12,7 +16,7 @@ export class AuthService {
   constructor(private jwtService: JwtService, private usersService: UserService) {}
 
   // ユーザーを認証する
-  async validateUser(username: string, password: string): Promise<User | undefined> {
+  async validateUser(username: string, password: string): Promise<JwtPayload | undefined> {
     const user = (
       await this.usersService.find(undefined, {
         where: { username },
@@ -22,13 +26,13 @@ export class AuthService {
 
     if (user != null && user.password === password) {
       user.password = '';
-      return user;
+      return { username: user.username };
     }
     return undefined;
   }
 
   // jwt tokenを返す
   getToken(user: User) {
-    return this.jwtService.sign(Object.assign({}, user));
+    return this.jwtService.sign({ username: user.username } as JwtPayload);
   }
 }

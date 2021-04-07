@@ -3,7 +3,7 @@ import { Strategy as BaseLocalStrategy } from 'passport-local';
 
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService, JwtPayload } from './auth.service';
 import { User } from '@/entities/user/user.model';
 
 /**
@@ -16,7 +16,7 @@ export class LocalStrategy extends PassportStrategy(BaseLocalStrategy) {
   }
 
   // passport-localは、デフォルトで username と password をパラメーターで受け取る
-  async validate(username: string, password: string): Promise<User> {
+  async validate(username: string, password: string): Promise<JwtPayload> {
     // 認証して結果を受け取る
     const user = await this.authService.validateUser(username, password);
     if (user == null) {

@@ -17,24 +17,24 @@ export class UserResolver {
   constructor(@Inject(UserService) private userService: UserService) {}
 
   /** ユーザー一覧を権限情報と共に取得します */
-  // @UseGuards(AuthGuard('jwt'))
-  @UseGuards(JwtStrategy)
+  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(JwtStrategy)
   @Query(() => [User])
   // @RequiredAbilities(AbilityTypes.Administrator)
   async users(
     @Args('organizationId', { type: () => [ID] }) organizationId: string,
     @Args('ids', { type: () => [ID], nullable: true, defaultValue: null }) ids: number[] | null,
-    @Info() info: GraphQLResolveInfo,
-    @Request() req: any,
+    // @Info() info: GraphQLResolveInfo,
+    // @Request() req: any,
   ) {
     // RequiredAbilities([AbilityTypes.Administrator], currentUser, organizationId);
 
     // クエリにリレーションオブジェクトが指定されている場合にのみリレーションを設定（もうちょっと簡略化できそう）
     const relations: string[] = [];
-    const parsedInfo = parseResolveInfo(info) as any;
+    // const parsedInfo = parseResolveInfo(info) as any;
 
     console.log('users.req');
-    console.log(req);
+    // console.log(req);
 
     // console.log(parsedInfo);
     // console.log(ids);

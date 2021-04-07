@@ -42,6 +42,7 @@ export function RequiredAbilities(abilityTypes: AbilityTypes[], user: User, orga
 }
 
 import { ExtractJwt, Strategy as BaseJwtStrategy } from 'passport-jwt';
+import { JwtPayload } from './auth.service';
 
 // @Injectable()
 // export class GqlAuthGuard extends AuthGuard('jwt') {
@@ -62,7 +63,7 @@ export class JwtStrategy extends PassportStrategy(BaseJwtStrategy) {
     super({
       // Authorization bearerからトークンを読み込む関数を返す
       jwtFromRequest: () =>
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJnZW5raSIsInBhc3N3b3JkIjoiIiwibmFtZSI6Iuefs-S4uOWFg-awlyIsImNyZWF0ZWRBdCI6IjIwMjEtMDQtMDZUMTQ6NDM6MDkuMjEyWiIsInJvbGVkVXNlcnMiOlt7ImlkIjoxLCJvcmdhbml6YXRpb24iOnsiaWQiOjEsIm5hbWUiOiJHZW5raSBDb21wYW55In0sInJvbGVzIjpbeyJpZCI6MSwibmFtZSI6IkFkbWluIiwiYWJpbGl0aWVzIjpbeyJpZCI6MSwibmFtZSI6IkFkbWluaXN0cmF0b3IifV19XX1dLCJpYXQiOjE2MTc3ODE1NDUsImV4cCI6MTYxODM4NjM0NX0.NDgRrCCy6irX8OP1Vrpkv-SmKd_iqRI9xTa5CmQSrrw', //ExtractJwt.fromAuthHeaderAsBearerToken(),
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdlbmtpIiwiaWF0IjoxNjE3Nzk5Mjk1LCJleHAiOjE2MTg0MDQwOTV9.ATbhje-k4L8VXU-5YNyVzEByqJseY_Qb1CZubpboeuo', //ExtractJwt.fromAuthHeaderAsBearerToken(),
       // 有効期間を無視するかどうか
       ignoreExpiration: false,
       // envファイルから秘密鍵を渡す
@@ -125,10 +126,10 @@ Kv3w3+N8MLQard8THBGklUjMQV+V+rqU4wche3HmNB1pa2PqcpcXS6KfS991V3q+
 
   // ここでPayloadを使ったバリデーション処理を実行できる
   // Payloadは、AuthService.login()で定義した値
-  async validate(user: User): Promise<User> {
+  async validate(user: JwtPayload): Promise<JwtPayload> {
     console.log('USER!!');
     console.log(user);
-    return user; // { userId: payload.userId, username: payload.username };
+    return { username: user.username }; // { userId: payload.userId, username: payload.username };
   }
 }
 
