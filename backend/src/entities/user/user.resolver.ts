@@ -24,9 +24,8 @@ export class UserResolver {
   async users(
     @Args('organizationId', { type: () => [ID] }) organizationId: string,
     @Args('ids', { type: () => [ID], nullable: true, defaultValue: null }) ids: number[] | null,
-    // @Info() info: GraphQLResolveInfo,
-    // @Request() req: any,
-    @CurrentUser() currentUser: any,
+    @Info() info: GraphQLResolveInfo,
+    @CurrentUser() currentUser: User,
   ) {
     // RequiredAbilities([AbilityTypes.Administrator], currentUser, organizationId);
 

@@ -45,7 +45,7 @@ type Query {
   categories: [Role!]!
   ability(id: ID!): Ability
   abilities: [Ability!]!
-  organizations(ids: [ID!] = null): [Organization!]!
+  organizations: [Organization!]!
 }
 
 type Mutation {

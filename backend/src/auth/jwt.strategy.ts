@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
-import { JwtPayload } from './auth.service';
+import { User } from '@/entities/user/user.model';
 
 // cookie
 // https://wanago.io/2020/05/25/api-nestjs-authenticating-users-bcrypt-passport-jwt-cookies/
@@ -85,10 +85,8 @@ Kv3w3+N8MLQard8THBGklUjMQV+V+rqU4wche3HmNB1pa2PqcpcXS6KfS991V3q+
 
   // ここでPayloadを使ったバリデーション処理を実行できる
   // Payloadは、AuthService.login()で定義した値
-  async validate(payload: JwtPayload): Promise<JwtPayload> {
-    console.log('jwtValidate');
-    console.log(payload);
-    return { username: payload.username };
+  async validate(payload: User): Promise<User> {
+    return payload;
   }
 }
 

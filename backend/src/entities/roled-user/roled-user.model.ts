@@ -16,12 +16,12 @@ export class RoledUser {
   /** 組織 */
   @Field(() => Organization)
   @ManyToOne(() => Organization, (organization) => organization.roledUsers, { nullable: false })
-  organization?: Organization;
+  organization: Organization = new Organization();
 
   /** ユーザー */
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.roledUsers, { nullable: false })
-  user?: User;
+  user: User = new User();
 
   /** 役割 */
   @Field(() => [Role])

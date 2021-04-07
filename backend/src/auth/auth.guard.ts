@@ -16,6 +16,33 @@ import * as jwt from 'jsonwebtoken';
 
 // graphqlへのアクセス時にトークンからユーザーIDを識別する
 
+// 権限のクラスを定義
+class AbilityType {
+  constructor(public readonly id: number) {}
+}
+
+// 権限とIDのリストを定義
+export const AbilityTypes = {
+  Administrator: new AbilityType(1),
+} as const;
+export type AbilityTypes = typeof AbilityTypes[keyof typeof AbilityTypes];
+
+export function RequiredAbilities(abilityTypes: AbilityTypes[], user: User, organizationId: string) {
+  const organization = user.roledUsers?.find(
+    (x) => x.organization?.id.toString() === organizationId || x.organization?.name === organizationId,
+  );
+  const abilityIds =
+    organization?.roles
+      ?.map((x) => x.abilities)
+      ?.flat()
+      ?.map((x) => x?.id) ?? [];
+  if (abilityTypes.every((x) => abilityIds.some((y) => y != null && x.id === y))) {
+    // ok
+  } else {
+    throw new UnauthorizedException();
+  }
+}
+
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('jwt') {
   getRequest(context: ExecutionContext) {
@@ -29,6 +56,8 @@ export const CurrentUser = createParamDecorator((data: unknown, context: Executi
   return ctx.getContext().req.user;
 });
 
+export const NoGuard = () => SetMetadata('noGuard', true);
+
 // export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext) => {
 //   const ctx = GqlExecutionContext.create(context);
 //   const user = ctx.getContext().req.User;
@@ -40,33 +69,6 @@ export const CurrentUser = createParamDecorator((data: unknown, context: Executi
 // graphqlのプレイグラウンドからは、ヘッダーに以下の様にトークンを入力して試験できる。
 // {
 //   "Authorization": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiZ2Vua2kxNDAiLCJpYXQiOjE2MTY5ODM5NjgsImV4cCI6MTYxNjk4NTE2OH0._7a8-yG4C7ZkED2OMsLGPo46NXtqyLdqOdachkjdVyI"
-// }
-
-// // 権限のクラスを定義
-// class AbilityType {
-//   constructor(public readonly id: number) {}
-// }
-
-// // 権限とIDのリストを定義
-// export const AbilityTypes = {
-//   Administrator: new AbilityType(1),
-// } as const;
-// export type AbilityTypes = typeof AbilityTypes[keyof typeof AbilityTypes];
-
-// export function RequiredAbilities(abilityTypes: AbilityTypes[], user: User, organizationId: string) {
-//   const organization = user.roledUsers?.find(
-//     (x) => x.organization?.id.toString() === organizationId || x.organization?.name === organizationId,
-//   );
-//   const abilityIds =
-//     organization?.roles
-//       ?.map((x) => x.abilities)
-//       ?.flat()
-//       ?.map((x) => x?.id) ?? [];
-//   if (abilityTypes.every((x) => abilityIds.some((y) => y != null && x.id === y))) {
-//     // ok
-//   } else {
-//     throw new UnauthorizedException();
-//   }
 // }
 
 // import { ExtractJwt, Strategy as BaseJwtStrategy } from 'passport-jwt';
@@ -289,8 +291,6 @@ export const CurrentUser = createParamDecorator((data: unknown, context: Executi
 //   //   return payload; // { userId: payload.userId, username: payload.username };
 //   // }
 // }
-
-export const NoGuard = () => SetMetadata('noGuard', true);
 
 // export const RequiredAbilities = (...requiredAbilities: AbilityType[]) =>
 //   SetMetadata('requiredAbilities', requiredAbilities);
