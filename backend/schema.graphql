@@ -39,13 +39,20 @@ type User {
 """Date custom scalar type"""
 scalar Date
 
+type Area {
+  id: ID!
+  name: String!
+  organization: Organization!
+}
+
 type Query {
-  users(ids: [ID!] = null, organizationId: [ID!]!): [User!]!
+  users(ids: [ID!] = null, organizationId: ID!): [User!]!
   role(id: ID!): Role
   categories: [Role!]!
   ability(id: ID!): Ability
   abilities: [Ability!]!
   organizations: [Organization!]!
+  areas(ids: [ID!] = null, organizationId: ID!): [Area!]!
 }
 
 type Mutation {

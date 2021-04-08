@@ -35,14 +35,11 @@ const Page = () => {
 
   return (
     <Layout title={organizationName}>
-      <div>ここは組織のルートページ。 自分が保持している区域の一覧を表示する。</div>
-
       {/* <LoadingContainer loading={loading} error={error}>
         {data?.organizations.map((x) => (
           <div>{x.name}</div>
         ))}
       </LoadingContainer> */}
-
       <Link href={organizationPath + '/A-1'}>
         <Button variant="contained" color="primary">
           A-1
@@ -53,7 +50,6 @@ const Page = () => {
           A-2
         </Button>
       </Link>
-
       <Card>
         <CardActionArea>
           <CardContent>
@@ -75,7 +71,6 @@ const Page = () => {
           </Button>
         </CardActions> */}
       </Card>
-
       <Link href={organizationPath + '/settings'}>組織設定</Link>
     </Layout>
   );

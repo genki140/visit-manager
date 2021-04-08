@@ -15,6 +15,7 @@ import { AbilityModule } from '@/entities/ability/ability.module';
 import { DateScalar } from '@/scalars/date.scalar';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
+import { AreaModule } from './entities/area/area.module';
 
 type EnvironmentVariables = {
   DB_HOST: string;
@@ -52,6 +53,7 @@ type EnvironmentVariables = {
     AuthModule,
     OrganizationModule,
     RoledUserModule,
+    AreaModule,
   ],
   controllers: [AuthController],
   providers: [

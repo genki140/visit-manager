@@ -31,12 +31,24 @@ export function RequiredAbilities(abilityTypes: AbilityTypes[], user: User, orga
   const organization = user.roledUsers?.find(
     (x) => x.organization?.id.toString() === organizationId || x.organization?.name === organizationId,
   );
-  const abilityIds =
+
+  let abilities =
     organization?.roles
-      ?.map((x) => x.abilities)
+      ?.map((x) => x.abilities ?? [])
       ?.flat()
-      ?.map((x) => x?.id) ?? [];
-  if (abilityTypes.every((x) => abilityIds.some((y) => y != null && x.id === y))) {
+      ?.map((x) => x) ?? [];
+  abilities = [...new Set(abilities)]; // 重複除外
+
+  // 必要な権限などデバッグ表示
+  console.log(
+    'UserAbilities = ' +
+      abilities.map((x) => x.name + '(' + x.id + ')') +
+      ', Required=' +
+      abilityTypes.map((x) => x.id) +
+      '',
+  );
+
+  if (abilityTypes.every((x) => abilities.some((y) => x.id === y.id))) {
     // ok
   } else {
     throw new UnauthorizedException();

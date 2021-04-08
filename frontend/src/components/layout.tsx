@@ -17,6 +17,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { useAppState } from '@/ducks/app';
 import Link from 'next/link';
+import MapIcon from '@material-ui/icons/Map';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,21 +29,6 @@ const useStyles = makeStyles((theme) => ({
   header: {
     gridRow: '1',
   },
-  // headerContent: {
-  //   display: 'grid',
-  //   gridTemplateColumns: '1fr auto',
-  //   border: '10px solid yellow',
-  // },
-  // headerLeft: {
-  //   gridColumn: '1',
-  //   border: '10px solid yellow',
-  //   display: 'flex',
-  // },
-  // headerRight: {
-  //   gridColumn: '2',
-  //   display: 'flex',
-  // },
-
   toolbarButtons: {
     marginLeft: 'auto',
   },
@@ -52,10 +38,6 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     gridRow: '3',
   },
-
-  // border: {
-  //   border: '10px solid yellow',
-  // },
 
   text: {
     padding: theme.spacing(2, 2, 0),
@@ -84,7 +66,9 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     margin: '0 auto',
   },
-
+  content: {
+    margin: 20,
+  },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
@@ -113,6 +97,10 @@ const Layout = ({ children, title = '既定値' }: { children: ReactNode; title:
             <IconButton edge="start" color="inherit">
               <MenuIcon />
             </IconButton>
+            <IconButton edge="start" color="inherit">
+              <MapIcon />
+            </IconButton>
+
             <Typography variant="h6">{title}</Typography>
             <div className={classes.toolbarButtons}>
               <Link href="/settings">
@@ -130,7 +118,9 @@ const Layout = ({ children, title = '既定値' }: { children: ReactNode; title:
         </AppBar>
       </header>
 
-      <div className={classes.body}>{children}</div>
+      <div className={classes.body}>
+        <div className={classes.content}>{children}</div>
+      </div>
 
       <header className={classes.footer}>
         <AppBar position="static">
