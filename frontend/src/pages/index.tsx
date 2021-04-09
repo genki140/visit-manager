@@ -16,24 +16,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 // ページ情報が取得できなければエラー
-export const queries = [
-  gql`
-    query GetOrganizations {
-      organizations {
-        id
-        name
-        # roledUsers {
-        #   roles {
-        #     name
-        #     abilities {
-        #       name
-        #     }
-        #   }
-        # }
-      }
+export const GetOrganizationsGql = gql`
+  query GetOrganizations {
+    organizations {
+      id
+      name
     }
-  `,
-];
+  }
+`;
 
 const IndexPage = () => {
   const classes = useStyles();

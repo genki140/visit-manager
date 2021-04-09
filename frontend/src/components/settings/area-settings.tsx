@@ -13,8 +13,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const USERS = gql`
-  query GetAreas($organizationId: ID!) {
+export const getAreasGql = gql`
+  query getAreas($organizationId: ID!) {
     areas(organizationId: $organizationId) {
       id
       name

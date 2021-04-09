@@ -1,4 +1,4 @@
-// typeormの接続設定
+// typeormの接続設定。変更するには.envファイルを編集すること
 
 module.exports = {
   type: 'mysql',

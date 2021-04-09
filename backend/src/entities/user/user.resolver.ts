@@ -46,11 +46,13 @@ export class UserResolver {
     //   relations.push('role.abilities');
     // }
 
-    // とりあえず
+    // とりあえず自動で読み込む。本当は↑の条件みたいなのをちゃんと設定し、不要なリレーションは含めないべき
     relations.push('roledUsers');
     relations.push('roledUsers.roles');
     relations.push('roledUsers.roles.abilities');
     relations.push('roledUsers.organization');
+    // relations.push('userAreas');
+    // relations.push('userAreas.organization');
 
     // // 以下は理想
     // const relationsTest = GetGraphqlQueryRelations([{type:'Role',path:'role'},{type:'Ability',path:'role.Abilities'}]);
