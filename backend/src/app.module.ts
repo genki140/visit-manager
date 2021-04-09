@@ -16,6 +16,8 @@ import { DateScalar } from '@/scalars/date.scalar';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { AreaModule } from './entities/area/area.module';
+import { UserAreaService } from './entities/user-area/user-area.service';
+import { UserAreaModule } from './entities/user-area/user-area.module';
 
 type EnvironmentVariables = {
   DB_HOST: string;
@@ -33,6 +35,7 @@ type EnvironmentVariables = {
       autoSchemaFile: 'schema.graphql',
     }), //GraphQL
     TypeOrmModule.forRootAsync({
+      // ormconfig.js に書くのが多分正解
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService<EnvironmentVariables>) => ({
@@ -54,6 +57,7 @@ type EnvironmentVariables = {
     OrganizationModule,
     RoledUserModule,
     AreaModule,
+    UserAreaModule,
   ],
   controllers: [AuthController],
   providers: [

@@ -20,9 +20,9 @@ export class OrganizationResolver {
   ) {
     // 関連組織をすべて返す
 
-    const ids = currentUser.roledUsers?.map((x) => x.organization.id) ?? [];
-    const relations: string[] = [];
-    const result = await this.organizationService.find(ids, { relations: relations });
+    const ids = currentUser.roledUsers?.map((x) => x.organization?.id as number) ?? [];
+    // const relations: string[] = [];
+    const result = await this.organizationService.find(ids);
     if (ids != null && result.length !== ids.length) {
       throw new Error('Some IDs were not found.');
     }

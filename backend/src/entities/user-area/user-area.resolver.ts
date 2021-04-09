@@ -1,17 +1,18 @@
 import { AbilityTypes, CurrentUser, GqlAuthGuard, RequiredAbilities } from '@/auth/auth.guard';
 import { Inject, UseGuards } from '@nestjs/common';
 import { Args, ID, Query, Resolver } from '@nestjs/graphql';
+import { In } from 'typeorm';
 import { User } from '../user/user.model';
-import { Area } from './area.model';
-import { AreaService } from './area.service';
+import { UserArea } from './user-area.model';
+import { UserAreaService } from './user-area.service';
 
-@Resolver(() => Area)
-export class AreaResolver {
-  constructor(@Inject(AreaService) private areaService: AreaService) {}
+@Resolver(() => UserArea)
+export class UserAreaResolver {
+  constructor(@Inject(UserAreaService) private userAreaService: UserAreaService) {}
 
   @UseGuards(GqlAuthGuard)
-  @Query(() => [Area])
-  async areas(
+  @Query(() => [UserArea])
+  async userAreas(
     @Args('organizationId', { type: () => ID }) organizationId: string,
     // @Args('ids', { type: () => [ID], nullable: true, defaultValue: null }) ids: number[] | null,
     @CurrentUser() currentUser: User,
@@ -21,17 +22,13 @@ export class AreaResolver {
     // クエリにリレーションオブジェクトが指定されている場合にのみリレーションを設定（もうちょっと簡略化できそう）
     const relations: string[] = [];
     // // とりあえず
-    // relations.push('roledUsers');
-    // relations.push('roledUsers.roles');
-    // relations.push('roledUsers.roles.abilities');
-    // relations.push('roledUsers.organization');
+    relations.push('area');
+    relations.push('area.organization');
+    relations.push('user');
 
-    const result = await this.areaService.find(undefined, {
-      // where: { organization: { id: 1, name: '' } },
-      // where: {
-      //   organization: { name: organizationId },
-      // },
-      // relations: relations,
+    // , area: { name: 'A-1' }
+    const result = await this.userAreaService.find(undefined, {
+      relations: relations,
     });
     // if (ids != null && result.length !== ids.length) {
     //   throw new Error('Some IDs were not found.');

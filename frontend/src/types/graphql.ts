@@ -4,7 +4,7 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions = {};
+const defaultOptions =  {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -22,10 +22,18 @@ export type Ability = {
   name: Scalars['String'];
 };
 
+export type Area = {
+  __typename?: 'Area';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  organization: Organization;
+};
+
 export type CreateUserInput = {
   userId?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
 };
+
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -34,13 +42,16 @@ export type Mutation = {
   deleteRole?: Maybe<Role>;
 };
 
+
 export type MutationCreateUserArgs = {
   user: CreateUserInput;
 };
 
+
 export type MutationDeleteUserArgs = {
   id: Scalars['ID'];
 };
+
 
 export type MutationDeleteRoleArgs = {
   id: Scalars['ID'];
@@ -61,19 +72,29 @@ export type Query = {
   ability?: Maybe<Ability>;
   abilities: Array<Ability>;
   organizations: Array<Organization>;
+  areas: Array<Area>;
 };
+
 
 export type QueryUsersArgs = {
   ids?: Maybe<Array<Scalars['ID']>>;
-  organizationId: Array<Scalars['ID']>;
+  organizationId: Scalars['ID'];
 };
+
 
 export type QueryRoleArgs = {
   id: Scalars['ID'];
 };
 
+
 export type QueryAbilityArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryAreasArgs = {
+  ids?: Maybe<Array<Scalars['ID']>>;
+  organizationId: Scalars['ID'];
 };
 
 export type Role = {
@@ -102,20 +123,75 @@ export type User = {
   roledUsers: Array<RoledUser>;
 };
 
-export type GetOrganizationsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetAreasQueryVariables = Exact<{
+  organizationId: Scalars['ID'];
+}>;
 
-export type GetOrganizationsQuery = { __typename?: 'Query' } & {
-  organizations: Array<{ __typename?: 'Organization' } & Pick<Organization, 'id' | 'name'>>;
-};
 
-export const GetOrganizationsDocument = gql`
-  query GetOrganizations {
-    organizations {
-      id
-      name
-    }
+export type GetAreasQuery = (
+  { __typename?: 'Query' }
+  & { areas: Array<(
+    { __typename?: 'Area' }
+    & Pick<Area, 'id' | 'name'>
+  )> }
+);
+
+export type GetOrganizationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetOrganizationsQuery = (
+  { __typename?: 'Query' }
+  & { organizations: Array<(
+    { __typename?: 'Organization' }
+    & Pick<Organization, 'id' | 'name'>
+  )> }
+);
+
+
+export const GetAreasDocument = gql`
+    query GetAreas($organizationId: ID!) {
+  areas(organizationId: $organizationId) {
+    id
+    name
   }
-`;
+}
+    `;
+
+/**
+ * __useGetAreasQuery__
+ *
+ * To run a query within a React component, call `useGetAreasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAreasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAreasQuery({
+ *   variables: {
+ *      organizationId: // value for 'organizationId'
+ *   },
+ * });
+ */
+export function useGetAreasQuery(baseOptions: Apollo.QueryHookOptions<GetAreasQuery, GetAreasQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAreasQuery, GetAreasQueryVariables>(GetAreasDocument, options);
+      }
+export function useGetAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAreasQuery, GetAreasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAreasQuery, GetAreasQueryVariables>(GetAreasDocument, options);
+        }
+export type GetAreasQueryHookResult = ReturnType<typeof useGetAreasQuery>;
+export type GetAreasLazyQueryHookResult = ReturnType<typeof useGetAreasLazyQuery>;
+export type GetAreasQueryResult = Apollo.QueryResult<GetAreasQuery, GetAreasQueryVariables>;
+export const GetOrganizationsDocument = gql`
+    query GetOrganizations {
+  organizations {
+    id
+    name
+  }
+}
+    `;
 
 /**
  * __useGetOrganizationsQuery__
@@ -132,18 +208,14 @@ export const GetOrganizationsDocument = gql`
  *   },
  * });
  */
-export function useGetOrganizationsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetOrganizationsQuery, GetOrganizationsQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetOrganizationsQuery, GetOrganizationsQueryVariables>(GetOrganizationsDocument, options);
-}
-export function useGetOrganizationsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationsQuery, GetOrganizationsQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetOrganizationsQuery, GetOrganizationsQueryVariables>(GetOrganizationsDocument, options);
-}
+export function useGetOrganizationsQuery(baseOptions?: Apollo.QueryHookOptions<GetOrganizationsQuery, GetOrganizationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrganizationsQuery, GetOrganizationsQueryVariables>(GetOrganizationsDocument, options);
+      }
+export function useGetOrganizationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizationsQuery, GetOrganizationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrganizationsQuery, GetOrganizationsQueryVariables>(GetOrganizationsDocument, options);
+        }
 export type GetOrganizationsQueryHookResult = ReturnType<typeof useGetOrganizationsQuery>;
 export type GetOrganizationsLazyQueryHookResult = ReturnType<typeof useGetOrganizationsLazyQuery>;
 export type GetOrganizationsQueryResult = Apollo.QueryResult<GetOrganizationsQuery, GetOrganizationsQueryVariables>;

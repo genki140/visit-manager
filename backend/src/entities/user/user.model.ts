@@ -5,6 +5,7 @@ import { MaxLength } from 'class-validator';
 import { Role } from '../role/role.model';
 import { Organization } from '../organization/organization.model';
 import { RoledUser } from '../roled-user/roled-user.model';
+import { UserArea } from '../user-area/user-area.model';
 
 @ObjectType()
 @Entity('users')
@@ -36,6 +37,13 @@ export class User {
   @Field(() => [RoledUser])
   @OneToMany(() => RoledUser, (roledUser) => roledUser.user)
   roledUsers?: RoledUser[];
+
+  /** ユーザー区域
+   * RoledUserに結びつけようかと思ったが、別の組織のRoledUserとも結びつけられてしまうため、Userと結びつけるのが正解。
+   */
+  @Field(() => [UserArea])
+  @OneToMany(() => UserArea, (userArea) => userArea.user)
+  userAreas?: UserArea[];
 }
 
 @InputType()

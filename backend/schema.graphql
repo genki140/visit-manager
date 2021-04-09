@@ -27,6 +27,19 @@ type RoledUser {
   roles: [Role!]!
 }
 
+type Area {
+  id: ID!
+  name: String!
+  organization: Organization!
+  userAreas: [UserArea!]!
+}
+
+type UserArea {
+  id: ID!
+  user: User!
+  area: Area!
+}
+
 type User {
   id: ID!
   createdAt: Date!
@@ -34,16 +47,11 @@ type User {
   password: String!
   name: String!
   roledUsers: [RoledUser!]!
+  userAreas: [UserArea!]!
 }
 
 """Date custom scalar type"""
 scalar Date
-
-type Area {
-  id: ID!
-  name: String!
-  organization: Organization!
-}
 
 type Query {
   users(ids: [ID!] = null, organizationId: ID!): [User!]!
@@ -52,7 +60,8 @@ type Query {
   ability(id: ID!): Ability
   abilities: [Ability!]!
   organizations: [Organization!]!
-  areas(ids: [ID!] = null, organizationId: ID!): [Area!]!
+  areas(organizationId: ID!): [Area!]!
+  userAreas(organizationId: ID!): [UserArea!]!
 }
 
 type Mutation {
