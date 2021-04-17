@@ -159,6 +159,7 @@ export type GetUserAreasQuery = (
   { __typename?: 'Query' }
   & { userAreas: Array<(
     { __typename?: 'UserArea' }
+    & Pick<UserArea, 'id'>
     & { area: (
       { __typename?: 'Area' }
       & Pick<Area, 'name'>
@@ -217,6 +218,7 @@ export type GetAreasQueryResult = Apollo.QueryResult<GetAreasQuery, GetAreasQuer
 export const GetUserAreasDocument = gql`
     query getUserAreas($organizationId: ID!) {
   userAreas(organizationId: $organizationId) {
+    id
     area {
       name
     }

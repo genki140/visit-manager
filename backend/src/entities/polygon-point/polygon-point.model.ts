@@ -9,29 +9,24 @@ import { UserArea } from '../user-area/user-area.model';
 import { Polygon } from '../polygon/polygon.model';
 
 @ObjectType()
-@Entity('areas')
-export class Area {
+@Entity('polygon_point')
+export class PolygonPoint {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number = 0;
 
-  /** 名前 */
+  /** 緯度 */
   @Field()
-  @Column({ length: 100 })
-  name: string = '';
+  @Column('double')
+  latitude: number = 0;
 
-  /** 組織 */
-  @Field(() => Organization)
-  @ManyToOne(() => Organization, (organization) => organization.roledUsers, { nullable: false })
-  organization?: Organization;
-
-  /** ユーザー区域 */
-  @Field(() => [UserArea])
-  @OneToMany(() => UserArea, (userArea) => userArea.area)
-  userAreas?: UserArea[];
+  /** 経度 */
+  @Field()
+  @Column('double')
+  longitude: number = 0;
 
   /** ポリゴン */
-  @Field(() => [Polygon])
-  @OneToMany(() => Polygon, (polygon) => polygon.area)
-  polygons?: Polygon[];
+  @Field(() => Polygon)
+  @ManyToOne(() => Polygon, (polygon) => polygon.points, { nullable: false })
+  polygon?: Polygon;
 }

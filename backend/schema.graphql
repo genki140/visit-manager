@@ -27,11 +27,25 @@ type RoledUser {
   roles: [Role!]!
 }
 
+type PolygonPoint {
+  id: ID!
+  latitude: Float!
+  longitude: Float!
+  polygon: Polygon!
+}
+
+type Polygon {
+  id: ID!
+  points: [PolygonPoint!]!
+  area: Area!
+}
+
 type Area {
   id: ID!
   name: String!
   organization: Organization!
   userAreas: [UserArea!]!
+  polygons: [Polygon!]!
 }
 
 type UserArea {

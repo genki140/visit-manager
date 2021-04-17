@@ -15,9 +15,13 @@ import { AccountCircle, Settings } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import SaveIcon from '@material-ui/icons/Save';
+import ClearIcon from '@material-ui/icons/Clear';
+import GestureIcon from '@material-ui/icons/Gesture';
 import { useAppState } from '@/ducks/app';
 import Link from 'next/link';
 import MapIcon from '@material-ui/icons/Map';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -75,9 +79,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Layout = ({ children, title = '既定値' }: { children: ReactNode; title: string }) => {
+// ヘッダーとフッターを構成します。
+
+const Layout = (props: { children: ReactNode; title: string; fillContent?: boolean }) => {
   const classes = useStyles();
   const app = useAppState().app;
+  const router = useRouter();
+  const organizationName = (router.query.organizationName ?? '').toString();
+  const organizationPath = '/' + organizationName;
+  const areaName = (router.query.areaName ?? '').toString();
+  const areaPath = (organizationName === '' ? '' : '/' + organizationName) + (areaName === '' ? '' : '/' + areaName);
+
+  let title = '区域管理';
+  title = organizationName !== '' ? organizationName : title;
+  title = areaName !== '' ? areaName : title;
 
   return (
     <div className={classes.container}>
@@ -86,7 +101,7 @@ const Layout = ({ children, title = '既定値' }: { children: ReactNode; title:
       </Backdrop>
 
       <Head>
-        <title>{title}</title>
+        <title>{props.title}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
@@ -94,16 +109,13 @@ const Layout = ({ children, title = '既定値' }: { children: ReactNode; title:
       <header className={classes.header}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton edge="start" color="inherit">
+            {/* <IconButton edge="start" color="inherit">
               <MenuIcon />
-            </IconButton>
-            <IconButton edge="start" color="inherit">
-              <MapIcon />
-            </IconButton>
+            </IconButton> */}
 
-            <Typography variant="h6">{title}</Typography>
+            <Typography variant="h1">{title}</Typography>
             <div className={classes.toolbarButtons}>
-              <Link href="/settings">
+              <Link href={areaPath + '/settings'}>
                 <IconButton color="inherit">
                   <Settings />
                 </IconButton>
@@ -119,25 +131,43 @@ const Layout = ({ children, title = '既定値' }: { children: ReactNode; title:
       </header>
 
       <div className={classes.body}>
-        <div className={classes.content}>{children}</div>
+        {props.fillContent === true ? props.children : <div className={classes.content}>{props.children}</div>}
       </div>
 
       <header className={classes.footer}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="open drawer">
+            <Link href={organizationPath}>
+              <IconButton edge="start" color="inherit">
+                <MapIcon />
+              </IconButton>
+            </Link>
+
+            {/* <IconButton edge="start" color="inherit" aria-label="open drawer">
               <MenuIcon />
-            </IconButton>
-            <Fab color="secondary" aria-label="add" className={classes.fabButton}>
+            </IconButton> */}
+            {/* <Fab color="secondary" aria-label="add" className={classes.fabButton}>
               <AddIcon />
-            </Fab>
-            <div className={classes.grow} />
-            <IconButton color="inherit">
+            </Fab> */}
+            {/* <div className={classes.grow} /> */}
+            {/* <IconButton color="inherit">
               <SearchIcon />
             </IconButton>
             <IconButton edge="end" color="inherit">
               <MoreIcon />
-            </IconButton>
+            </IconButton> */}
+
+            <div className={classes.toolbarButtons}>
+              <IconButton edge="end" color="inherit">
+                <GestureIcon />
+              </IconButton>
+              <IconButton edge="end" color="inherit">
+                <SaveIcon />
+              </IconButton>
+              <IconButton edge="end" color="inherit">
+                <ClearIcon />
+              </IconButton>
+            </div>
           </Toolbar>
         </AppBar>
       </header>

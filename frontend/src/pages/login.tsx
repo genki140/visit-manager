@@ -48,26 +48,80 @@ const AboutPage = () => {
 
   return (
     <Layout title="ログイン">
+      <div
+        style={{
+          maxWidth: 500,
+          margin: 'auto',
+        }}
+      >
+        <TextField
+          label="ユーザー名"
+          value={username}
+          onChange={(e) => {
+            e.preventDefault();
+            setUsername(e.target.value);
+          }}
+          style={{
+            width: '100%',
+            display: 'flex',
+          }}
+        />
+        <TextField
+          label="パスワード"
+          value={password}
+          type="password"
+          onChange={(e) => {
+            e.preventDefault();
+            setPassword(e.target.value);
+          }}
+          style={{
+            width: '100%',
+            display: 'flex',
+          }}
+        />
+        <Button
+          variant="contained"
+          size="large"
+          color="secondary"
+          onClick={async () => {
+            unwrapResult(await dispatch(asyncLogin({ username, password })));
+            Router.push('/');
+          }}
+          style={{
+            display: 'flex',
+            marginTop: 10,
+            marginLeft: 'auto',
+          }}
+        >
+          Login
+        </Button>
+      </div>
+
+      {/* 
       <Card className={classes.container}>
         <CardHeader>ログイン</CardHeader>
         <CardContent>
-          <TextField
-            label="ユーザー名"
-            value={username}
-            onChange={(e) => {
-              e.preventDefault();
-              setUsername(e.target.value);
-            }}
-          />
-          <TextField
-            label="パスワード"
-            value={password}
-            type="password"
-            onChange={(e) => {
-              e.preventDefault();
-              setPassword(e.target.value);
-            }}
-          />
+          <div>
+            <TextField
+              label="ユーザー名"
+              value={username}
+              onChange={(e) => {
+                e.preventDefault();
+                setUsername(e.target.value);
+              }}
+            />
+          </div>
+          <div>
+            <TextField
+              label="パスワード"
+              value={password}
+              type="password"
+              onChange={(e) => {
+                e.preventDefault();
+                setPassword(e.target.value);
+              }}
+            />
+          </div>
         </CardContent>
         <CardActions>
           <Button
@@ -81,8 +135,8 @@ const AboutPage = () => {
           >
             Login
           </Button>
-        </CardActions>
-      </Card>
+        </CardActions> 
+      </Card>*/}
     </Layout>
   );
 };

@@ -1,43 +1,35 @@
 // import zIndex from '@material-ui/core/styles/zIndex';
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import {
+  GoogleMap,
+  InfoWindow,
+  LoadScript,
+  Marker,
+  Polygon,
+  Polyline,
+  useJsApiLoader,
+  useLoadScript,
+} from '@react-google-maps/api';
+import React, { useCallback, useRef, useState } from 'react';
 
-// const containerStyle = {
-//   width: '100%',
-//   height: '100%',
-// };
+// import mapStyles from './mapUtils/mapStyles';
+// 地図のデザインを指定することができます。
+// デザインは https://snazzymaps.com からインポートすることができます。
 
 const center = {
   lat: 35.69575,
   lng: 139.77521,
 };
 
-// import React, { useCallback, useRef } from 'react';
-// import { GoogleMap, useLoadScript } from '@react-google-maps/api';
-
-// // import mapStyles from "./mapUtils/mapStyles";
-// // 地図のデザインを指定することができます。
-// // デザインは https://snazzymaps.com からインポートすることができます。
-
-// const libraries = ['places'];
-// const mapContainerStyle = {
-//   height: '60vh',
-//   width: '100%',
-// };
-// // 地図の大きさを指定します。
-
-// const options = {
-//   // styles: mapStyles,
-//   disableDefaultUI: true,
-//   // デフォルトUI（衛星写真オプションなど）をキャンセルします。
-//   zoomControl: true,
-// };
+const divStyle = {
+  background: 'white',
+  fontSize: 7.5,
+};
 
 const Map = () => {
+  const [selected, setSelected] = useState<any>();
+
   return (
-    <LoadScript
-      googleMapsApiKey="AIzaSyD44R5U7ckGYHVBK-iDrgvlKL7Kr7lIspQ"
-      libraries={[]}
-    >
+    <LoadScript googleMapsApiKey="AIzaSyD44R5U7ckGYHVBK-iDrgvlKL7Kr7lIspQ">
       <GoogleMap
         mapContainerStyle={{
           width: '100%',
@@ -45,10 +37,52 @@ const Map = () => {
         }}
         options={{
           disableDefaultUI: true,
+          clickableIcons: false,
         }}
         center={center}
         zoom={17}
-      ></GoogleMap>
+        onClick={(e) => {
+          console.log(e);
+        }}
+      >
+        <Marker
+          position={center}
+          draggable={true}
+          onMouseOver={() => {
+            setSelected(1);
+            // マウスオーバーで<InfoWindow>が描画されます。
+          }}
+        />
+
+        <Polygon
+          editable={true}
+          options={{
+            fillOpacity: 0,
+            geodesic: false,
+            clickable: false,
+          }}
+          path={[
+            {
+              lat: 35.69575,
+              lng: 139.77521,
+            },
+            {
+              lat: 36.69575,
+              lng: 138.77521,
+            },
+            {
+              lat: 36.69575,
+              lng: 139.77521,
+            },
+          ]}
+        ></Polygon>
+
+        <InfoWindow position={center}>
+          <div style={divStyle}>
+            <h1>秋葉原オフィス</h1>
+          </div>
+        </InfoWindow>
+      </GoogleMap>
     </LoadScript>
   );
 };

@@ -28,6 +28,7 @@ const useStyles = makeStyles(() => ({
 export const getUserAreasGql = gql`
   query getUserAreas($organizationId: ID!) {
     userAreas(organizationId: $organizationId) {
+      id
       area {
         name
       }
@@ -48,11 +49,13 @@ const Page = () => {
 
   return (
     <Layout title={organizationName}>
-      <h2>自分が保持している区域一覧</h2>
+      <Typography gutterBottom variant="h2">
+        自分の区域一覧
+      </Typography>
       <LoadingContainer loading={loading} error={error}>
         <div className={classes.list}>
           {data?.userAreas.map((x) => (
-            <Link href={organizationPath + '/' + x.area.name}>
+            <Link href={organizationPath + '/' + x.area.name} key={x.id}>
               <Card>
                 <CardActionArea>
                   <CardContent>
@@ -69,8 +72,6 @@ const Page = () => {
           ))}
         </div>
       </LoadingContainer>
-
-      <Link href={organizationPath + '/settings'}>組織設定</Link>
     </Layout>
   );
 };

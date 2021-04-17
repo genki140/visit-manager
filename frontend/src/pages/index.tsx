@@ -6,6 +6,8 @@ import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
 import { gql } from '@apollo/react-hooks';
 import { Autocomplete } from '@react-google-maps/api';
+import { useRouter } from 'next/router';
+import Map from '@/components/map';
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -26,6 +28,7 @@ export const GetOrganizationsGql = gql`
 `;
 
 const IndexPage = () => {
+  const router = useRouter();
   const classes = useStyles();
   const { loading, error, data } = useGetOrganizationsQuery();
   return (
@@ -35,7 +38,7 @@ const IndexPage = () => {
       <LoadingContainer loading={loading} error={error}>
         <div className={classes.list}>
           {data?.organizations.map((x) => (
-            <Link href={x.name}>
+            <Link href={x.name} key={x.id}>
               <Card>
                 <CardActionArea>
                   <CardContent>
@@ -58,8 +61,21 @@ const IndexPage = () => {
       <Button variant="contained" color="primary">
         新規組織の作成
       </Button>
+
+      {/* <Button
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          router.push({
+            pathname: '/about',
+            query: { test_data: 'あいうえおかきくけこ' },
+          });
+        }}
+      >
+        遷移テスト
+      </Button>
+       */}
     </Layout>
   );
-  // <Map></Map>
 };
 export default IndexPage;
