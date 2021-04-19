@@ -40,11 +40,28 @@ type Polygon {
   area: Area!
 }
 
+type Resident {
+  id: ID!
+  room: String!
+  floor: Float!
+  residence: Residence!
+}
+
+type Residence {
+  id: ID!
+  latitude: Float!
+  longitude: Float!
+  residents: [Resident!]!
+  area: Area!
+}
+
 type Area {
   id: ID!
   name: String!
+  description: String!
   organization: Organization!
   userAreas: [UserArea!]!
+  residences: [Residence!]!
   polygons: [Polygon!]!
 }
 

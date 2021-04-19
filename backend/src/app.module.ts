@@ -1,10 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { APP_GUARD } from '@nestjs/core';
-
 import { DateScalar } from '@/scalars/date.scalar';
 
 // Import modules
@@ -20,6 +17,9 @@ import { UserAreaModule } from './entities/user-area/user-area.module';
 
 import { PolygonModule } from './entities/polygon/polygon.module';
 import { PolygonPointModule } from './entities/polygon-point/polygon-point.module';
+
+import { ResidenceModule } from './entities/residence/residence.module';
+import { ResidentModule } from './entities/resident/resident.module';
 
 import { getConnectionOptions } from 'typeorm';
 
@@ -46,6 +46,8 @@ import { getConnectionOptions } from 'typeorm';
     UserAreaModule,
     PolygonModule,
     PolygonPointModule,
+    ResidenceModule,
+    ResidentModule,
   ],
   controllers: [AuthController],
   providers: [

@@ -9,5 +9,12 @@ const theme = createMuiTheme({
       fontSize: 17,
     },
   },
+
+  // palette: {
+  //   // background: {
+  //   //   default: '#EEEEEE',
+  //   // },
+  //   type: 'dark',
+  // },
 });
 export default theme;

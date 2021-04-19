@@ -1,22 +1,15 @@
-import React, { ReactNode } from 'react';
-import {
-  Backdrop,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  CircularProgress,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import React from 'react';
+import { Card, CardActionArea, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import Layout from '@/components/layout';
 import Link from 'next/link';
-import { ApolloError, gql } from '@apollo/react-hooks';
-import { useGetOrganizationsQuery, useGetUserAreasQuery } from '@/types/graphql';
-import { StyledProps } from '@/types/styled-props';
+import { gql } from '@apollo/react-hooks';
+import { useGetUserAreasQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
+import ErrorPage from 'next/error';
+import Custom404 from '../404';
 
+// スタイル定義
 const useStyles = makeStyles(() => ({
   list: {
     display: 'grid',
@@ -25,6 +18,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+// クエリ定義
 export const getUserAreasGql = gql`
   query getUserAreas($organizationId: ID!) {
     userAreas(organizationId: $organizationId) {
@@ -37,7 +31,7 @@ export const getUserAreasGql = gql`
 `;
 
 /** 組織ルートページ */
-const Page = () => {
+const OrganizationPage = () => {
   const classes = useStyles();
   const router = useRouter();
   const organizationName = router.query.organizationName?.toString() ?? '';
@@ -46,6 +40,14 @@ const Page = () => {
   const { loading, error, data } = useGetUserAreasQuery({
     variables: { organizationId: organizationName },
   });
+
+  // ユーザーがこの組織に所属していなければ404
+  if (error != null) {
+    const errorCode = error.graphQLErrors?.[0]?.extensions?.['code'];
+    if (errorCode === 'NOT_FOUND') {
+      return <Custom404 />;
+    }
+  }
 
   return (
     <Layout title={organizationName}>
@@ -75,4 +77,4 @@ const Page = () => {
     </Layout>
   );
 };
-export default Page;
+export default OrganizationPage;

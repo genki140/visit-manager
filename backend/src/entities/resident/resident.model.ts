@@ -1,0 +1,29 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Residence } from '../residence/residence.model';
+
+@ObjectType()
+@Entity('residents')
+export class Resident {
+  @Field(() => ID)
+  @PrimaryGeneratedColumn()
+  id: number = 0;
+
+  /** 部屋名 */
+  @Field()
+  @Column({ length: 100 })
+  room: string = '';
+
+  /** フロア番号 */
+  @Field()
+  @Column()
+  floor: number = 0;
+
+  /** 建物 */
+  @Field(() => Residence)
+  @ManyToOne(() => Residence, (residence) => residence.residents, { nullable: false })
+  residence?: Residence;
+
+  // その他拒否情報など？
+}

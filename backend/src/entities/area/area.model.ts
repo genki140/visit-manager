@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { MaxLength } from 'class-validator';
-import { User } from '../user/user.model';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Organization } from '../organization/organization.model';
-import { Role } from '../role/role.model';
 import { UserArea } from '../user-area/user-area.model';
 import { Polygon } from '../polygon/polygon.model';
+import { Residence } from '../residence/residence.model';
 
 @ObjectType()
 @Entity('areas')
@@ -20,6 +18,11 @@ export class Area {
   @Column({ length: 100 })
   name: string = '';
 
+  /** 解説 */
+  @Field()
+  @Column({ length: 100 })
+  description: string = '';
+
   /** 組織 */
   @Field(() => Organization)
   @ManyToOne(() => Organization, (organization) => organization.roledUsers, { nullable: false })
@@ -29,6 +32,11 @@ export class Area {
   @Field(() => [UserArea])
   @OneToMany(() => UserArea, (userArea) => userArea.area)
   userAreas?: UserArea[];
+
+  /** 住宅 */
+  @Field(() => [Residence])
+  @OneToMany(() => Residence, (residence) => residence.area)
+  residences?: Residence[];
 
   /** ポリゴン */
   @Field(() => [Polygon])

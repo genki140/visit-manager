@@ -5,9 +5,6 @@ import Link from 'next/link';
 import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
 import { gql } from '@apollo/react-hooks';
-import { Autocomplete } from '@react-google-maps/api';
-import { useRouter } from 'next/router';
-import Map from '@/components/map';
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -28,12 +25,13 @@ export const GetOrganizationsGql = gql`
 `;
 
 const IndexPage = () => {
-  const router = useRouter();
   const classes = useStyles();
   const { loading, error, data } = useGetOrganizationsQuery();
   return (
     <Layout title="訪問管理">
-      <h2>所属している組織</h2>
+      <Typography gutterBottom variant="h2">
+        所属している組織
+      </Typography>
 
       <LoadingContainer loading={loading} error={error}>
         <div className={classes.list}>
@@ -56,25 +54,13 @@ const IndexPage = () => {
         </div>
       </LoadingContainer>
 
-      <h2>組織の操作</h2>
+      <Typography gutterBottom variant="h2">
+        組織の操作{' '}
+      </Typography>
 
       <Button variant="contained" color="primary">
         新規組織の作成
       </Button>
-
-      {/* <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          router.push({
-            pathname: '/about',
-            query: { test_data: 'あいうえおかきくけこ' },
-          });
-        }}
-      >
-        遷移テスト
-      </Button>
-       */}
     </Layout>
   );
 };

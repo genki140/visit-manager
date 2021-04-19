@@ -1,19 +1,18 @@
 import React from 'react';
-import { makeStyles, Tab, Tabs } from '@material-ui/core';
+import { Tab, Tabs } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import Layout from '@/components/layout';
 import MainSettings from '@/components/settings/main';
-import UserSettings from '@/components/settings/users';
 import ErrorPage from 'next/error';
 import Link from 'next/link';
 import AreaSettings from '@/components/settings/area-settings';
 
 // ファイル名[[...id]].tsxは、settings以降の存在する全てのパスに対応する。
 
-const useStyles = makeStyles((theme) => ({}));
+// const useStyles = makeStyles((theme) => ({}));
 
 const Page = () => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const router = useRouter();
   const organizationName = (router.query.organizationName ?? '').toString();
   const organizationPath = organizationName === '' ? '' : '/' + organizationName;

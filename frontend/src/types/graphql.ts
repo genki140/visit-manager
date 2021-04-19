@@ -28,6 +28,8 @@ export type Area = {
   name: Scalars['String'];
   organization: Organization;
   userAreas: Array<UserArea>;
+  residences: Array<Residence>;
+  polygons: Array<Polygon>;
 };
 
 export type CreateUserInput = {
@@ -63,6 +65,21 @@ export type Organization = {
   id: Scalars['ID'];
   name: Scalars['String'];
   roledUsers: Array<RoledUser>;
+};
+
+export type Polygon = {
+  __typename?: 'Polygon';
+  id: Scalars['ID'];
+  points: Array<PolygonPoint>;
+  area: Area;
+};
+
+export type PolygonPoint = {
+  __typename?: 'PolygonPoint';
+  id: Scalars['ID'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
+  polygon: Polygon;
 };
 
 export type Query = {
@@ -101,6 +118,23 @@ export type QueryAreasArgs = {
 
 export type QueryUserAreasArgs = {
   organizationId: Scalars['ID'];
+};
+
+export type Residence = {
+  __typename?: 'Residence';
+  id: Scalars['ID'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
+  residents: Array<Resident>;
+  area: Area;
+};
+
+export type Resident = {
+  __typename?: 'Resident';
+  id: Scalars['ID'];
+  room: Scalars['String'];
+  floor: Scalars['Float'];
+  residence: Residence;
 };
 
 export type Role = {

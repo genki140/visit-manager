@@ -1,16 +1,6 @@
 import Layout from '@/components/layout';
 import React, { useState } from 'react';
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  createStyles,
-  makeStyles,
-  TextField,
-  Theme,
-} from '@material-ui/core';
+import { Button, createStyles, makeStyles, TextField, Theme } from '@material-ui/core';
 import { asyncLogin } from '@/ducks/app';
 import { useAppDispatch } from '@/ducks/store';
 import Router from 'next/router';
@@ -47,7 +37,7 @@ const AboutPage = () => {
   const [password, setPassword] = useState('');
 
   return (
-    <Layout title="ログイン">
+    <Layout title="ログイン" showMenuButton={false}>
       <div
         style={{
           maxWidth: 500,

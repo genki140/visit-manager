@@ -1,5 +1,6 @@
 // next
 import { AppProps } from 'next/app';
+import dynamic from 'next/dynamic';
 
 // redux
 import { Provider } from 'react-redux';
@@ -29,6 +30,8 @@ const App: React.FC<AppProps> = (props) => {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
+
+  // const SafeHydrate = dynamic(() => import('../components/SafeHydrate'), { ssr: false });
 
   return (
     <MuiThemeProvider theme={theme}>

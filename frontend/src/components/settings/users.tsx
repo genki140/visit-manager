@@ -1,5 +1,5 @@
 import React from 'react';
-import { gql } from '@apollo/react-hooks';
+// import { gql } from '@apollo/react-hooks';
 
 // export const USERS = gql`
 //   query GetUserSettings {

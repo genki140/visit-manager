@@ -1,32 +1,38 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import Head from 'next/head';
 import {
   AppBar,
   Backdrop,
   CircularProgress,
-  Fab,
+  Divider,
+  Drawer,
   IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   makeStyles,
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import { AccountCircle, Settings } from '@material-ui/icons';
-import AddIcon from '@material-ui/icons/Add';
-import SearchIcon from '@material-ui/icons/Search';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import GestureIcon from '@material-ui/icons/Gesture';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
 import { useAppState } from '@/ducks/app';
 import Link from 'next/link';
 import MapIcon from '@material-ui/icons/Map';
+import MenuIcon from '@material-ui/icons/Menu';
 import { useRouter } from 'next/router';
+import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'grid',
-    gridTemplateRows: 'auto 1fr auto',
+    // gridTemplateRows: 'auto 1fr auto',
+    gridTemplateRows: 'auto 1fr',
     width: '100%',
     height: '100vh',
   },
@@ -39,9 +45,9 @@ const useStyles = makeStyles((theme) => ({
   body: {
     gridRow: '2',
   },
-  footer: {
-    gridRow: '3',
-  },
+  // footer: {
+  //   gridRow: '3',
+  // },
 
   text: {
     padding: theme.spacing(2, 2, 0),
@@ -81,25 +87,23 @@ const useStyles = makeStyles((theme) => ({
 
 // ヘッダーとフッターを構成します。
 
-const Layout = (props: { children: ReactNode; title: string; fillContent?: boolean }) => {
+const Layout = (props: { children: ReactNode; title: string; fillContent?: boolean; showMenuButton?: boolean }) => {
   const classes = useStyles();
   const app = useAppState().app;
   const router = useRouter();
+  const [menuVisibled, setMenuVisibled] = useState(false);
+
   const organizationName = (router.query.organizationName ?? '').toString();
   const organizationPath = '/' + organizationName;
   const areaName = (router.query.areaName ?? '').toString();
   const areaPath = (organizationName === '' ? '' : '/' + organizationName) + (areaName === '' ? '' : '/' + areaName);
 
-  let title = '区域管理';
-  title = organizationName !== '' ? organizationName : title;
-  title = areaName !== '' ? areaName : title;
+  // let title = '区域管理';
+  // title = organizationName !== '' ? organizationName : title;
+  // title = areaName !== '' ? areaName : title;
 
   return (
     <div className={classes.container}>
-      <Backdrop className={classes.backdrop} open={app.loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-
       <Head>
         <title>{props.title}</title>
         <meta charSet="utf-8" />
@@ -109,55 +113,107 @@ const Layout = (props: { children: ReactNode; title: string; fillContent?: boole
       <header className={classes.header}>
         <AppBar position="static">
           <Toolbar>
-            {/* <IconButton edge="start" color="inherit">
-              <MenuIcon />
-            </IconButton> */}
+            {/* 組織ホームボタン */}
+            {organizationName === '' ? (
+              <IconButton edge="start" color="inherit">
+                <MapIcon />
+              </IconButton>
+            ) : (
+              <Link href={organizationPath}>
+                <IconButton edge="start" color="inherit">
+                  <MapIcon />
+                </IconButton>
+              </Link>
+            )}
 
-            <Typography variant="h1">{title}</Typography>
-            <div className={classes.toolbarButtons}>
-              <Link href={areaPath + '/settings'}>
+            {/* タイトル */}
+            <Typography variant="h1">{props.title}</Typography>
+
+            {/* 右メニュー */}
+            {(props.showMenuButton ?? true) && (
+              <div className={classes.toolbarButtons}>
+                {/* 編集開始 */}
+                <Link href={areaPath + '/settings'}>
+                  <IconButton edge="start" color="inherit">
+                    <EditIcon />
+                  </IconButton>
+                </Link>
+
+                {/* メニュー表示 */}
+                <IconButton edge="start" color="inherit" onClick={() => setMenuVisibled(true)}>
+                  <MenuIcon />
+                </IconButton>
+              </div>
+            )}
+          </Toolbar>
+        </AppBar>
+      </header>
+
+      {/* <Link href={areaPath + '/settings'}>
                 <IconButton color="inherit">
                   <Settings />
                 </IconButton>
               </Link>
               <Link href="/login">
-                <IconButton color="inherit">
+                <IconButton edge="end" color="inherit">
                   <AccountCircle />
                 </IconButton>
-              </Link>
-            </div>
-          </Toolbar>
-        </AppBar>
-      </header>
+              </Link> */}
 
+      {/* 外部から挿入されるコンテンツ */}
       <div className={classes.body}>
         {props.fillContent === true ? props.children : <div className={classes.content}>{props.children}</div>}
       </div>
 
-      <header className={classes.footer}>
+      {/* メニュー */}
+      <Drawer anchor="right" open={menuVisibled} onClose={() => setMenuVisibled(false)}>
+        <List>
+          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+
+      <Backdrop className={classes.backdrop} open={app.loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
+      {/* <header className={classes.footer}>
         <AppBar position="static">
           <Toolbar>
             <Link href={organizationPath}>
               <IconButton edge="start" color="inherit">
                 <MapIcon />
               </IconButton>
-            </Link>
+            </Link> */}
 
-            {/* <IconButton edge="start" color="inherit" aria-label="open drawer">
+      {/* <IconButton edge="start" color="inherit" aria-label="open drawer">
               <MenuIcon />
             </IconButton> */}
-            {/* <Fab color="secondary" aria-label="add" className={classes.fabButton}>
+      {/* <Fab color="secondary" aria-label="add" className={classes.fabButton}>
               <AddIcon />
             </Fab> */}
-            {/* <div className={classes.grow} /> */}
-            {/* <IconButton color="inherit">
+      {/* <div className={classes.grow} /> */}
+      {/* <IconButton color="inherit">
               <SearchIcon />
             </IconButton>
             <IconButton edge="end" color="inherit">
               <MoreIcon />
             </IconButton> */}
 
-            <div className={classes.toolbarButtons}>
+      {/* <div className={classes.toolbarButtons}>
               <IconButton edge="end" color="inherit">
                 <GestureIcon />
               </IconButton>
@@ -170,7 +226,7 @@ const Layout = (props: { children: ReactNode; title: string; fillContent?: boole
             </div>
           </Toolbar>
         </AppBar>
-      </header>
+      </header> */}
     </div>
   );
 };

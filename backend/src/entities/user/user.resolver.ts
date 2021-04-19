@@ -1,11 +1,9 @@
-import { createParamDecorator, ExecutionContext, Inject, UseGuards, Request } from '@nestjs/common';
-import { Args, Context, GqlExecutionContext, ID, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Inject, UseGuards } from '@nestjs/common';
+import { Args, ID, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CreateUserInput, User } from '@/entities/user/user.model';
 import { UserService } from '@/entities/user/user.service';
-import { FieldNode, GraphQLResolveInfo, SelectionSetNode } from 'graphql';
-import { parseResolveInfo } from 'graphql-parse-resolve-info';
-import { AuthGuard } from '@nestjs/passport';
+import { GraphQLResolveInfo } from 'graphql';
 import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 
 // export const CustomDecorator = createParamDecorator((data: unknown, ctx: ExecutionContext) =>

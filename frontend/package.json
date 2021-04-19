@@ -6,7 +6,7 @@
   "repository": {},
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect=0.0.0.0:9228' next dev -p 3001",
-    "build": "next build -p 3001",
+    "build": "next build",
     "start": "next start -p 3001",
     "type-check": "tsc",
     "gen": "graphql-codegen"
@@ -19,6 +19,7 @@
     "@react-google-maps/api": "^2.1.1",
     "@reduxjs/toolkit": "^1.5.0",
     "axios": "^0.21.1",
+    "googlemaps": "^1.12.0",
     "graphql": "^15.5.0",
     "linq": "^3.2.3",
     "next": "^10.0.9",
