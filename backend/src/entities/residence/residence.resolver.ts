@@ -5,7 +5,7 @@ import { CreateUserInput, User } from '@/entities/user/user.model';
 import { UserService } from '@/entities/user/user.service';
 import { GraphQLResolveInfo } from 'graphql';
 import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
-import { CreateResidenceInput, Residence } from './residence.model';
+import { CreateResidenceInput, Residence, UpdateResidenceInput } from './residence.model';
 import { ResidenceService } from './residence.service';
 
 // export const CustomDecorator = createParamDecorator((data: unknown, ctx: ExecutionContext) =>
@@ -19,6 +19,13 @@ export class ResidenceResolver {
   @Mutation(() => Residence)
   async createResidence(@Args('residence') residence: CreateResidenceInput) {
     const result = await this.residenceService.create(residence);
+    console.log(result);
+    return result;
+  }
+
+  @Mutation(() => Residence)
+  async updateResidence(@Args('residence') residence: UpdateResidenceInput) {
+    const result = await this.residenceService.update(residence);
     console.log(result);
     return result;
   }

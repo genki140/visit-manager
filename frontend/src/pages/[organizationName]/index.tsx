@@ -3,7 +3,7 @@ import { Card, CardActionArea, CardContent, makeStyles, Typography } from '@mate
 import { useRouter } from 'next/router';
 import Layout from '@/components/layout';
 import Link from 'next/link';
-import { gql } from '@apollo/react-hooks';
+import { gql } from '@apollo/client';
 import { useGetUserAreasQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
 import ErrorPage from 'next/error';

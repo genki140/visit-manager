@@ -70,3 +70,22 @@ export class CreateResidenceInput {
   // @MaxLength(100)
   // password: string = '';
 }
+
+@InputType()
+export class UpdateResidenceInput {
+  @Field(() => ID)
+  id: number = 0;
+
+  /** 建物名 */
+  @Field()
+  @MaxLength(100)
+  name: string = '';
+
+  /** 緯度 */
+  @Field()
+  latitude: number = 0;
+
+  /** 経度 */
+  @Field()
+  longitude: number = 0;
+}

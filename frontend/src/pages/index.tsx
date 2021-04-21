@@ -4,7 +4,7 @@ import { Button, Card, CardActionArea, CardContent, makeStyles, Typography } fro
 import Link from 'next/link';
 import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
-import { gql } from '@apollo/react-hooks';
+import { gql } from '@apollo/client';
 
 const useStyles = makeStyles(() => ({
   list: {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
-import { CreateResidenceInput, Residence } from './residence.model';
+import { CreateResidenceInput, Residence, UpdateResidenceInput } from './residence.model';
 
 @Injectable()
 export class ResidenceService {
@@ -21,7 +21,7 @@ export class ResidenceService {
   async create(payload: CreateResidenceInput) {
     const result = await this.residenceRepository.save({
       areaId: payload.areaId,
-      name: 'test', //payload.name,
+      name: payload.name,
       latitude: payload.latitude,
       longitude: payload.longitude,
     });
@@ -35,6 +35,18 @@ export class ResidenceService {
     //   throw new Error('userId is already used.');
     // }
     // return await this.residenceRepository.save({ ...payload });
+  }
+
+  async update(payload: UpdateResidenceInput) {
+    let item = await this.residenceRepository.findOneOrFail(payload.id, {
+      relations: ['residents'],
+    });
+
+    item.name = payload.name;
+    item.latitude = payload.latitude;
+    item.longitude = payload.longitude;
+    const result = await this.residenceRepository.save(item);
+    return item;
   }
 
   // async delete(id: number) {

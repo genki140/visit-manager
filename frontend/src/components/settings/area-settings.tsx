@@ -1,5 +1,5 @@
 import React from 'react';
-import { gql } from '@apollo/react-hooks';
+import { gql } from '@apollo/client';
 import { useGetAreasQuery } from '@/types/graphql';
 import { Link, Card, CardActionArea, CardContent, Typography, makeStyles } from '@material-ui/core';
 import LoadingContainer from '../loading-container';

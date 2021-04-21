@@ -1,7 +1,7 @@
 // import zIndex from '@material-ui/core/styles/zIndex';
 import { mapStyles } from '@/styles/map-styles';
 import { GoogleMap, LoadScript, Marker, Polygon } from '@react-google-maps/api';
-import React, { ReactNode, useState } from 'react';
+import React, { forwardRef, ReactNode, useImperativeHandle, useState } from 'react';
 import { actions, useAppDispatch } from '@/ducks/store';
 
 // import mapStyles from './mapUtils/mapStyles';
@@ -12,60 +12,86 @@ const center = {
   lng: 139.10948906051917,
 };
 
-export type MapPosition = {
-  latitude: number;
-  longitude: number;
+// export type MapPosition = {
+//   latitude: number;
+//   longitude: number;
+// };
+
+export type MapData = {
+  zoom: number;
+  center: {
+    latitude: number;
+    longitude: number;
+  };
 };
 
-const Map = (props: {
-  children: ReactNode;
-  onCenterChanged?: (position: MapPosition) => void;
-  onZoomChanged?: (zoom: number) => void;
-}) => {
+const Map = (
+  props: {
+    children: (mapData: any) => ReactNode;
+    // onCenterChanged?: (position: MapPosition) => void;
+    // onZoomChanged?: (zoom: number) => void;
+  },
+  // ref,
+) => {
   // const dispatch = useAppDispatch();
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapRef, setMapRef] = useState<any>(null);
 
+  // const mapRefCurrent = useImperativeHandle(ref, () => {
+  //   return {
+  //     center: mapRef?.getCenter()?.toJSON(),
+  //     zoom: mapRef?.getZoom(),
+  //   };
+  // });
   return (
     <>
       <LoadScript googleMapsApiKey="AIzaSyD44R5U7ckGYHVBK-iDrgvlKL7Kr7lIspQ" onLoad={() => setMapLoaded(true)}>
-        {mapLoaded && (
-          <GoogleMap
-            onLoad={(map) => setMapRef(map)}
-            mapContainerStyle={{ width: '100%', height: '100%' }}
-            options={{
-              styles: mapStyles as any,
-              disableDefaultUI: true,
-              clickableIcons: false,
-            }}
-            center={center}
-            zoom={18}
-            onClick={(e) => {
-              // console.log(e);
-            }}
-            onIdle={() => {
-              const center = mapRef?.getCenter()?.toJSON();
-              if (center != null && props.onCenterChanged != null) {
-                props.onCenterChanged({ latitude: center.lat, longitude: center.lng });
-              }
-            }}
-            onCenterChanged={() => {
-              const center = mapRef?.getCenter()?.toJSON();
-              if (center != null && props.onCenterChanged != null) {
-                props.onCenterChanged({ latitude: center.lat, longitude: center.lng });
-              }
-            }}
-            onZoomChanged={() => {
-              const zoom = mapRef?.getZoom();
-              if (zoom != null && props.onZoomChanged != null) {
-                props.onZoomChanged(zoom);
-                // dispatch(actions.setMapZoom({ zoom: zoom }));
-              }
-            }}
-          >
-            {props.children}
-          </GoogleMap>
-        )}
+        {/* {mapLoaded && ( */}
+        <GoogleMap
+          onLoad={(map) => setMapRef(map)}
+          mapContainerStyle={{ width: '100%', height: '100%' }}
+          options={{
+            styles: mapStyles as any,
+            disableDefaultUI: true,
+            clickableIcons: false,
+          }}
+          center={center}
+          zoom={18}
+          // onClick={(e) => {
+          //   // console.log(e);
+          // }}
+          // onIdle={() => {
+          //   const center = mapRef?.getCenter()?.toJSON();
+          //   if (center != null && props.onCenterChanged != null) {
+          //     props.onCenterChanged({ latitude: center.lat, longitude: center.lng });
+          //   }
+          // }}
+          // onCenterChanged={() => {
+          //   const center = mapRef?.getCenter()?.toJSON();
+          //   if (center != null && props.onCenterChanged != null) {
+          //     props.onCenterChanged({ latitude: center.lat, longitude: center.lng });
+          //   }
+          // }}
+          // onZoomChanged={() => {
+          //   const zoom = mapRef?.getZoom();
+          //   if (zoom != null && props.onZoomChanged != null) {
+          //     props.onZoomChanged(zoom);
+          //     // dispatch(actions.setMapZoom({ zoom: zoom }));
+          //   }
+          // }}
+        >
+          {/* {props.children} */}
+          {mapLoaded && mapRef != null && props.children(mapRef)}
+          // props.children(
+          {
+            //   zoom: mapRef?.getZoom(),
+            //   center: {
+            //     latitude: mapRef?.getCenter()?.toJSON().lat,
+            //     longitude: mapRef?.getCenter()?.toJSON().lng,
+            //   },
+            // })
+          }
+        </GoogleMap>
       </LoadScript>
     </>
   );

@@ -101,6 +101,7 @@ type Mutation {
   deleteUser(id: ID!): Ability
   deleteRole(id: ID!): Role
   createResidence(residence: CreateResidenceInput!): Residence!
+  updateResidence(residence: UpdateResidenceInput!): Residence!
 }
 
 input CreateUserInput {
@@ -110,6 +111,13 @@ input CreateUserInput {
 
 input CreateResidenceInput {
   areaId: ID = 0
+  name: String = ""
+  latitude: Float = 0
+  longitude: Float = 0
+}
+
+input UpdateResidenceInput {
+  id: ID = 0
   name: String = ""
   latitude: Float = 0
   longitude: Float = 0

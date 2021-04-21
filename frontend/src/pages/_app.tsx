@@ -1,12 +1,11 @@
 // next
 import { AppProps } from 'next/app';
-import dynamic from 'next/dynamic';
 
 // redux
 import { Provider } from 'react-redux';
 
 // apollo
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/react-hooks';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
 // material ui
 import { MuiThemeProvider } from '@material-ui/core/styles';

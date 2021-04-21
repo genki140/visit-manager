@@ -52,6 +52,7 @@ export type Mutation = {
   deleteUser?: Maybe<Ability>;
   deleteRole?: Maybe<Role>;
   createResidence: Residence;
+  updateResidence: Residence;
 };
 
 
@@ -72,6 +73,11 @@ export type MutationDeleteRoleArgs = {
 
 export type MutationCreateResidenceArgs = {
   residence: CreateResidenceInput;
+};
+
+
+export type MutationUpdateResidenceArgs = {
+  residence: UpdateResidenceInput;
 };
 
 export type Organization = {
@@ -169,6 +175,13 @@ export type RoledUser = {
   roles: Array<Role>;
 };
 
+export type UpdateResidenceInput = {
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -242,6 +255,25 @@ export type CreateResidenceMutationVariables = Exact<{
 export type CreateResidenceMutation = (
   { __typename?: 'Mutation' }
   & { createResidence: (
+    { __typename?: 'Residence' }
+    & Pick<Residence, 'id' | 'latitude' | 'longitude' | 'name'>
+    & { residents: Array<(
+      { __typename?: 'Resident' }
+      & Pick<Resident, 'id' | 'room' | 'floor'>
+    )> }
+  ) }
+);
+
+export type UpdateResidenceMutationVariables = Exact<{
+  id: Scalars['ID'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
+}>;
+
+
+export type UpdateResidenceMutation = (
+  { __typename?: 'Mutation' }
+  & { updateResidence: (
     { __typename?: 'Residence' }
     & Pick<Residence, 'id' | 'latitude' | 'longitude' | 'name'>
     & { residents: Array<(
@@ -420,6 +452,51 @@ export function useCreateResidenceMutation(baseOptions?: Apollo.MutationHookOpti
 export type CreateResidenceMutationHookResult = ReturnType<typeof useCreateResidenceMutation>;
 export type CreateResidenceMutationResult = Apollo.MutationResult<CreateResidenceMutation>;
 export type CreateResidenceMutationOptions = Apollo.BaseMutationOptions<CreateResidenceMutation, CreateResidenceMutationVariables>;
+export const UpdateResidenceDocument = gql`
+    mutation updateResidence($id: ID!, $latitude: Float!, $longitude: Float!) {
+  updateResidence(
+    residence: {id: $id, name: "", latitude: $latitude, longitude: $longitude}
+  ) {
+    id
+    latitude
+    longitude
+    name
+    residents {
+      id
+      room
+      floor
+    }
+  }
+}
+    `;
+export type UpdateResidenceMutationFn = Apollo.MutationFunction<UpdateResidenceMutation, UpdateResidenceMutationVariables>;
+
+/**
+ * __useUpdateResidenceMutation__
+ *
+ * To run a mutation, you first call `useUpdateResidenceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateResidenceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateResidenceMutation, { data, loading, error }] = useUpdateResidenceMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      latitude: // value for 'latitude'
+ *      longitude: // value for 'longitude'
+ *   },
+ * });
+ */
+export function useUpdateResidenceMutation(baseOptions?: Apollo.MutationHookOptions<UpdateResidenceMutation, UpdateResidenceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateResidenceMutation, UpdateResidenceMutationVariables>(UpdateResidenceDocument, options);
+      }
+export type UpdateResidenceMutationHookResult = ReturnType<typeof useUpdateResidenceMutation>;
+export type UpdateResidenceMutationResult = Apollo.MutationResult<UpdateResidenceMutation>;
+export type UpdateResidenceMutationOptions = Apollo.BaseMutationOptions<UpdateResidenceMutation, UpdateResidenceMutationVariables>;
 export const GetUserAreasDocument = gql`
     query getUserAreas($organizationId: ID!) {
   userAreas(organizationId: $organizationId) {
