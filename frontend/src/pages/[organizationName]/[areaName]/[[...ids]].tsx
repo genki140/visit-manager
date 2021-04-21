@@ -2,20 +2,14 @@ import React, { useRef, useState } from 'react';
 import { Button, Drawer, Fab, makeStyles, Slide } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import Layout from '@/components/layout';
-import Map, { MapPosition } from '@/components/map';
+import Map from '@/components/map';
 import ErrorPage from 'next/error';
 import AddIcon from '@material-ui/icons/Add';
 import { Marker, Polygon } from '@react-google-maps/api';
-import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
-import BlockRoundedIcon from '@material-ui/icons/BlockRounded';
-import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
+import HouseIcon from '@material-ui/icons/House';
+import Crop54Icon from '@material-ui/icons/Crop54';
 import { gql } from '@apollo/client';
-import {
-  useGetUserAreaQuery,
-  useCreateResidenceMutation,
-  GetUserAreaDocument,
-  useUpdateResidenceMutation,
-} from '@/types/graphql';
+import { useGetUserAreaQuery, useCreateResidenceMutation, useUpdateResidenceMutation } from '@/types/graphql';
 import { actions, useAppDispatch } from '@/ducks/store';
 
 // 地図ページ。設定画面と兼用
@@ -103,7 +97,9 @@ const ApartmentPath =
 const AreaPage = () => {
   const dispatch = useAppDispatch();
   const [roomEditTargetRoomId, setRoomEditTargetRoomId] = useState<number | undefined>();
-  const [roomSelectTargetPlaceId, setRoomSelectTargetPlaceId] = useState<string | undefined>();
+
+  const [selectedResidenceId, setSelectedResidenceId] = useState<string | undefined>();
+  const [selectedPolygonId, setSelectedPolygonId] = useState<string | undefined>();
 
   // const [mapZoom, setMapZoom] = useState<number>();
   // const [mapCenter, setMapCenter] = useState<MapPosition>({ latitude: 0, longitude: 0 });
@@ -115,26 +111,50 @@ const AreaPage = () => {
   const areaName = (router.query.areaName ?? '').toString();
   // const areaPath = (organizationName === '' ? '' : '/' + organizationName) + (areaName === '' ? '' : '/' + areaName);
 
-  // 現状、毎回オンラインから取得するため低速。追加後なのでキャッシュからで十分なんだが。
   const [createResidence, createResidenceResult] = useCreateResidenceMutation({
-    // update: (cache, result) => {
-    //   const comments = cache.readQuery({
-    //     query: getUserAreaGql,
-    //     variables: { organizationId: organizationName, areaId: areaName },
-    //   });
-    //   const newData = Object.assign(comments, result.data);
-    //   cache.writeQuery({
-    //   });
+    // // これがうまく動かない
+    // optimisticResponse: {
+    //   __typename: 'Mutation',
+    //   createResidence: {
+    //     __typename: 'Residence',
+    //     id: '100',
+    //     name: '',
+    //     latitude: pos.lat,
+    //     longitude: pos.lng,
+    //     residents: [],
+    //   },
     // },
+    update: (cache, { data }) => {
+      // こんな感じで書きたい
+      // RefreshCache(getUserAreaResult,(cache)=>cache.userAreas[0].area.residences.push(data?.createResidence));
+
+      // getUserAreaResult.variables
+
+      // キャッシュデータ取得
+      const copiedData = JSON.parse(
+        JSON.stringify(
+          cache.readQuery({
+            query: getUserAreaGql,
+            variables: getUserAreaResult.variables,
+          }),
+        ),
+      );
+
+      // クエリに対するキャッシュデータ書き換え
+      copiedData.userAreas[0].area.residences.push(data?.createResidence);
+
+      // キャッシュデータ更新
+      cache.writeQuery({
+        query: getUserAreaGql,
+        variables: getUserAreaResult.variables,
+        data: copiedData,
+      });
+    },
   });
 
   const [updateResidence, updateResidenceResult] = useUpdateResidenceMutation();
 
-  // const [createResidence, createResidenceResult] = useCreateResidenceMutation({ refetchQueries: ['getUserArea'] });
   const getUserAreaResult = useGetUserAreaQuery({
-    // fetchPolicy: 'cache-and-network',
-    // nextFetchPolicy: 'cache-only',
-
     variables: { organizationId: organizationName, areaId: areaName },
   });
   const userArea = getUserAreaResult.data?.userAreas?.[0];
@@ -161,18 +181,16 @@ const AreaPage = () => {
       {userArea != null && (
         <>
           <Map>
-            {(mapRef) => (
+            {(map) => (
               <>
                 {userArea.area.residences.map((residence) => {
+                  const isSelected = selectedResidenceId === residence.id;
                   return (
                     <Marker
                       key={'residence:' + residence.id}
-                      position={{
-                        lat: residence.latitude,
-                        lng: residence.longitude,
-                      }}
+                      position={{ lat: residence.latitude, lng: residence.longitude }}
                       icon={{
-                        fillColor: '#8888FF', //塗り潰し色
+                        fillColor: isSelected ? '#0000FF' : '#8888FF', //塗り潰し色
                         strokeColor: '#6666AA', //枠の色
                         fillOpacity: 1.0,
                         strokeOpacity: 1.0,
@@ -181,22 +199,63 @@ const AreaPage = () => {
                         path: HousePath,
                         scale: 1.5,
                       }}
-                      draggable={true}
-                      onClick={() => {
+                      draggable={isSelected}
+                      onClick={() => setSelectedResidenceId(residence.id)}
+                      onDragEnd={(e) => {
                         updateResidence({
                           variables: {
                             id: residence.id,
-                            latitude: residence.latitude + 0.001,
-                            longitude: residence.longitude,
+                            latitude: e.latLng.lat(),
+                            longitude: e.latLng.lng(),
+                          },
+                          optimisticResponse: {
+                            updateResidence: Object.assign({}, residence, {
+                              __typename: 'Residence',
+                              latitude: e.latLng.lat(),
+                              longitude: e.latLng.lng(),
+                            }),
                           },
                         });
-                        setRoomSelectTargetPlaceId(residence.id);
                       }}
                     />
                   );
                 })}
 
-                <Polygon
+                {userArea.area.polygons.map((polygon) => {
+                  const isSelected = selectedPolygonId === polygon.id;
+                  return (
+                    <Polygon
+                      key={'polygon:' + polygon.id}
+                      editable={true} // ポイント移動を許可
+                      draggable={true} // エッジ追加を許可
+                      options={{
+                        fillOpacity: 0, // 塗りつぶし無し
+                        geodesic: false,
+                        clickable: false, // 全体のクリック禁止
+                        strokeColor: 'blue',
+                      }}
+                      // onClick={() => setSelectedResidenceId(residence.id)}
+                      // onDragEnd={(e) => {
+                      //   updateResidence({
+                      //     variables: {
+                      //       id: residence.id,
+                      //       latitude: e.latLng.lat(),
+                      //       longitude: e.latLng.lng(),
+                      //     },
+                      //     optimisticResponse: {
+                      //       updateResidence: Object.assign({}, residence, {
+                      //         __typename: 'Residence',
+                      //         latitude: e.latLng.lat(),
+                      //         longitude: e.latLng.lng(),
+                      //       }),
+                      //     },
+                      //   });
+                      // }}
+                    />
+                  );
+                })}
+
+                {/* <Polygon
                   editable={true} // ポイント移動を許可
                   draggable={true} // エッジ追加を許可
                   options={{
@@ -222,47 +281,42 @@ const AreaPage = () => {
                       lng: 139.77521,
                     },
                   ]}
-                ></Polygon>
+                ></Polygon> */}
 
                 <Slide direction="up" in={router.query.ids?.[0] === 'settings'} mountOnEnter unmountOnExit>
                   <div className={classes.button}>
                     <Fab
                       color="secondary"
                       onClick={async () => {
-                        const pos = mapRef.getCenter().toJSON();
-
-                        // dispatch(actions)
+                        const pos = map.getCenter().toJSON();
                         const result = await createResidence({
                           variables: {
                             areaId: userArea.area.id,
                             latitude: pos.lat,
                             longitude: pos.lng,
                           },
-                          update: (cache, { data }) => {
-                            // こんな感じで書きたい
-                            // RefreshCache(getUserAreaResult,(cache)=>cache.userAreas[0].area.residences.push(data?.createResidence));
-
-                            // キャッシュデータ取得
-                            const readedQuery = cache.readQuery({
-                              query: getUserAreaGql,
-                              variables: { organizationId: organizationName, areaId: areaName },
-                            }) as any;
-
-                            // クエリに対するキャッシュデータ書き換え
-                            const copiedData = JSON.parse(JSON.stringify(readedQuery));
-                            copiedData.userAreas[0].area.residences.push(data?.createResidence);
-                            console.log(copiedData);
-
-                            // キャッシュデータ更新
-                            cache.writeQuery({
-                              query: getUserAreaGql,
-                              variables: { organizationId: organizationName, areaId: areaName },
-                              data: copiedData,
-                            });
-                          },
                         });
                       }}
                     >
+                      <HouseIcon />
+                      <AddIcon />
+                    </Fab>
+
+                    <Fab
+                      color="secondary"
+                      onClick={async () => {
+                        // const pos = map.getCenter().toJSON();
+                        // const zoom = map.getZoom();
+                        // const result = await createResidence({
+                        //   variables: {
+                        //     areaId: userArea.area.id,
+                        //     latitude: pos.lat,
+                        //     longitude: pos.lng,
+                        //   },
+                        // });
+                      }}
+                    >
+                      <Crop54Icon />
                       <AddIcon />
                     </Fab>
                   </div>
@@ -272,10 +326,10 @@ const AreaPage = () => {
           </Map>
 
           {/* 部屋選択 */}
-          <Drawer
+          {/* <Drawer
             anchor="bottom"
-            open={roomSelectTargetPlaceId != null && roomEditTargetRoomId == null}
-            onClose={() => setRoomSelectTargetPlaceId(undefined)}
+            open={selectedResidenceId != null && roomEditTargetRoomId == null}
+            onClose={() => setSelectedResidenceId(undefined)}
           >
             <div>部屋選択</div>
             <div
@@ -357,7 +411,7 @@ const AreaPage = () => {
             anchor="bottom"
             open={roomEditTargetRoomId != null}
             onClose={() => {
-              setRoomSelectTargetPlaceId(undefined);
+              setSelectedResidenceId(undefined);
               setRoomEditTargetRoomId(undefined);
             }}
           >
@@ -380,7 +434,7 @@ const AreaPage = () => {
             >
               部屋一覧
             </Button>
-          </Drawer>
+          </Drawer> */}
         </>
       )}
     </Layout>

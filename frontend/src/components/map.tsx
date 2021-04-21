@@ -27,7 +27,7 @@ export type MapData = {
 
 const Map = (
   props: {
-    children: (mapData: any) => ReactNode;
+    children: (map: google.maps.Map) => ReactNode;
     // onCenterChanged?: (position: MapPosition) => void;
     // onZoomChanged?: (zoom: number) => void;
   },
@@ -35,7 +35,7 @@ const Map = (
 ) => {
   // const dispatch = useAppDispatch();
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [mapRef, setMapRef] = useState<any>(null);
+  const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
 
   // const mapRefCurrent = useImperativeHandle(ref, () => {
   //   return {
