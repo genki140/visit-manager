@@ -19,14 +19,12 @@ export class ResidenceResolver {
   @Mutation(() => Residence)
   async createResidence(@Args('residence') residence: CreateResidenceInput) {
     const result = await this.residenceService.create(residence);
-    console.log(result);
     return result;
   }
 
   @Mutation(() => Residence)
   async updateResidence(@Args('residence') residence: UpdateResidenceInput) {
     const result = await this.residenceService.update(residence);
-    console.log(result);
     return result;
   }
 

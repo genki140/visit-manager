@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
-import { Polygon } from './polygon.model';
+import { CreatePolygonInput, Polygon, UpdatePolygonInput } from './polygon.model';
 
 @Injectable()
 export class PolygonService {
@@ -18,30 +18,24 @@ export class PolygonService {
     }
   }
 
-  // async create(payload: CreateResidenceInput) {
-  //   const result = await this.residenceRepository.save({
-  //     areaId: payload.areaId,
-  //     name: payload.name,
-  //     latitude: payload.latitude,
-  //     longitude: payload.longitude,
-  //   });
+  async create(payload: CreatePolygonInput) {
+    // const result = await this.polygonRepository.save({
+    //   areaId: payload.areaId,
+    //   points: payload.points,
+    // });
+    // return this.polygonRepository.findOne(result.id, {
+    //   relations: ['points'],
+    // });
+  }
 
-  //   return this.residenceRepository.findOne(result.id, {
-  //     relations: ['residents'],
-  //   });
-  // }
-
-  // async update(payload: UpdateResidenceInput) {
-  //   let item = await this.residenceRepository.findOneOrFail(payload.id, {
-  //     relations: ['residents'],
-  //   });
-
-  //   item.name = payload.name;
-  //   item.latitude = payload.latitude;
-  //   item.longitude = payload.longitude;
-  //   const result = await this.residenceRepository.save(item);
-  //   return item;
-  // }
+  async update(payload: UpdatePolygonInput) {
+    // const item = await this.polygonRepository.findOneOrFail(payload.id, {
+    //   relations: ['points'],
+    // });
+    // item.points = payload.points;
+    // const result = await this.polygonRepository.save(item);
+    // return item;
+  }
 
   // async delete(id: number) {
   //   await this.userRepository.delete(id);

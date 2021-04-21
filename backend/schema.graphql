@@ -100,8 +100,9 @@ type Mutation {
   createUser(user: CreateUserInput!): User!
   deleteUser(id: ID!): Ability
   deleteRole(id: ID!): Role
-  createResidence(residence: CreateResidenceInput!): Residence!
+  createPolygon(polygon: CreatePolygonInput!): Polygon!
   updateResidence(residence: UpdateResidenceInput!): Residence!
+  createResidence(residence: CreateResidenceInput!): Residence!
 }
 
 input CreateUserInput {
@@ -109,15 +110,19 @@ input CreateUserInput {
   password: String = ""
 }
 
-input CreateResidenceInput {
+input CreatePolygonInput {
   areaId: ID = 0
+}
+
+input UpdateResidenceInput {
+  id: ID = 0
   name: String = ""
   latitude: Float = 0
   longitude: Float = 0
 }
 
-input UpdateResidenceInput {
-  id: ID = 0
+input CreateResidenceInput {
+  areaId: ID = 0
   name: String = ""
   latitude: Float = 0
   longitude: Float = 0
