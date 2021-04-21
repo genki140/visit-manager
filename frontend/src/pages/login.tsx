@@ -1,8 +1,7 @@
 import Layout from '@/components/layout';
 import React, { useState } from 'react';
 import { Button, createStyles, makeStyles, TextField, Theme } from '@material-ui/core';
-import { asyncLogin } from '@/ducks/app';
-import { useAppDispatch } from '@/ducks/store';
+import { asyncLogin, useAppDispatch } from '@/ducks/store';
 import Router from 'next/router';
 import { unwrapResult } from '@reduxjs/toolkit';
 

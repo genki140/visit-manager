@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { MaxLength } from 'class-validator';
 import { Role } from '../role/role.model';
 import { User } from '../user/user.model';
@@ -16,6 +16,7 @@ export class Organization {
   /** 組織名(URLに含まれるため重複できない) */
   @Field()
   @Column({ length: 100 })
+  @Index({ unique: true })
   name: string = '';
 
   /** ユーザーとのリレーション */

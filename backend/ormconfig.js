@@ -8,7 +8,8 @@ module.exports = {
   password: process.env.DB_PASSWORD || 'password',
   database: process.env.DB_NAME || 'database',
   synchronize: true,
-  logging: true,
+  // logging: true, // デバッグにSQLを出力する
+
   // entities: [join(__dirname, '**', '*.model.ts}')],
   // entities: ['./src/entities/**/*.model.ts'],
   // migrations: ['common/migration/**/*.ts'],

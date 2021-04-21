@@ -15,18 +15,14 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import { AccountCircle, Settings } from '@material-ui/icons';
-import SaveIcon from '@material-ui/icons/Save';
-import ClearIcon from '@material-ui/icons/Clear';
-import GestureIcon from '@material-ui/icons/Gesture';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
-import { useAppState } from '@/ducks/app';
 import Link from 'next/link';
 import MapIcon from '@material-ui/icons/Map';
 import MenuIcon from '@material-ui/icons/Menu';
 import { useRouter } from 'next/router';
 import EditIcon from '@material-ui/icons/Edit';
+import { useStoreState } from '@/ducks/store';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -89,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Layout = (props: { children: ReactNode; title: string; fillContent?: boolean; showMenuButton?: boolean }) => {
   const classes = useStyles();
-  const app = useAppState().app;
+  const app = useStoreState();
   const router = useRouter();
   const [menuVisibled, setMenuVisibled] = useState(false);
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Organization } from '../organization/organization.model';
 import { UserArea } from '../user-area/user-area.model';
 import { Polygon } from '../polygon/polygon.model';
@@ -8,6 +8,7 @@ import { Residence } from '../residence/residence.model';
 
 @ObjectType()
 @Entity('areas')
+@Index(['id', 'name'], { unique: true }) // 同じ組織に同名は許可しない
 export class Area {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
@@ -16,6 +17,7 @@ export class Area {
   /** 名前 */
   @Field()
   @Column({ length: 100 })
+  @Index() // 異なる組織の同名は許可するためユニークにはしない
   name: string = '';
 
   /** 解説 */

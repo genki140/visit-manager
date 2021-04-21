@@ -26,10 +26,18 @@ export type Area = {
   __typename?: 'Area';
   id: Scalars['ID'];
   name: Scalars['String'];
+  description: Scalars['String'];
   organization: Organization;
   userAreas: Array<UserArea>;
   residences: Array<Residence>;
   polygons: Array<Polygon>;
+};
+
+export type CreateResidenceInput = {
+  areaId?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
 };
 
 export type CreateUserInput = {
@@ -43,6 +51,7 @@ export type Mutation = {
   createUser: User;
   deleteUser?: Maybe<Ability>;
   deleteRole?: Maybe<Role>;
+  createResidence: Residence;
 };
 
 
@@ -58,6 +67,11 @@ export type MutationDeleteUserArgs = {
 
 export type MutationDeleteRoleArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationCreateResidenceArgs = {
+  residence: CreateResidenceInput;
 };
 
 export type Organization = {
@@ -117,12 +131,14 @@ export type QueryAreasArgs = {
 
 
 export type QueryUserAreasArgs = {
+  ids?: Maybe<Array<Scalars['ID']>>;
   organizationId: Scalars['ID'];
 };
 
 export type Residence = {
   __typename?: 'Residence';
   id: Scalars['ID'];
+  name: Scalars['String'];
   latitude: Scalars['Float'];
   longitude: Scalars['Float'];
   residents: Array<Resident>;
@@ -182,6 +198,57 @@ export type GetAreasQuery = (
     { __typename?: 'Area' }
     & Pick<Area, 'id' | 'name'>
   )> }
+);
+
+export type GetUserAreaQueryVariables = Exact<{
+  organizationId: Scalars['ID'];
+  areaId: Scalars['ID'];
+}>;
+
+
+export type GetUserAreaQuery = (
+  { __typename?: 'Query' }
+  & { userAreas: Array<(
+    { __typename?: 'UserArea' }
+    & { area: (
+      { __typename?: 'Area' }
+      & Pick<Area, 'id' | 'name' | 'description'>
+      & { residences: Array<(
+        { __typename?: 'Residence' }
+        & Pick<Residence, 'id' | 'name' | 'latitude' | 'longitude'>
+        & { residents: Array<(
+          { __typename?: 'Resident' }
+          & Pick<Resident, 'id' | 'room' | 'floor'>
+        )> }
+      )>, polygons: Array<(
+        { __typename?: 'Polygon' }
+        & Pick<Polygon, 'id'>
+        & { points: Array<(
+          { __typename?: 'PolygonPoint' }
+          & Pick<PolygonPoint, 'id' | 'latitude' | 'longitude'>
+        )> }
+      )> }
+    ) }
+  )> }
+);
+
+export type CreateResidenceMutationVariables = Exact<{
+  areaId: Scalars['ID'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
+}>;
+
+
+export type CreateResidenceMutation = (
+  { __typename?: 'Mutation' }
+  & { createResidence: (
+    { __typename?: 'Residence' }
+    & Pick<Residence, 'id' | 'latitude' | 'longitude' | 'name'>
+    & { residents: Array<(
+      { __typename?: 'Resident' }
+      & Pick<Resident, 'id' | 'room' | 'floor'>
+    )> }
+  ) }
 );
 
 export type GetUserAreasQueryVariables = Exact<{
@@ -249,6 +316,110 @@ export function useGetAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetAreasQueryHookResult = ReturnType<typeof useGetAreasQuery>;
 export type GetAreasLazyQueryHookResult = ReturnType<typeof useGetAreasLazyQuery>;
 export type GetAreasQueryResult = Apollo.QueryResult<GetAreasQuery, GetAreasQueryVariables>;
+export const GetUserAreaDocument = gql`
+    query getUserArea($organizationId: ID!, $areaId: ID!) {
+  userAreas(organizationId: $organizationId, ids: [$areaId]) {
+    area {
+      id
+      name
+      description
+      residences {
+        id
+        name
+        latitude
+        longitude
+        residents {
+          id
+          room
+          floor
+        }
+      }
+      polygons {
+        id
+        points {
+          id
+          latitude
+          longitude
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserAreaQuery__
+ *
+ * To run a query within a React component, call `useGetUserAreaQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserAreaQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserAreaQuery({
+ *   variables: {
+ *      organizationId: // value for 'organizationId'
+ *      areaId: // value for 'areaId'
+ *   },
+ * });
+ */
+export function useGetUserAreaQuery(baseOptions: Apollo.QueryHookOptions<GetUserAreaQuery, GetUserAreaQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserAreaQuery, GetUserAreaQueryVariables>(GetUserAreaDocument, options);
+      }
+export function useGetUserAreaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserAreaQuery, GetUserAreaQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserAreaQuery, GetUserAreaQueryVariables>(GetUserAreaDocument, options);
+        }
+export type GetUserAreaQueryHookResult = ReturnType<typeof useGetUserAreaQuery>;
+export type GetUserAreaLazyQueryHookResult = ReturnType<typeof useGetUserAreaLazyQuery>;
+export type GetUserAreaQueryResult = Apollo.QueryResult<GetUserAreaQuery, GetUserAreaQueryVariables>;
+export const CreateResidenceDocument = gql`
+    mutation createResidence($areaId: ID!, $latitude: Float!, $longitude: Float!) {
+  createResidence(
+    residence: {areaId: $areaId, name: "", latitude: $latitude, longitude: $longitude}
+  ) {
+    id
+    latitude
+    longitude
+    name
+    residents {
+      id
+      room
+      floor
+    }
+  }
+}
+    `;
+export type CreateResidenceMutationFn = Apollo.MutationFunction<CreateResidenceMutation, CreateResidenceMutationVariables>;
+
+/**
+ * __useCreateResidenceMutation__
+ *
+ * To run a mutation, you first call `useCreateResidenceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateResidenceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createResidenceMutation, { data, loading, error }] = useCreateResidenceMutation({
+ *   variables: {
+ *      areaId: // value for 'areaId'
+ *      latitude: // value for 'latitude'
+ *      longitude: // value for 'longitude'
+ *   },
+ * });
+ */
+export function useCreateResidenceMutation(baseOptions?: Apollo.MutationHookOptions<CreateResidenceMutation, CreateResidenceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateResidenceMutation, CreateResidenceMutationVariables>(CreateResidenceDocument, options);
+      }
+export type CreateResidenceMutationHookResult = ReturnType<typeof useCreateResidenceMutation>;
+export type CreateResidenceMutationResult = Apollo.MutationResult<CreateResidenceMutation>;
+export type CreateResidenceMutationOptions = Apollo.BaseMutationOptions<CreateResidenceMutation, CreateResidenceMutationVariables>;
 export const GetUserAreasDocument = gql`
     query getUserAreas($organizationId: ID!) {
   userAreas(organizationId: $organizationId) {

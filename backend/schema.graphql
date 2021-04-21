@@ -49,6 +49,7 @@ type Resident {
 
 type Residence {
   id: ID!
+  name: String!
   latitude: Float!
   longitude: Float!
   residents: [Resident!]!
@@ -92,16 +93,24 @@ type Query {
   abilities: [Ability!]!
   organizations: [Organization!]!
   areas(organizationId: ID!): [Area!]!
-  userAreas(organizationId: ID!): [UserArea!]!
+  userAreas(ids: [ID!] = null, organizationId: ID!): [UserArea!]!
 }
 
 type Mutation {
   createUser(user: CreateUserInput!): User!
   deleteUser(id: ID!): Ability
   deleteRole(id: ID!): Role
+  createResidence(residence: CreateResidenceInput!): Residence!
 }
 
 input CreateUserInput {
   userId: String = ""
   password: String = ""
+}
+
+input CreateResidenceInput {
+  areaId: ID = 0
+  name: String = ""
+  latitude: Float = 0
+  longitude: Float = 0
 }

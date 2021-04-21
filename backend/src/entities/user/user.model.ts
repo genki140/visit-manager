@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { MaxLength } from 'class-validator';
 import { RoledUser } from '../roled-user/roled-user.model';
 import { UserArea } from '../user-area/user-area.model';
@@ -19,6 +19,7 @@ export class User {
   /** ユーザーID */
   @Field()
   @Column({ length: 100 })
+  @Index({ unique: true })
   username: string = '';
 
   /** パスワード */
