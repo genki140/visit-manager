@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button, Drawer, Fab, makeStyles, Slide } from '@material-ui/core';
+import { BottomNavigation, BottomNavigationAction, Button, Drawer, Fab, makeStyles, Slide } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import Layout from '@/components/layout';
 import Map, { MapOutput } from '@/components/map';
@@ -8,11 +8,15 @@ import AddIcon from '@material-ui/icons/Add';
 import { Marker, Polygon } from '@react-google-maps/api';
 import HouseIcon from '@material-ui/icons/House';
 import Crop54Icon from '@material-ui/icons/Crop54';
+import RestoreIcon from '@material-ui/icons/Restore';
 import { gql } from '@apollo/client';
 import { useGetUserAreaQuery, useCreateResidenceMutation, useUpdateResidenceMutation } from '@/types/graphql';
-import { actions, useAppDispatch, useStoreState } from '@/ducks/store';
+import { actions, MapEditType, useAppDispatch, useStoreState } from '@/ducks/store';
 import MapData, { getUserAreaGql } from '@/components/map-data';
 import { assertNonNullType } from 'graphql';
+import EditIcon from '@material-ui/icons/Edit';
+import ApartmentIcon from '@material-ui/icons/Apartment';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 // 地図ページ。設定画面と兼用
 
@@ -37,14 +41,14 @@ const AreaPage = () => {
 
   // local states
 
-  const [roomEditTargetRoomId, setRoomEditTargetRoomId] = useState<number | undefined>();
-  // const [mapZoom, setMapZoom] = useState<number>();
-  // const [mapCenter, setMapCenter] = useState<MapPosition>({ latitude: 0, longitude: 0 });
+  // const [roomEditTargetRoomId, setRoomEditTargetRoomId] = useState<number | undefined>();
 
   // radux states
 
   const dispatch = useAppDispatch();
   const mapLoaded = useStoreState((x) => x.map.loaded);
+  const mapEditType = useStoreState((x) => x.map.editType);
+  const selectedResidenceId = useStoreState((x) => x.map.selectedResidenceId);
 
   // router
 
@@ -53,56 +57,6 @@ const AreaPage = () => {
   // const organizationPath = '/' + organizationName;
   const areaName = (router.query.areaName ?? '').toString();
   // const areaPath = (organizationName === '' ? '' : '/' + organizationName) + (areaName === '' ? '' : '/' + areaName);
-
-  // queries
-
-  const getUserAreaResult = useGetUserAreaQuery({
-    variables: { organizationId: organizationName, areaId: areaName },
-  });
-  const userArea = getUserAreaResult.data?.userAreas?.[0];
-
-  // mutations
-
-  const [createResidence, createResidenceResult] = useCreateResidenceMutation({
-    // // これがうまく動かない
-    // optimisticResponse: {
-    //   __typename: 'Mutation',
-    //   createResidence: {
-    //     __typename: 'Residence',
-    //     id: '100',
-    //     name: '',
-    //     latitude: pos.lat,
-    //     longitude: pos.lng,
-    //     residents: [],
-    //   },
-    // },
-    update: (cache, { data }) => {
-      // こんな感じで書きたい
-      // RefreshCache(getUserAreaResult,(cache)=>cache.userAreas[0].area.residences.push(data?.createResidence));
-
-      // getUserAreaResult.variables
-
-      // キャッシュデータ取得
-      const copiedData = JSON.parse(
-        JSON.stringify(
-          cache.readQuery({
-            query: getUserAreaGql,
-            variables: getUserAreaResult.variables,
-          }),
-        ),
-      );
-
-      // クエリに対するキャッシュデータ書き換え
-      copiedData.userAreas[0].area.residences.push(data?.createResidence);
-
-      // キャッシュデータ更新
-      cache.writeQuery({
-        query: getUserAreaGql,
-        variables: getUserAreaResult.variables,
-        data: copiedData,
-      });
-    },
-  });
 
   // // ユーザーがこの組織に所属していなければ404
   // if (error != null) {
@@ -123,7 +77,7 @@ const AreaPage = () => {
   }
 
   return (
-    <Layout title={areaName + (createResidenceResult.loading ? '読み込み中' : '')} fillContent={true}>
+    <Layout title={areaName} fillContent={true}>
       <Map ref={mapRef}>
         <MapData />
       </Map>
@@ -131,30 +85,58 @@ const AreaPage = () => {
       <Slide direction="up" in={router.query.ids?.[0] === 'settings'} mountOnEnter unmountOnExit>
         <div className={classes.button}>
           <Fab
-            color="secondary"
+            color={mapEditType === MapEditType.Residence ? 'primary' : undefined}
             onClick={async () => {
-              if (userArea != null) {
-                const mapInfo = mapRef.current.getInfo();
-                await createResidence({
-                  variables: {
-                    areaId: userArea.area.id,
-                    latitude: mapInfo.center.latitude,
-                    longitude: mapInfo.center.longitude,
-                  },
-                });
-              }
+              dispatch(actions.setMapEditType({ editType: MapEditType.Residence }));
             }}
           >
             <HouseIcon />
-            <AddIcon />
           </Fab>
 
-          <Fab color="secondary" onClick={async () => {}}>
+          {mapEditType === MapEditType.Residence ? (
+            <Fab
+              disabled={selectedResidenceId == null}
+              color={'secondary'}
+              onClick={async () => {
+                //
+              }}
+            >
+              <DeleteIcon />
+            </Fab>
+          ) : null}
+
+          <Fab
+            color={mapEditType === MapEditType.Room ? 'primary' : undefined}
+            onClick={async () => {
+              dispatch(actions.setMapEditType({ editType: MapEditType.Room }));
+            }}
+          >
+            <ApartmentIcon />
+          </Fab>
+
+          <Fab
+            color={mapEditType === MapEditType.Polygon ? 'primary' : undefined}
+            onClick={async () => {
+              dispatch(actions.setMapEditType({ editType: MapEditType.Polygon }));
+            }}
+          >
             <Crop54Icon />
-            <AddIcon />
           </Fab>
         </div>
       </Slide>
+
+      {/* <BottomNavigation
+        // value={value}
+        // onChange={(event, newValue) => {
+        //   setValue(newValue);
+        // }}
+        showLabels
+        // className={classes.root}
+      >
+        <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
+        <BottomNavigationAction label="Favorites" icon={<RestoreIcon />} />
+        <BottomNavigationAction label="Nearby" icon={<RestoreIcon />} />
+      </BottomNavigation> */}
 
       {/* 部屋選択 */}
       {/* <Drawer

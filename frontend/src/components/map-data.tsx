@@ -1,4 +1,4 @@
-import { actions, useAppDispatch, useStoreState } from '@/ducks/store';
+import { actions, MapEditType, useAppDispatch, useStoreState } from '@/ducks/store';
 import { useGetUserAreaQuery, useUpdateResidenceMutation } from '@/types/graphql';
 import { gql } from '@apollo/client';
 import { Marker, Polygon } from '@react-google-maps/api';
@@ -12,6 +12,7 @@ const ApartmentPath =
 
 const MapData = () => {
   // local state
+  // const [markerDragging, setMarkerDragging] = useState(false);
 
   // redux state
 
@@ -19,6 +20,7 @@ const MapData = () => {
   const mapLoaded = useStoreState((x) => x.map.loaded);
   const selectedResidenceId = useStoreState((x) => x.map.selectedResidenceId);
   const selectedPolygonId = useStoreState((x) => x.map.selectedPolygonId);
+  const mapEditType = useStoreState((x) => x.map.editType);
 
   // router
 
@@ -27,6 +29,9 @@ const MapData = () => {
   // const organizationPath = '/' + organizationName;
   const areaName = (router.query.areaName ?? '').toString();
   // const areaPath = (organizationName === '' ? '' : '/' + organizationName) + (areaName === '' ? '' : '/' + areaName);
+  // if (organizationName === '' || areaName === '') {
+  //   return null;
+  // }
 
   // queries
 
@@ -39,6 +44,8 @@ const MapData = () => {
 
   // render
 
+  // console.log(markerDragging);
+
   return userArea != null && mapLoaded ? (
     <>
       {userArea.area.residences.map((residence) => {
@@ -47,6 +54,7 @@ const MapData = () => {
           <Marker
             key={'residence:' + residence.id}
             position={{ lat: residence.latitude, lng: residence.longitude }}
+            cursor={mapEditType === MapEditType.Residence ? 'grab' : 'pointer'}
             icon={{
               fillColor: isSelected ? '#0000FF' : '#8888FF', //塗り潰し色
               strokeColor: '#6666AA', //枠の色
@@ -57,8 +65,12 @@ const MapData = () => {
               path: residence.residents.length > 2 ? ApartmentPath : HousePath,
               scale: 1.5,
             }}
-            draggable={isSelected}
-            onClick={() => dispatch(actions.setSelectedResidenceId(Number(residence.id)))}
+            draggable={mapEditType === MapEditType.Residence}
+            onClick={
+              // mapEditType === MapEditType.Residence
+              //   ? undefined :
+              () => dispatch(actions.setSelectedResidenceId(Number(residence.id)))
+            }
             onDragEnd={(e) => {
               updateResidence({
                 variables: {

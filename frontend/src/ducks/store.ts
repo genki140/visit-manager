@@ -2,6 +2,13 @@ import { AsyncThunk, configureStore, createAsyncThunk, createSlice, PayloadActio
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 
+export const MapEditType = {
+  Residence: 'Residence',
+  Room: 'Room',
+  Polygon: 'Polygon',
+} as const;
+export type MapEditType = typeof MapEditType[keyof typeof MapEditType];
+
 /** ストアの型 */
 export type StoreState = {
   loading: boolean;
@@ -14,6 +21,7 @@ export type StoreState = {
     zoom: number;
     selectedResidenceId?: number;
     selectedPolygonId?: number;
+    editType: MapEditType;
   };
   // residences: {
   //   test: number;
@@ -32,6 +40,7 @@ const createStoreInitial = () => {
         lng: 0,
       },
       zoom: 0,
+      editType: MapEditType.Residence,
     },
     // residences: [],
   };
@@ -79,6 +88,12 @@ export const storeSlice = createSlice({
     },
     setSelectedResidenceId: (state, action: PayloadAction<number | undefined>) => {
       state.map.selectedResidenceId = action.payload;
+    },
+    setMapEditType: (state, action: PayloadAction<{ editType: MapEditType }>) => {
+      state.map.editType = action.payload.editType;
+      if (action.payload.editType === MapEditType.Residence) {
+        state.map.selectedResidenceId = undefined;
+      }
     },
   },
   extraReducers: (builder) => {

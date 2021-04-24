@@ -1,3 +1,7 @@
+// import mapStyles from './mapUtils/mapStyles';
+// 地図のデザインを指定することができます。
+// デザインは https://snazzymaps.com からインポートすることができます。
+
 export const mapStyles: google.maps.MapTypeStyle[] = [
   // {
   //   featureType: 'all',
