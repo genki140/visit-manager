@@ -1,5 +1,5 @@
 import { StyledProps } from '@/types/styled-props';
-import { ApolloError } from '@apollo/react-hooks';
+import { ApolloError } from '@apollo/client';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import React, { ReactNode } from 'react';
 

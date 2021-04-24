@@ -6,11 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 export type StoreState = {
   loading: boolean;
   map: {
+    loaded: boolean;
     position: {
       lat: number;
       lng: number;
     };
     zoom: number;
+    selectedResidenceId?: number;
+    selectedPolygonId?: number;
   };
   // residences: {
   //   test: number;
@@ -23,6 +26,7 @@ const createStoreInitial = () => {
   const value: StoreState = {
     loading: false,
     map: {
+      loaded: false,
       position: {
         lat: 0,
         lng: 0,
@@ -69,6 +73,12 @@ export const storeSlice = createSlice({
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
+    },
+    setMapLoaded: (state) => {
+      state.map.loaded = true;
+    },
+    setSelectedResidenceId: (state, action: PayloadAction<number | undefined>) => {
+      state.map.selectedResidenceId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -120,4 +130,12 @@ type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
 // export type ReduxStore = Store<StoreState>;
 
 // useヘルパー
-export const useStoreState = () => useSelector((state: StoreState) => state);
+export const useStoreState = <T>(getter: (state: StoreState) => T): T => useSelector<StoreState, T>(getter);
+
+// 使い方
+// const loading = useStoreState((x) => x.loading);
+
+// export function useSelector<TState = DefaultRootState, TSelected = unknown>(
+//   selector: (state: TState) => TSelected,
+//   equalityFn?: (left: TSelected, right: TSelected) => boolean
+// ): TSelected;

@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Layout = (props: { children: ReactNode; title: string; fillContent?: boolean; showMenuButton?: boolean }) => {
   const classes = useStyles();
-  const app = useStoreState();
+  const appLoading = useStoreState((x) => x.loading);
   const router = useRouter();
   const [menuVisibled, setMenuVisibled] = useState(false);
 
@@ -182,7 +182,7 @@ const Layout = (props: { children: ReactNode; title: string; fillContent?: boole
         </List>
       </Drawer>
 
-      <Backdrop className={classes.backdrop} open={app.loading}>
+      <Backdrop className={classes.backdrop} open={appLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
 
