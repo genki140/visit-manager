@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import Layout from '@/components/layout';
+import { Layout } from '@/components/layout';
 import Link from 'next/link';
 
 const SettingsPage = () => {

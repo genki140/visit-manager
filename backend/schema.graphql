@@ -29,6 +29,7 @@ type RoledUser {
 
 type PolygonPoint {
   id: ID!
+  order: Float!
   latitude: Float!
   longitude: Float!
   polygon: Polygon!
@@ -111,7 +112,14 @@ input CreateUserInput {
 }
 
 input CreatePolygonInput {
+  points: [CreatePolygonPointInput!]!
   areaId: ID = 0
+}
+
+input CreatePolygonPointInput {
+  order: Float = 0
+  latitude: Float = 0
+  longitude: Float = 0
 }
 
 input UpdateResidenceInput {

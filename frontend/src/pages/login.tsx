@@ -1,36 +1,39 @@
-import Layout from '@/components/layout';
-import React, { useState } from 'react';
-import { Button, createStyles, makeStyles, TextField, Theme } from '@material-ui/core';
+import { Layout } from '@/components/layout';
+import { useState } from 'react';
+// import { Button, createStyles, makeStyles, TextField, Theme } from '@material-ui/core';
 import { asyncLogin, useAppDispatch } from '@/ducks/store';
-import Router from 'next/router';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { TextField } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { useRouter } from 'next/router';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      width: 400,
-      margin: `${theme.spacing(0)} auto`,
-    },
-    loginBtn: {
-      marginTop: theme.spacing(2),
-      flexGrow: 1,
-    },
-    header: {
-      textAlign: 'center',
-      background: '#212121',
-      color: '#fff',
-    },
-    card: {
-      marginTop: theme.spacing(10),
-    },
-  }),
-);
+// const useStyles = makeStyles((theme: Theme) =>
+//   createStyles({
+//     container: {
+//       display: 'flex',
+//       flexWrap: 'wrap',
+//       width: 400,
+//       margin: `${theme.spacing(0)} auto`,
+//     },
+//     loginBtn: {
+//       marginTop: theme.spacing(2),
+//       flexGrow: 1,
+//     },
+//     header: {
+//       textAlign: 'center',
+//       background: '#212121',
+//       color: '#fff',
+//     },
+//     card: {
+//       marginTop: theme.spacing(10),
+//     },
+//   }),
+// );
 
-const AboutPage = () => {
-  const classes = useStyles();
+const LoginPage = () => {
+  // const classes = useStyles();
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -74,7 +77,7 @@ const AboutPage = () => {
           color="secondary"
           onClick={async () => {
             unwrapResult(await dispatch(asyncLogin({ username, password })));
-            Router.push('/');
+            router.push('/');
           }}
           style={{
             display: 'flex',
@@ -129,4 +132,4 @@ const AboutPage = () => {
     </Layout>
   );
 };
-export default AboutPage;
+export default LoginPage;

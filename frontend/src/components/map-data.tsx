@@ -1,9 +1,8 @@
 import { actions, MapEditType, useAppDispatch, useStoreState } from '@/ducks/store';
 import { useGetUserAreaQuery, useUpdateResidenceMutation } from '@/types/graphql';
-import { gql } from '@apollo/client';
 import { Marker, Polygon } from '@react-google-maps/api';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React from 'react';
 
 // https://fonts.google.com/icons?selected=Material+Icons&icon.query=house
 const HousePath = 'M19,9.3V4h-3v2.6L12,3L2,12h3v8h5v-6h4v6h5v-8h3L19,9.3z M10,10c0-1.1,0.9-2,2-2s2,0.9,2,2H10z';
@@ -19,7 +18,7 @@ const MapData = () => {
   const dispatch = useAppDispatch();
   const mapLoaded = useStoreState((x) => x.map.loaded);
   const selectedResidenceId = useStoreState((x) => x.map.selectedResidenceId);
-  const selectedPolygonId = useStoreState((x) => x.map.selectedPolygonId);
+  // const selectedPolygonId = useStoreState((x) => x.map.selectedPolygonId);
   const mapEditType = useStoreState((x) => x.map.editType);
 
   // router
@@ -40,7 +39,7 @@ const MapData = () => {
 
   // mutations
 
-  const [updateResidence, updateResidenceResult] = useUpdateResidenceMutation();
+  const [updateResidence] = useUpdateResidenceMutation();
 
   // render
 
@@ -92,7 +91,7 @@ const MapData = () => {
       })}
 
       {userArea.area.polygons.map((polygon) => {
-        const isSelected = selectedPolygonId === Number(polygon.id);
+        // const isSelected = selectedPolygonId === Number(polygon.id);
         return (
           <Polygon
             key={'polygon:' + polygon.id}
@@ -111,69 +110,3 @@ const MapData = () => {
   ) : null;
 };
 export default MapData;
-
-// queries
-
-/** ユーザーエリアの全情報を取得 */
-export const getUserAreaGql = gql`
-  query getUserArea($organizationId: ID!, $areaId: ID!) {
-    userAreas(organizationId: $organizationId, ids: [$areaId]) {
-      area {
-        id
-        name
-        description
-        residences {
-          id
-          name
-          latitude
-          longitude
-          residents {
-            id
-            room
-            floor
-          }
-        }
-        polygons {
-          id
-          points {
-            id
-            latitude
-            longitude
-          }
-        }
-      }
-    }
-  }
-`;
-
-export const createResidenceGql = gql`
-  mutation createResidence($areaId: ID!, $latitude: Float!, $longitude: Float!) {
-    createResidence(residence: { areaId: $areaId, name: "", latitude: $latitude, longitude: $longitude }) {
-      id
-      latitude
-      longitude
-      name
-      residents {
-        id
-        room
-        floor
-      }
-    }
-  }
-`;
-
-export const updateResidenceGql = gql`
-  mutation updateResidence($id: ID!, $latitude: Float!, $longitude: Float!) {
-    updateResidence(residence: { id: $id, name: "", latitude: $latitude, longitude: $longitude }) {
-      id
-      latitude
-      longitude
-      name
-      residents {
-        id
-        room
-        floor
-      }
-    }
-  }
-`;

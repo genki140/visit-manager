@@ -10,6 +10,11 @@ export class PolygonPoint {
   @PrimaryGeneratedColumn()
   id: number = 0;
 
+  /** 点の順 */
+  @Field()
+  @Column()
+  order: number = 0;
+
   /** 緯度 */
   @Field()
   @Column('double')

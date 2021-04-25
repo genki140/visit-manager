@@ -83,7 +83,12 @@ const useStyles = makeStyles((theme) => ({
 
 // ヘッダーとフッターを構成します。
 
-const Layout = (props: { children: ReactNode; title: string; fillContent?: boolean; showMenuButton?: boolean }) => {
+export const Layout = (props: {
+  children: ReactNode;
+  title: string;
+  fillContent?: boolean;
+  showMenuButton?: boolean;
+}) => {
   const classes = useStyles();
   const appLoading = useStoreState((x) => x.loading);
   const router = useRouter();
@@ -93,10 +98,6 @@ const Layout = (props: { children: ReactNode; title: string; fillContent?: boole
   const organizationPath = '/' + organizationName;
   const areaName = (router.query.areaName ?? '').toString();
   const areaPath = (organizationName === '' ? '' : '/' + organizationName) + (areaName === '' ? '' : '/' + areaName);
-
-  // let title = '区域管理';
-  // title = organizationName !== '' ? organizationName : title;
-  // title = areaName !== '' ? areaName : title;
 
   return (
     <div className={classes.container}>
@@ -144,17 +145,6 @@ const Layout = (props: { children: ReactNode; title: string; fillContent?: boole
           </Toolbar>
         </AppBar>
       </header>
-
-      {/* <Link href={areaPath + '/settings'}>
-                <IconButton color="inherit">
-                  <Settings />
-                </IconButton>
-              </Link>
-              <Link href="/login">
-                <IconButton edge="end" color="inherit">
-                  <AccountCircle />
-                </IconButton>
-              </Link> */}
 
       {/* 外部から挿入されるコンテンツ */}
       <div className={classes.body}>
@@ -226,4 +216,3 @@ const Layout = (props: { children: ReactNode; title: string; fillContent?: boole
     </div>
   );
 };
-export default Layout;

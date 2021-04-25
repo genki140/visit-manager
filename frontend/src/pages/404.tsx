@@ -1,9 +1,8 @@
-import React from 'react';
-import Layout from '@/components/layout';
+import { Layout } from '@/components/layout';
 import { Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
 
-const Custom404 = () => {
+export const Custom404 = () => {
   const router = useRouter();
   return (
     <Layout title="ページが見つかりません">

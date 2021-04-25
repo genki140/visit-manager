@@ -1,13 +1,11 @@
-import React from 'react';
 import { Card, CardActionArea, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import Layout from '@/components/layout';
 import Link from 'next/link';
-import { gql } from '@apollo/client';
 import { useGetUserAreasQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
-import ErrorPage from 'next/error';
-import Custom404 from '../404';
+import { Layout } from '@/components/layout';
+import { Custom404 } from '../404';
+import { useRouterParams } from '@/utils/use-router-params';
 
 // スタイル定義
 const useStyles = makeStyles(() => ({
@@ -18,27 +16,14 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-// クエリ定義
-export const getUserAreasGql = gql`
-  query getUserAreas($organizationId: ID!) {
-    userAreas(organizationId: $organizationId) {
-      id
-      area {
-        name
-      }
-    }
-  }
-`;
-
 /** 組織ルートページ */
 const OrganizationPage = () => {
   const classes = useStyles();
-  const router = useRouter();
-  const organizationName = router.query.organizationName?.toString() ?? '';
-  const organizationPath = organizationName === '' ? '' : '/' + organizationName;
+  const routerParams = useRouterParams();
 
   const { loading, error, data } = useGetUserAreasQuery({
-    variables: { organizationId: organizationName },
+    variables: { organizationId: routerParams.organizationName },
+    skip: routerParams.organizationName === '',
   });
 
   // ユーザーがこの組織に所属していなければ404
@@ -50,14 +35,14 @@ const OrganizationPage = () => {
   }
 
   return (
-    <Layout title={organizationName}>
+    <Layout title={routerParams.organizationName}>
       <Typography gutterBottom variant="h2">
         自分の区域一覧
       </Typography>
       <LoadingContainer loading={loading} error={error}>
         <div className={classes.list}>
           {data?.userAreas.map((x) => (
-            <Link href={organizationPath + '/' + x.area.name} key={x.id}>
+            <Link href={'/' + routerParams.organizationName + '/' + x.area.name} key={x.id}>
               <Card>
                 <CardActionArea>
                   <CardContent>

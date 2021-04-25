@@ -27,10 +27,12 @@ export class Polygon {
   areaId?: number;
 }
 
-@ObjectType()
-export class PolygonPointInput {
-  @Field(() => ID, { nullable: true })
-  id?: number = undefined;
+@InputType()
+export class CreatePolygonPointInput {
+  /** 点の順 */
+  @Field()
+  @Column()
+  order: number = 0;
 
   /** 緯度 */
   @Field()
@@ -43,12 +45,12 @@ export class PolygonPointInput {
 
 @InputType()
 export class CreatePolygonInput {
+  /** ポイント */
+  @Field(() => [CreatePolygonPointInput])
+  points?: CreatePolygonPointInput[];
+
   @Field(() => ID)
   areaId: number = 0;
-
-  // /** ポイント */
-  // @Field(() => [PolygonPointInput])
-  // points?: PolygonPointInput[];
 }
 
 @InputType()

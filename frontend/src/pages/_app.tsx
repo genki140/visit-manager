@@ -13,7 +13,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 // project
 import store from '@/ducks/store';
-import theme from '@/styles/theme';
+import { theme } from '@/styles/theme';
 import React from 'react';
 
 const client = new ApolloClient({

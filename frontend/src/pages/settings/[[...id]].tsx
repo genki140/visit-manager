@@ -1,11 +1,11 @@
 import React from 'react';
 import { Tab, Tabs } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import Layout from '@/components/layout';
+import { Layout } from '@/components/layout';
 import MainSettings from '@/components/settings/main';
 import UserSettings from '@/components/settings/users';
-import ErrorPage from 'next/error';
 import Link from 'next/link';
+import { Custom404 } from '../404';
 
 // ファイル名[[...id]].tsxは、settings以降の存在する全てのパスに対応する。
 
@@ -31,7 +31,7 @@ const SettingsPage = () => {
   ];
   const settingIndex = settings.findIndex((x) => x.url === ((router.query.id ?? [])[0] ?? ''));
   if ((router.query.id?.length ?? 0) >= 2 || settingIndex === -1) {
-    return <ErrorPage statusCode={404} />;
+    return <Custom404 />;
   }
   const setting = settings[settingIndex];
 

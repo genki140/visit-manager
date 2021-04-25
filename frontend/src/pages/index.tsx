@@ -1,10 +1,8 @@
-import React from 'react';
-import Layout from '@/components/layout';
+import { Layout } from '@/components/layout';
 import { Button, Card, CardActionArea, CardContent, makeStyles, Typography } from '@material-ui/core';
-import Link from 'next/link';
 import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
-import { gql } from '@apollo/client';
+import Link from 'next/link';
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -13,16 +11,6 @@ const useStyles = makeStyles(() => ({
     gap: 10,
   },
 }));
-
-// ページ情報が取得できなければエラー
-export const GetOrganizationsGql = gql`
-  query GetOrganizations {
-    organizations {
-      id
-      name
-    }
-  }
-`;
 
 const IndexPage = () => {
   const classes = useStyles();

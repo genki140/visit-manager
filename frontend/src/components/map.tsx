@@ -2,14 +2,11 @@ import { mapStyles } from '@/styles/map-styles';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import React, { forwardRef, ReactNode, useImperativeHandle, useState } from 'react';
 import { actions, MapEditType, useAppDispatch, useStoreState } from '@/ducks/store';
-import { useCreateResidenceMutation, useGetUserAreaQuery } from '@/types/graphql';
-import { useRouter } from 'next/router';
-import { getUserAreaGql } from './map-data';
+import { useGetUserAreaQuery } from '@/types/graphql';
+import { useRouterParams } from '@/utils/use-router-params';
+import { useCreateResidenceMutationWithCacheUpdate } from '@/queries/map-edit-queries';
 
-const center = {
-  lat: 37.94181358543269,
-  lng: 139.10948906051917,
-};
+const center = { lat: 37.94181358543269, lng: 139.10948906051917 };
 
 export type MapOutput = {
   getInfo: () => {
@@ -32,51 +29,17 @@ const Map = forwardRef<
   const mapEditType = useStoreState((x) => x.map.editType);
 
   // router
-
-  const router = useRouter();
-  const organizationName = (router.query.organizationName ?? '').toString();
-  // const organizationPath = '/' + organizationName;
-  const areaName = (router.query.areaName ?? '').toString();
-  // const areaPath = (organizationName === '' ? '' : '/' + organizationName) + (areaName === '' ? '' : '/' + areaName);
-  // if (organizationName === '' || areaName === '') {
-  //   return null;
-  // }
+  const routerParams = useRouterParams();
 
   // queries
-
   const getUserAreaResult = useGetUserAreaQuery({
-    variables: { organizationId: organizationName, areaId: areaName },
+    variables: { organizationId: routerParams.organizationName, areaId: routerParams.areaName },
+    skip: !routerParams.hasOrganizationAndArea,
   });
   const userArea = getUserAreaResult.data?.userAreas?.[0];
 
   // mutations
-
-  const [createResidence, createResidenceResult] = useCreateResidenceMutation({
-    update: (cache, { data }) => {
-      // こんな感じで書きたい
-      // RefreshCache(getUserAreaResult,(cache)=>cache.userAreas[0].area.residences.push(data?.createResidence));
-
-      // キャッシュデータ取得
-      const copiedData = JSON.parse(
-        JSON.stringify(
-          cache.readQuery({
-            query: getUserAreaGql,
-            variables: getUserAreaResult.variables,
-          }),
-        ),
-      );
-
-      // クエリに対するキャッシュデータ書き換え
-      copiedData.userAreas[0].area.residences.push(data?.createResidence);
-
-      // キャッシュデータ更新
-      cache.writeQuery({
-        query: getUserAreaGql,
-        variables: getUserAreaResult.variables,
-        data: copiedData,
-      });
-    },
-  });
+  const [createResidence] = useCreateResidenceMutationWithCacheUpdate(getUserAreaResult.variables);
 
   const getInfo = () => ({
     center: {
