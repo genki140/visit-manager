@@ -19,13 +19,20 @@ export class PolygonService {
   }
 
   async create(payload: CreatePolygonInput) {
-    // const result = await this.polygonRepository.save({
-    //   areaId: payload.areaId,
-    //   points: payload.points,
-    // });
-    // return this.polygonRepository.findOne(result.id, {
-    //   relations: ['points'],
-    // });
+    const result = await this.polygonRepository.save({
+      areaId: payload.areaId,
+      points: payload.points?.map((x, i) => ({
+        latitude: x.latitude,
+        longitude: x.longitude,
+        order: i,
+      })),
+    });
+    // console.log(result);
+    const one = await this.polygonRepository.findOne(result.id, {
+      relations: ['points'],
+    });
+    // console.log(one);
+    return one;
   }
 
   async update(payload: UpdatePolygonInput) {

@@ -74,14 +74,16 @@ gql`
         latitude
         longitude
       }
-      area {
-        id
-      }
     }
   }
 `;
 
-import { GetUserAreaDocument, GetUserAreaQueryVariables, useCreateResidenceMutation } from '@/types/graphql';
+import {
+  GetUserAreaDocument,
+  GetUserAreaQueryVariables,
+  useCreatePolygonMutation,
+  useCreateResidenceMutation,
+} from '@/types/graphql';
 
 /** キャッシュを自動更新するミューテーション */
 export const useCreateResidenceMutationWithCacheUpdate = (variables: GetUserAreaQueryVariables | undefined) =>
@@ -102,6 +104,35 @@ export const useCreateResidenceMutationWithCacheUpdate = (variables: GetUserArea
 
       // クエリに対するキャッシュデータ書き換え
       copiedData.userAreas[0].area.residences.push(data?.createResidence);
+
+      // キャッシュデータ更新
+      cache.writeQuery({
+        query: GetUserAreaDocument,
+        variables: variables,
+        data: copiedData,
+      });
+    },
+  });
+
+/** キャッシュを自動更新するミューテーション */
+export const useCreatePolygonMutationWithCacheUpdate = (variables: GetUserAreaQueryVariables | undefined) =>
+  useCreatePolygonMutation({
+    update: (cache, { data }) => {
+      // こんな感じで書きたい
+      // RefreshCache(getUserAreaResult,(cache)=>cache.userAreas[0].area.residences.push(data?.createResidence));
+
+      // キャッシュデータ取得
+      const copiedData = JSON.parse(
+        JSON.stringify(
+          cache.readQuery({
+            query: GetUserAreaDocument,
+            variables: variables,
+          }),
+        ),
+      );
+
+      // クエリに対するキャッシュデータ書き換え
+      copiedData.userAreas[0].area.polygons.push(data?.createPolygon);
 
       // キャッシュデータ更新
       cache.writeQuery({

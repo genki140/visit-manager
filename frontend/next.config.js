@@ -16,5 +16,6 @@ module.exports = {
     // ここに書いたものはサーバークライアント両方から参照可能
     SITE_URL: process.env.SITE_URL,
     SITE_PORT: process.env.SITE_PORT,
+    GOOGLE_MAP_API_KEY: process.env.GOOGLE_MAP_API_KEY,
   },
 };

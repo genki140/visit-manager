@@ -13,7 +13,6 @@ export type MapEditType = typeof MapEditType[keyof typeof MapEditType];
 export type StoreState = {
   loading: boolean;
   map: {
-    loaded: boolean;
     position: {
       lat: number;
       lng: number;
@@ -34,7 +33,6 @@ const createStoreInitial = () => {
   const value: StoreState = {
     loading: false,
     map: {
-      loaded: false,
       position: {
         lat: 0,
         lng: 0,
@@ -83,9 +81,6 @@ export const storeSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    setMapLoaded: (state) => {
-      state.map.loaded = true;
-    },
     setSelectedResidenceId: (state, action: PayloadAction<number | undefined>) => {
       state.map.selectedResidenceId = action.payload;
     },
@@ -127,14 +122,13 @@ export function useAppDispatch() {
 }
 
 // ストアを作成
-const store = configureStore({
+export const store = configureStore({
   reducer: storeSlice.reducer,
   // chrome の redux ツールキットを使う前提であれば logger による console 出力はむしろ邪魔
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(), //.concat(logger),
   devTools: process.env.NODE_ENV !== 'production',
   preloadedState: createStoreInitial(),
 });
-export default store;
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>;

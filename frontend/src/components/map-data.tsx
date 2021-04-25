@@ -16,7 +16,6 @@ const MapData = () => {
   // redux state
 
   const dispatch = useAppDispatch();
-  const mapLoaded = useStoreState((x) => x.map.loaded);
   const selectedResidenceId = useStoreState((x) => x.map.selectedResidenceId);
   // const selectedPolygonId = useStoreState((x) => x.map.selectedPolygonId);
   const mapEditType = useStoreState((x) => x.map.editType);
@@ -45,7 +44,7 @@ const MapData = () => {
 
   // console.log(markerDragging);
 
-  return userArea != null && mapLoaded ? (
+  return userArea != null ? (
     <>
       {userArea.area.residences.map((residence) => {
         const isSelected = selectedResidenceId === Number(residence.id);
@@ -65,11 +64,7 @@ const MapData = () => {
               scale: 1.5,
             }}
             draggable={mapEditType === MapEditType.Residence}
-            onClick={
-              // mapEditType === MapEditType.Residence
-              //   ? undefined :
-              () => dispatch(actions.setSelectedResidenceId(Number(residence.id)))
-            }
+            onClick={() => dispatch(actions.setSelectedResidenceId(Number(residence.id)))}
             onDragEnd={(e) => {
               updateResidence({
                 variables: {
@@ -95,14 +90,15 @@ const MapData = () => {
         return (
           <Polygon
             key={'polygon:' + polygon.id}
-            editable={true} // ポイント移動を許可
-            draggable={true} // エッジ追加を許可
+            editable={mapEditType === MapEditType.Polygon} // ポイント移動を許可
+            draggable={mapEditType === MapEditType.Polygon} // エッジ追加を許可
             options={{
               fillOpacity: 0, // 塗りつぶし無し
               geodesic: false,
               clickable: false, // 全体のクリック禁止
               strokeColor: 'blue',
             }}
+            path={polygon.points.map((x) => ({ lat: x.latitude, lng: x.longitude }))}
           />
         );
       })}

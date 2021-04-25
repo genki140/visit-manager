@@ -14,7 +14,7 @@ export class Polygon {
 
   /** ポイント */
   @Field(() => [PolygonPoint])
-  @OneToMany(() => PolygonPoint, (polygonPoint) => polygonPoint.polygon)
+  @OneToMany(() => PolygonPoint, (polygonPoint) => polygonPoint.polygon, { cascade: true })
   points?: PolygonPoint[];
 
   /** 区域 */
@@ -29,10 +29,10 @@ export class Polygon {
 
 @InputType()
 export class CreatePolygonPointInput {
-  /** 点の順 */
-  @Field()
-  @Column()
-  order: number = 0;
+  // /** 点の順 */
+  // @Field()
+  // @Column()
+  // order: number = 0;
 
   /** 緯度 */
   @Field()

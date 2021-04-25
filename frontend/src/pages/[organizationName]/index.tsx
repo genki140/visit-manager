@@ -1,5 +1,4 @@
 import { Card, CardActionArea, CardContent, makeStyles, Typography } from '@material-ui/core';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useGetUserAreasQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';

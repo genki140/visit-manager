@@ -45,7 +45,7 @@ export class Residence {
 
 @InputType()
 export class CreateResidenceInput {
-  /** ID */
+  /** 区域ID */
   @Field(() => ID)
   areaId: number = 0;
 

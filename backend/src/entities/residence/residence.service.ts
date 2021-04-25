@@ -26,7 +26,7 @@ export class ResidenceService {
       longitude: payload.longitude,
     });
 
-    return this.residenceRepository.findOne(result.id, {
+    return await this.residenceRepository.findOne(result.id, {
       relations: ['residents'],
     });
 
