@@ -36,12 +36,31 @@ export class PolygonService {
   }
 
   async update(payload: UpdatePolygonInput) {
-    let item = await this.polygonRepository.findOneOrFail(payload.id, {
-      relations: ['residents'],
+    const item = await this.polygonRepository.findOneOrFail(payload.id, {
+      relations: ['points'],
     });
+
+    // orderベースでpointsを入れ替える
+    for (const payloadPoint of payload.points ?? []) {
+      const findPoint = item.points?.find((x) => x.order === payloadPoint.order);
+      if (findPoint != null) {
+        findPoint.latitude = payloadPoint.latitude;
+        findPoint.longitude = payloadPoint.longitude;
+      } else {
+        //新規追加
+        item.points?.push({
+          id: 0,
+          order: payloadPoint.order,
+          latitude: payloadPoint.latitude,
+          longitude: payloadPoint.longitude,
+        });
+      }
+    }
+
+    // とりあえずテスト
     // item.points = payload.points?.map((x) => x);
+
     const result = await this.polygonRepository.save(item);
-    console.log(result);
     return item;
 
     // const result = await this.polygonRepository.save({

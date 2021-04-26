@@ -1,5 +1,11 @@
 import { actions, useAppDispatch } from '@/ducks/store';
-import { Polygon, Residence, useUpdateResidenceMutation } from '@/types/graphql';
+import {
+  Polygon,
+  Residence,
+  UpdatePolygonPointInput,
+  useUpdatePolygonMutation,
+  useUpdateResidenceMutation,
+} from '@/types/graphql';
 import { Marker, Polygon as MapPolygon } from '@react-google-maps/api';
 import React, { memo } from 'react';
 import equal from 'fast-deep-equal';
@@ -9,6 +15,25 @@ import { useCallback } from 'react';
 export const MapOutline = memo(
   (props: { polygon: Polygon; editable: boolean }) => {
     const dispatch = useAppDispatch();
+
+    // この辺も全部含めて切り出せそう。
+    const [updatePolygon] = useUpdatePolygonMutation();
+    const updatePolygonTest = (points: UpdatePolygonPointInput[]) =>
+      updatePolygon({
+        variables: {
+          id: props.polygon.id,
+          points: points,
+        },
+        optimisticResponse: {
+          // なぜか効かない
+          __typename: 'Mutation',
+          updatePolygon: {
+            __typename: 'Polygon',
+            id: props.polygon.id,
+            points: props.polygon.points,
+          },
+        },
+      });
 
     // ------編集検出ロジック------
     const polygonRef = useRef<any | undefined>();
@@ -21,8 +46,10 @@ export const MapOutline = memo(
           .map((latLng: any) => {
             return { lat: latLng.lat(), lng: latLng.lng() };
           });
-        console.log(nextPath);
+        // console.log(nextPath);
         // setPath(nextPath);
+        const newPoints = nextPath.map((x: any, i: any) => ({ order: i, latitude: x.lat, longitude: x.lng }));
+        updatePolygonTest(newPoints);
       }
     };
     const onLoad = (polygon: any) => {
@@ -53,7 +80,8 @@ export const MapOutline = memo(
         path={props.polygon.points.map((x) => ({ lat: x.latitude, lng: x.longitude }))}
         onLoad={onLoad}
         onUnmount={onUnmount}
-        onDragEnd={onEdit}
+        onMouseUp={onEdit}
+        // onDragEnd={onEdit}
       />
     );
   },
