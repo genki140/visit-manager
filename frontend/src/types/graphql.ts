@@ -62,8 +62,9 @@ export type Mutation = {
   deleteUser?: Maybe<Ability>;
   deleteRole?: Maybe<Role>;
   createPolygon: Polygon;
-  updateResidence: Residence;
+  updatePolygon: Polygon;
   createResidence: Residence;
+  updateResidence: Residence;
 };
 
 
@@ -87,13 +88,18 @@ export type MutationCreatePolygonArgs = {
 };
 
 
-export type MutationUpdateResidenceArgs = {
-  residence: UpdateResidenceInput;
+export type MutationUpdatePolygonArgs = {
+  polygon: UpdatePolygonInput;
 };
 
 
 export type MutationCreateResidenceArgs = {
   residence: CreateResidenceInput;
+};
+
+
+export type MutationUpdateResidenceArgs = {
+  residence: UpdateResidenceInput;
 };
 
 export type Organization = {
@@ -190,6 +196,17 @@ export type RoledUser = {
   organization: Organization;
   user: User;
   roles: Array<Role>;
+};
+
+export type UpdatePolygonInput = {
+  id?: Maybe<Scalars['ID']>;
+  points: Array<UpdatePolygonPointInput>;
+};
+
+export type UpdatePolygonPointInput = {
+  order?: Maybe<Scalars['Float']>;
+  latitude?: Maybe<Scalars['Float']>;
+  longitude?: Maybe<Scalars['Float']>;
 };
 
 export type UpdateResidenceInput = {
@@ -309,6 +326,24 @@ export type CreatePolygonMutationVariables = Exact<{
 export type CreatePolygonMutation = (
   { __typename?: 'Mutation' }
   & { createPolygon: (
+    { __typename?: 'Polygon' }
+    & Pick<Polygon, 'id'>
+    & { points: Array<(
+      { __typename?: 'PolygonPoint' }
+      & Pick<PolygonPoint, 'id' | 'order' | 'latitude' | 'longitude'>
+    )> }
+  ) }
+);
+
+export type UpdatePolygonMutationVariables = Exact<{
+  id: Scalars['ID'];
+  points: Array<UpdatePolygonPointInput> | UpdatePolygonPointInput;
+}>;
+
+
+export type UpdatePolygonMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePolygon: (
     { __typename?: 'Polygon' }
     & Pick<Polygon, 'id'>
     & { points: Array<(
@@ -572,6 +607,46 @@ export function useCreatePolygonMutation(baseOptions?: Apollo.MutationHookOption
 export type CreatePolygonMutationHookResult = ReturnType<typeof useCreatePolygonMutation>;
 export type CreatePolygonMutationResult = Apollo.MutationResult<CreatePolygonMutation>;
 export type CreatePolygonMutationOptions = Apollo.BaseMutationOptions<CreatePolygonMutation, CreatePolygonMutationVariables>;
+export const UpdatePolygonDocument = gql`
+    mutation updatePolygon($id: ID!, $points: [UpdatePolygonPointInput!]!) {
+  updatePolygon(polygon: {id: $id, points: $points}) {
+    id
+    points {
+      id
+      order
+      latitude
+      longitude
+    }
+  }
+}
+    `;
+export type UpdatePolygonMutationFn = Apollo.MutationFunction<UpdatePolygonMutation, UpdatePolygonMutationVariables>;
+
+/**
+ * __useUpdatePolygonMutation__
+ *
+ * To run a mutation, you first call `useUpdatePolygonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePolygonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePolygonMutation, { data, loading, error }] = useUpdatePolygonMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      points: // value for 'points'
+ *   },
+ * });
+ */
+export function useUpdatePolygonMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePolygonMutation, UpdatePolygonMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePolygonMutation, UpdatePolygonMutationVariables>(UpdatePolygonDocument, options);
+      }
+export type UpdatePolygonMutationHookResult = ReturnType<typeof useUpdatePolygonMutation>;
+export type UpdatePolygonMutationResult = Apollo.MutationResult<UpdatePolygonMutation>;
+export type UpdatePolygonMutationOptions = Apollo.BaseMutationOptions<UpdatePolygonMutation, UpdatePolygonMutationVariables>;
 export const GetOrganizationsDocument = gql`
     query GetOrganizations {
   organizations {

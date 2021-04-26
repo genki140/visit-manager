@@ -48,8 +48,12 @@ const Map = forwardRef<
   const userArea = getUserAreaResult.data?.userAreas?.[0];
 
   // mutations
-  const [createResidence] = useCreateResidenceMutationWithCacheUpdate(getUserAreaResult.variables);
+  const [createResidence] = useCreateResidenceMutationWithCacheUpdate({
+    organizationId: routerParams.organizationName,
+    areaId: routerParams.areaName,
+  });
 
+  // fowardRef
   const getInfo = () => ({
     center: {
       latitude: (mapRef?.getCenter()?.toJSON()?.lat ?? 0) as number,
@@ -69,6 +73,7 @@ const Map = forwardRef<
   });
   useImperativeHandle(ref, () => ({ getInfo }));
 
+  // render
   return (
     <GoogleMap
       onLoad={(map) => setMapRef(map)}
@@ -93,6 +98,18 @@ const Map = forwardRef<
               latitude: e.latLng.lat(),
               longitude: e.latLng.lng(),
             },
+            // 楽観的更新
+            optimisticResponse: (v) => ({
+              __typename: 'Mutation',
+              createResidence: {
+                __typename: 'Residence',
+                id: 'residence:' + new Date().getTime(),
+                latitude: v.latitude,
+                longitude: v.longitude,
+                name: '',
+                residents: [],
+              },
+            }),
           });
           // if (result.data != null) {
           //   dispatch(actions.setSelectedResidenceId(Number(result.data?.createResidence.id)));

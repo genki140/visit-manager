@@ -78,6 +78,20 @@ gql`
   }
 `;
 
+gql`
+  mutation updatePolygon($id: ID!, $points: [UpdatePolygonPointInput!]!) {
+    updatePolygon(polygon: { id: $id, points: $points }) {
+      id
+      points {
+        id
+        order
+        latitude
+        longitude
+      }
+    }
+  }
+`;
+
 import {
   GetUserAreaDocument,
   GetUserAreaQueryVariables,
@@ -112,7 +126,33 @@ export const useCreateResidenceMutationWithCacheUpdate = (variables: GetUserArea
         data: copiedData,
       });
     },
+    // // 楽観的更新
+    // optimisticResponse: (v) => ({
+    //   createResidence: {
+    //     id: 'residence:' + new Date().getTime(),
+    //     latitude: v.latitude,
+    //     longitude: v.longitude,
+    //     name: '',
+    //     residents: [],
+    //   },
+    // }),
   });
+
+// export const useUpdateResidenceMutationWithCacheUpdate = () =>
+//   useUpdateResidenceMutation({
+//     // 楽観的更新
+//     optimisticResponse: (v) => ({
+//       // __typename: 'Mutation',
+//       updateResidence: {
+//         // __typename: 'Residence',
+//         id: v.id,
+//         // name: '',
+//         latitude: v.latitude,
+//         longitude: v.longitude,
+//         // residents: [],
+//       },
+//     }),
+//   });
 
 /** キャッシュを自動更新するミューテーション */
 export const useCreatePolygonMutationWithCacheUpdate = (variables: GetUserAreaQueryVariables | undefined) =>

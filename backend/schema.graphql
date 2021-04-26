@@ -102,8 +102,9 @@ type Mutation {
   deleteUser(id: ID!): Ability
   deleteRole(id: ID!): Role
   createPolygon(polygon: CreatePolygonInput!): Polygon!
-  updateResidence(residence: UpdateResidenceInput!): Residence!
+  updatePolygon(polygon: UpdatePolygonInput!): Polygon!
   createResidence(residence: CreateResidenceInput!): Residence!
+  updateResidence(residence: UpdateResidenceInput!): Residence!
 }
 
 input CreateUserInput {
@@ -121,15 +122,26 @@ input CreatePolygonPointInput {
   longitude: Float = 0
 }
 
-input UpdateResidenceInput {
+input UpdatePolygonInput {
   id: ID = 0
-  name: String = ""
+  points: [UpdatePolygonPointInput!]!
+}
+
+input UpdatePolygonPointInput {
+  order: Float = 0
   latitude: Float = 0
   longitude: Float = 0
 }
 
 input CreateResidenceInput {
   areaId: ID = 0
+  name: String = ""
+  latitude: Float = 0
+  longitude: Float = 0
+}
+
+input UpdateResidenceInput {
+  id: ID = 0
   name: String = ""
   latitude: Float = 0
   longitude: Float = 0

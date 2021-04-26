@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 
 export const MapEditType = {
+  None: 'None',
   Residence: 'Residence',
   Room: 'Room',
   Polygon: 'Polygon',
@@ -38,7 +39,7 @@ const createStoreInitial = () => {
         lng: 0,
       },
       zoom: 0,
-      editType: MapEditType.Residence,
+      editType: MapEditType.None,
     },
     // residences: [],
   };

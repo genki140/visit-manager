@@ -19,7 +19,9 @@ import { LoadScript } from '@react-google-maps/api';
 
 const client = new ApolloClient({
   uri: process.env.SITE_URL + (process.env.SITE_PORT == null ? '' : ':' + process.env.SITE_PORT) + '/graphql',
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    // addTypename: false,
+  }),
 });
 
 // エントリポイント。スタイルとストアの適用を行っている。

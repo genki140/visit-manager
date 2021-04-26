@@ -130,11 +130,11 @@ export const Layout = (props: {
             {(props.showMenuButton ?? true) && (
               <div className={classes.toolbarButtons}>
                 {/* 編集開始 */}
-                <Link href={areaPath + '/settings'}>
+                {/* <Link href={areaPath + '/settings'}>
                   <IconButton edge="start" color="inherit">
                     <EditIcon />
                   </IconButton>
-                </Link>
+                </Link> */}
 
                 {/* メニュー表示 */}
                 <IconButton edge="start" color="inherit" onClick={() => setMenuVisibled(true)}>

@@ -1,9 +1,9 @@
 import { actions, MapEditType, useAppDispatch, useStoreState } from '@/ducks/store';
-import { Fab, makeStyles } from '@material-ui/core';
-import { Slide } from '@material-ui/core';
+import { Fab, makeStyles, Zoom } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import React, { MutableRefObject } from 'react';
 import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
 import HouseIcon from '@material-ui/icons/House';
 import Crop54Icon from '@material-ui/icons/Crop54';
 // import RestoreIcon from '@material-ui/icons/Restore';
@@ -18,9 +18,38 @@ const useStyle = makeStyles((theme) => ({
   button: {
     position: 'absolute',
     bottom: theme.spacing(2),
+    right: theme.spacing(12),
+  },
+
+  exampleWrapper: {
+    position: 'relative',
+    marginTop: theme.spacing(3),
+    height: 380,
+  },
+
+  speedDial: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
 }));
+
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
+import SaveIcon from '@material-ui/icons/Save';
+import PrintIcon from '@material-ui/icons/Print';
+import ShareIcon from '@material-ui/icons/Share';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import { truncate } from 'node:fs';
+import DoneIcon from '@material-ui/icons/Done';
+
+const editButtons = [
+  { type: MapEditType.Residence, icon: <HouseIcon />, tooltip: '住宅の配置' },
+  { type: MapEditType.Room, icon: <ApartmentIcon />, tooltip: '部屋の設定' },
+  { type: MapEditType.Polygon, icon: <Crop54Icon />, tooltip: 'アウトライン' },
+];
 
 export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
   // styles
@@ -45,92 +74,100 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
   // mutations
   const [createPolygon] = useCreatePolygonMutationWithCacheUpdate(getUserAreaResult.variables);
 
+  const [open, setOpen] = React.useState(false);
+
   if (userArea == null) {
     return <>ローディング</>;
   }
 
   return (
     <>
-      <Slide direction="up" in={router.query.ids?.[0] === 'settings'} mountOnEnter unmountOnExit>
-        <div className={classes.button}>
+      <div className={classes.button}>
+        {/* 住宅削除 */}
+        <Zoom in={mapEditType === MapEditType.Residence}>
           <Fab
-            color={mapEditType === MapEditType.Residence ? 'primary' : undefined}
+            disabled={selectedResidenceId == null}
+            color={'secondary'}
             onClick={async () => {
-              dispatch(actions.setMapEditType({ editType: MapEditType.Residence }));
+              //
             }}
           >
-            <HouseIcon />
+            <DeleteIcon />
           </Fab>
+        </Zoom>
+      </div>
 
-          {mapEditType === MapEditType.Residence ? (
-            <Fab
-              disabled={selectedResidenceId == null}
-              color={'secondary'}
-              onClick={async () => {
-                //
+      <div className={classes.button}>
+        {/* アウトライン作成 */}
+        <Zoom in={mapEditType === MapEditType.Polygon}>
+          <Fab
+            // color={'primary'}
+            onClick={async () => {
+              const mapInfo = props.map.current.getInfo();
+              // console.log(userArea.area.id);
+              // ポリゴン追加
+              createPolygon({
+                variables: {
+                  areaId: userArea.area.id,
+                  points: [
+                    { latitude: mapInfo.bounds.northEast.latitude, longitude: mapInfo.bounds.northEast.longitude },
+                    { latitude: mapInfo.bounds.southWest.latitude, longitude: mapInfo.bounds.northEast.longitude },
+                    { latitude: mapInfo.bounds.southWest.latitude, longitude: mapInfo.bounds.southWest.longitude },
+                    { latitude: mapInfo.bounds.northEast.latitude, longitude: mapInfo.bounds.southWest.longitude },
+                  ],
+                },
+              });
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        </Zoom>
+      </div>
+
+      {/* 編集モード切替 */}
+      <div className={classes.speedDial}>
+        <SpeedDial
+          ariaLabel="Actions Button"
+          open={open}
+          icon={
+            <SpeedDialIcon
+              icon={
+                mapEditType === MapEditType.None ? <EditIcon /> : editButtons.find((x) => x.type === mapEditType)?.icon
+              }
+              openIcon={<EditIcon />}
+            />
+          }
+          onClose={() => setOpen(false)}
+          onOpen={() => setOpen(true)}
+          direction="up"
+        >
+          {editButtons.map((x) => (
+            <SpeedDialAction
+              key={x.type.toString()}
+              icon={x.icon}
+              tooltipTitle={x.tooltip}
+              tooltipPlacement="left"
+              onClick={() => {
+                dispatch(actions.setMapEditType({ editType: x.type }));
+                setOpen(false);
               }}
-            >
-              <DeleteIcon />
-            </Fab>
-          ) : null}
+            />
+          ))}
 
-          <Fab
-            color={mapEditType === MapEditType.Room ? 'primary' : undefined}
-            onClick={async () => {
-              dispatch(actions.setMapEditType({ editType: MapEditType.Room }));
-            }}
-          >
-            <ApartmentIcon />
-          </Fab>
-
-          <Fab
-            color={mapEditType === MapEditType.Polygon ? 'primary' : undefined}
-            onClick={async () => {
-              dispatch(actions.setMapEditType({ editType: MapEditType.Polygon }));
-            }}
-          >
-            <Crop54Icon />
-          </Fab>
-
-          {mapEditType === MapEditType.Polygon ? (
-            <Fab
-              color={'secondary'}
-              onClick={async () => {
-                const mapInfo = props.map.current.getInfo();
-                console.log(userArea.area.id);
-                // ポリゴン追加
-                createPolygon({
-                  variables: {
-                    areaId: userArea.area.id,
-                    points: [
-                      { latitude: mapInfo.bounds.northEast.latitude, longitude: mapInfo.bounds.northEast.longitude },
-                      { latitude: mapInfo.bounds.southWest.latitude, longitude: mapInfo.bounds.northEast.longitude },
-                      { latitude: mapInfo.bounds.southWest.latitude, longitude: mapInfo.bounds.southWest.longitude },
-                      { latitude: mapInfo.bounds.northEast.latitude, longitude: mapInfo.bounds.southWest.longitude },
-                    ],
-                  },
-                });
+          {/* 編集終了 */}
+          {mapEditType !== MapEditType.None && (
+            <SpeedDialAction
+              icon={<DoneIcon />}
+              tooltipTitle="編集完了"
+              tooltipPlacement="left"
+              onClick={() => {
+                dispatch(actions.setMapEditType({ editType: MapEditType.None }));
+                setOpen(false);
               }}
-            >
-              <Crop54Icon />
-              <AddIcon />
-            </Fab>
-          ) : null}
-        </div>
-      </Slide>
-
-      {/* <BottomNavigation
-        // value={value}
-        // onChange={(event, newValue) => {
-        //   setValue(newValue);
-        // }}
-        showLabels
-        // className={classes.root}
-      >
-        <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="Favorites" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="Nearby" icon={<RestoreIcon />} />
-      </BottomNavigation> */}
+            />
+          )}
+        </SpeedDial>
+      </div>
     </>
   );
 };

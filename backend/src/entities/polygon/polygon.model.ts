@@ -29,11 +29,6 @@ export class Polygon {
 
 @InputType()
 export class CreatePolygonPointInput {
-  // /** 点の順 */
-  // @Field()
-  // @Column()
-  // order: number = 0;
-
   /** 緯度 */
   @Field()
   latitude: number = 0;
@@ -54,11 +49,26 @@ export class CreatePolygonInput {
 }
 
 @InputType()
+export class UpdatePolygonPointInput {
+  /** 点の順 */
+  @Field()
+  order: number = 0;
+
+  /** 緯度 */
+  @Field()
+  latitude: number = 0;
+
+  /** 経度 */
+  @Field()
+  longitude: number = 0;
+}
+
+@InputType()
 export class UpdatePolygonInput {
   @Field(() => ID)
   id: number = 0;
 
-  // /** ポイント */
-  // @Field(() => [PolygonPointInput])
-  // points?: PolygonPointInput[];
+  /** ポイント */
+  @Field(() => [UpdatePolygonPointInput])
+  points?: UpdatePolygonPointInput[];
 }

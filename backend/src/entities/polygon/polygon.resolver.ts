@@ -19,7 +19,7 @@ export class PolygonResolver {
   }
 
   @Mutation(() => Polygon)
-  async updateResidence(@Args('polygon') polygon: UpdatePolygonInput) {
+  async updatePolygon(@Args('polygon') polygon: UpdatePolygonInput) {
     const result = await this.polygonService.update(polygon);
     return result;
   }
