@@ -27,6 +27,6 @@ export class PolygonPoint {
 
   /** ポリゴン */
   @Field(() => Polygon)
-  @ManyToOne(() => Polygon, (polygon) => polygon.points, { nullable: false })
+  @ManyToOne(() => Polygon, (polygon) => polygon.points, { nullable: false, onDelete: 'CASCADE' })
   polygon?: Polygon;
 }

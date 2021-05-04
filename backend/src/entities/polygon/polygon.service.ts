@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Repository } from 'typeorm';
+import { Connection, FindManyOptions, Repository } from 'typeorm';
+import { PolygonPoint } from '../polygon-point/polygon-point.model';
 import { CreatePolygonInput, Polygon, UpdatePolygonInput } from './polygon.model';
 
 @Injectable()
@@ -8,6 +9,9 @@ export class PolygonService {
   constructor(
     @InjectRepository(Polygon)
     private readonly polygonRepository: Repository<Polygon>,
+    @InjectRepository(PolygonPoint)
+    private readonly polygonPointRepository: Repository<PolygonPoint>,
+    private connection: Connection,
   ) {}
 
   async find(ids?: number[], options?: FindManyOptions<Polygon>) {
@@ -36,57 +40,60 @@ export class PolygonService {
   }
 
   async update(payload: UpdatePolygonInput) {
-    const item = await this.polygonRepository.findOneOrFail(payload.id, {
-      relations: ['points'],
-    });
+    return await this.connection.transaction(async (manager) => {
+      const polygonRepository = manager.getRepository(Polygon);
+      const polygonPointRepository = manager.getRepository(PolygonPoint);
 
-    // orderベースでpointsを入れ替える
-    for (const payloadPoint of payload.points ?? []) {
-      const findPoint = item.points?.find((x) => x.order === payloadPoint.order);
-      if (findPoint != null) {
-        findPoint.latitude = payloadPoint.latitude;
-        findPoint.longitude = payloadPoint.longitude;
-      } else {
-        //新規追加
-        item.points?.push({
-          id: 0,
-          order: payloadPoint.order,
-          latitude: payloadPoint.latitude,
-          longitude: payloadPoint.longitude,
-        });
+      let item = await polygonRepository.findOneOrFail(payload.id, {
+        relations: ['points'],
+      });
+      if (item.points == null) {
+        throw new Error();
       }
-    }
 
-    // とりあえずテスト
-    // item.points = payload.points?.map((x) => x);
+      // 新たなリストで存在しないものを先に削除
+      let deleted = false;
+      for (const deletes of item.points
+        .filter((x) => (payload.points ?? []).some((y) => y.order === x.order) === false)
+        .map((x, i) => ({ x, i }))) {
+        polygonPointRepository.delete(deletes.x.id);
+        deleted = true;
+      }
 
-    const result = await this.polygonRepository.save(item);
-    return item;
+      // 削除している場合は再取得
+      if (deleted) {
+        item = await polygonRepository.findOneOrFail(payload.id, {
+          relations: ['points'],
+        });
+        if (item.points == null) {
+          throw new Error();
+        }
+      }
 
-    // const result = await this.polygonRepository.save({
-    //   // areaId: payload.areaId,
-    //   points: payload.points?.map((x, i) => ({
-    //     latitude: x.latitude,
-    //     longitude: x.longitude,
-    //     order: i,
-    //   })),
-    // });
-    // // console.log(result);
-    // const one = await this.polygonRepository.findOne(result.id, {
-    //   relations: ['points'],
-    // });
-    // // console.log(one);
-    // return one;
+      for (const payloadPoint of payload.points ?? []) {
+        const findPoint = item.points.find((x) => x.order === payloadPoint.order);
+        if (findPoint != null) {
+          // 更新
+          findPoint.latitude = payloadPoint.latitude;
+          findPoint.longitude = payloadPoint.longitude;
+        } else {
+          //新規追加
+          item.points.push({
+            id: 0,
+            order: payloadPoint.order,
+            latitude: payloadPoint.latitude,
+            longitude: payloadPoint.longitude,
+          });
+        }
+      }
+      const result = await polygonRepository.save(item);
 
-    // const item = await this.polygonRepository.findOneOrFail(payload.id, {
-    //   relations: ['points'],
-    // });
-    // item.points = payload.points;
-    // const result = await this.polygonRepository.save(item);
-    // return item;
+      // console.log(item);
+      return item;
+    });
   }
 
-  // async delete(id: number) {
-  //   await this.userRepository.delete(id);
-  // }
+  async delete(id: number) {
+    return ((await this.polygonRepository.delete(id)).affected ?? 0) > 0;
+  }
 }

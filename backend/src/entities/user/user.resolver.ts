@@ -71,6 +71,6 @@ export class UserResolver {
 
   @Mutation(() => User, { nullable: true })
   async deleteUser(@Args('id', { type: () => ID }) id: number) {
-    return await this.userService.delete(id);
+    return ((await this.userService.delete(id)).affected ?? 0) > 0;
   }
 }

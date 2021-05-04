@@ -35,7 +35,11 @@ const MapData = () => {
             key={'residence:' + residence.id}
             draggable={mapEditType === MapEditType.Residence}
             selected={selectedResidenceId === Number(residence.id)}
-            selectable={mapEditType === MapEditType.Residence || mapEditType === MapEditType.Room}
+            selectable={
+              mapEditType === MapEditType.None ||
+              mapEditType === MapEditType.Residence ||
+              mapEditType === MapEditType.Room
+            }
             residence={residence as Residence}
           />
         );

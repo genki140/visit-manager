@@ -14,13 +14,14 @@ export type MapEditType = typeof MapEditType[keyof typeof MapEditType];
 export type StoreState = {
   loading: boolean;
   map: {
-    position: {
-      lat: number;
-      lng: number;
-    };
-    zoom: number;
+    // position: {
+    //   lat: number;
+    //   lng: number;
+    // };
+    // zoom: number;
     selectedResidenceId?: number;
     selectedPolygonId?: number;
+    selectedPolygonPointId?: number;
     editType: MapEditType;
   };
   // residences: {
@@ -34,11 +35,11 @@ const createStoreInitial = () => {
   const value: StoreState = {
     loading: false,
     map: {
-      position: {
-        lat: 0,
-        lng: 0,
-      },
-      zoom: 0,
+      // position: {
+      //   lat: 0,
+      //   lng: 0,
+      // },
+      // zoom: 0,
       editType: MapEditType.None,
     },
     // residences: [],
@@ -72,24 +73,33 @@ export const storeSlice = createSlice({
   name: storeName,
   initialState: createStoreInitial(),
   reducers: {
-    setMapPosition: (state, action: PayloadAction<{ lat: number; lng: number }>) => {
-      state.map.position.lat = action.payload.lat;
-      state.map.position.lng = action.payload.lng;
-    },
-    setMapZoom: (state, action: PayloadAction<{ zoom: number }>) => {
-      state.map.zoom = action.payload.zoom;
-    },
+    // setMapPosition: (state, action: PayloadAction<{ lat: number; lng: number }>) => {
+    //   state.map.position.lat = action.payload.lat;
+    //   state.map.position.lng = action.payload.lng;
+    // },
+    // setMapZoom: (state, action: PayloadAction<{ zoom: number }>) => {
+    //   state.map.zoom = action.payload.zoom;
+    // },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    setSelectedResidenceId: (state, action: PayloadAction<number | undefined>) => {
-      state.map.selectedResidenceId = action.payload;
+    setSelectedResidenceId: (state, action: PayloadAction<{ residenceId: number | undefined }>) => {
+      state.map.selectedResidenceId = action.payload.residenceId;
+    },
+    setSelectedPolygonId: (state, action: PayloadAction<{ polygonId: number | undefined }>) => {
+      state.map.selectedPolygonId = action.payload.polygonId;
+    },
+    setSelectedPolygonPointId: (state, action: PayloadAction<{ pointId: number | undefined }>) => {
+      state.map.selectedPolygonPointId = action.payload.pointId;
     },
     setMapEditType: (state, action: PayloadAction<{ editType: MapEditType }>) => {
       state.map.editType = action.payload.editType;
-      if (action.payload.editType === MapEditType.Residence) {
-        state.map.selectedResidenceId = undefined;
-      }
+      state.map.selectedResidenceId = undefined;
+      state.map.selectedPolygonId = undefined;
+      state.map.selectedPolygonPointId = undefined;
+      // if (action.payload.editType === MapEditType.Residence) {
+      //   state.map.selectedResidenceId = undefined;
+      // }
     },
   },
   extraReducers: (builder) => {

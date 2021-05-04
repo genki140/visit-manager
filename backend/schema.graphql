@@ -103,6 +103,7 @@ type Mutation {
   deleteRole(id: ID!): Role
   createPolygon(polygon: CreatePolygonInput!): Polygon!
   updatePolygon(polygon: UpdatePolygonInput!): Polygon!
+  deletePolygon(id: ID!): Boolean
   createResidence(residence: CreateResidenceInput!): Residence!
   updateResidence(residence: UpdateResidenceInput!): Residence!
 }
@@ -124,7 +125,7 @@ input CreatePolygonPointInput {
 
 input UpdatePolygonInput {
   id: ID = 0
-  points: [UpdatePolygonPointInput!]!
+  points: [UpdatePolygonPointInput!] = []
 }
 
 input UpdatePolygonPointInput {

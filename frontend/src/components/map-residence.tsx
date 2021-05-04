@@ -40,7 +40,7 @@ export const MapResidence = memo(
         position={{ lat: props.residence.latitude, lng: props.residence.longitude }}
         cursor={props.draggable ? 'grab' : 'pointer'}
         icon={{
-          fillColor: (props.residence as any).isOptimistic ? '#000000' : props.selected ? '#0000FF' : '#8888FF', //塗り潰し色
+          fillColor: props.draggable || props.selectable ? (props.selected ? '#0000FF' : '#8888FF') : 'black', //塗り潰し色
           strokeColor: '#6666AA', //枠の色
           fillOpacity: 1.0,
           strokeOpacity: 1.0,
@@ -51,7 +51,7 @@ export const MapResidence = memo(
         }}
         draggable={props.draggable}
         clickable={props.selectable}
-        onClick={() => dispatch(actions.setSelectedResidenceId(Number(props.residence.id)))}
+        onClick={() => dispatch(actions.setSelectedResidenceId({ residenceId: Number(props.residence.id) }))}
         onDragEnd={(e) => {
           updateResidenceTest(e.latLng.lat(), e.latLng.lng());
         }}

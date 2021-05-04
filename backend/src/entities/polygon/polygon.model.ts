@@ -51,15 +51,15 @@ export class CreatePolygonInput {
 @InputType()
 export class UpdatePolygonPointInput {
   /** 点の順 */
-  @Field()
+  @Field({ nullable: false })
   order: number = 0;
 
   /** 緯度 */
-  @Field()
+  @Field({ nullable: false })
   latitude: number = 0;
 
   /** 経度 */
-  @Field()
+  @Field({ nullable: false })
   longitude: number = 0;
 }
 
@@ -69,6 +69,6 @@ export class UpdatePolygonInput {
   id: number = 0;
 
   /** ポイント */
-  @Field(() => [UpdatePolygonPointInput])
-  points?: UpdatePolygonPointInput[];
+  @Field(() => [UpdatePolygonPointInput], { nullable: false })
+  points: UpdatePolygonPointInput[] = [];
 }

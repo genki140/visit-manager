@@ -23,6 +23,7 @@ gql`
           id
           points {
             id
+            order
             latitude
             longitude
           }
@@ -89,6 +90,12 @@ gql`
         longitude
       }
     }
+  }
+`;
+
+gql`
+  mutation deletePolygon($id: ID!) {
+    deletePolygon(id: $id)
   }
 `;
 

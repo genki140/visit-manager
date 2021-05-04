@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Resolver } from '@nestjs/graphql';
 
 import { PolygonService } from './polygon.service';
 import { CreatePolygonInput, Polygon, UpdatePolygonInput } from './polygon.model';
@@ -24,8 +24,8 @@ export class PolygonResolver {
     return result;
   }
 
-  // @Mutation(() => User, { nullable: true })
-  // async deleteUser(@Args('id', { type: () => ID }) id: number) {
-  //   return await this.residenceService.delete(id);
-  // }
+  @Mutation(() => Boolean, { nullable: true })
+  async deletePolygon(@Args('id', { type: () => ID }) id: number) {
+    return await this.polygonService.delete(id);
+  }
 }

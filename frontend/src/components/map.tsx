@@ -48,10 +48,7 @@ const Map = forwardRef<
   const userArea = getUserAreaResult.data?.userAreas?.[0];
 
   // mutations
-  const [createResidence] = useCreateResidenceMutationWithCacheUpdate({
-    organizationId: routerParams.organizationName,
-    areaId: routerParams.areaName,
-  });
+  const [createResidence] = useCreateResidenceMutationWithCacheUpdate(getUserAreaResult.variables);
 
   // fowardRef
   const getInfo = () => ({

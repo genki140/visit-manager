@@ -63,6 +63,7 @@ export type Mutation = {
   deleteRole?: Maybe<Role>;
   createPolygon: Polygon;
   updatePolygon: Polygon;
+  deletePolygon?: Maybe<Scalars['Boolean']>;
   createResidence: Residence;
   updateResidence: Residence;
 };
@@ -90,6 +91,11 @@ export type MutationCreatePolygonArgs = {
 
 export type MutationUpdatePolygonArgs = {
   polygon: UpdatePolygonInput;
+};
+
+
+export type MutationDeletePolygonArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -200,7 +206,7 @@ export type RoledUser = {
 
 export type UpdatePolygonInput = {
   id?: Maybe<Scalars['ID']>;
-  points: Array<UpdatePolygonPointInput>;
+  points?: Maybe<Array<UpdatePolygonPointInput>>;
 };
 
 export type UpdatePolygonPointInput = {
@@ -272,7 +278,7 @@ export type GetUserAreaQuery = (
         & Pick<Polygon, 'id'>
         & { points: Array<(
           { __typename?: 'PolygonPoint' }
-          & Pick<PolygonPoint, 'id' | 'latitude' | 'longitude'>
+          & Pick<PolygonPoint, 'id' | 'order' | 'latitude' | 'longitude'>
         )> }
       )> }
     ) }
@@ -351,6 +357,16 @@ export type UpdatePolygonMutation = (
       & Pick<PolygonPoint, 'id' | 'order' | 'latitude' | 'longitude'>
     )> }
   ) }
+);
+
+export type DeletePolygonMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeletePolygonMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deletePolygon'>
 );
 
 export type GetOrganizationsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -440,6 +456,7 @@ export const GetUserAreaDocument = gql`
         id
         points {
           id
+          order
           latitude
           longitude
         }
@@ -647,6 +664,37 @@ export function useUpdatePolygonMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdatePolygonMutationHookResult = ReturnType<typeof useUpdatePolygonMutation>;
 export type UpdatePolygonMutationResult = Apollo.MutationResult<UpdatePolygonMutation>;
 export type UpdatePolygonMutationOptions = Apollo.BaseMutationOptions<UpdatePolygonMutation, UpdatePolygonMutationVariables>;
+export const DeletePolygonDocument = gql`
+    mutation deletePolygon($id: ID!) {
+  deletePolygon(id: $id)
+}
+    `;
+export type DeletePolygonMutationFn = Apollo.MutationFunction<DeletePolygonMutation, DeletePolygonMutationVariables>;
+
+/**
+ * __useDeletePolygonMutation__
+ *
+ * To run a mutation, you first call `useDeletePolygonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePolygonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePolygonMutation, { data, loading, error }] = useDeletePolygonMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePolygonMutation(baseOptions?: Apollo.MutationHookOptions<DeletePolygonMutation, DeletePolygonMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePolygonMutation, DeletePolygonMutationVariables>(DeletePolygonDocument, options);
+      }
+export type DeletePolygonMutationHookResult = ReturnType<typeof useDeletePolygonMutation>;
+export type DeletePolygonMutationResult = Apollo.MutationResult<DeletePolygonMutation>;
+export type DeletePolygonMutationOptions = Apollo.BaseMutationOptions<DeletePolygonMutation, DeletePolygonMutationVariables>;
 export const GetOrganizationsDocument = gql`
     query GetOrganizations {
   organizations {

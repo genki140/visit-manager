@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Repository } from 'typeorm';
+import { DeleteResult, FindManyOptions, Repository } from 'typeorm';
 
 import { CreateUserInput, User } from './user.model';
 
@@ -46,6 +46,6 @@ export class UserService {
   }
 
   async delete(id: number) {
-    await this.userRepository.delete(id);
+    return await this.userRepository.delete(id);
   }
 }
