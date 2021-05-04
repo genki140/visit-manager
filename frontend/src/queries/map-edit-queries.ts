@@ -101,10 +101,17 @@ gql`
 
 import {
   GetUserAreaDocument,
+  GetUserAreaQuery,
   GetUserAreaQueryVariables,
+  Polygon,
+  UpdatePolygonMutationVariables,
   useCreatePolygonMutation,
   useCreateResidenceMutation,
+  useUpdatePolygonMutation,
 } from '@/types/graphql';
+import Enumerable from 'linq';
+import equal from 'fast-deep-equal';
+import { TypeUtil } from '@/utils/type-helper';
 
 /** キャッシュを自動更新するミューテーション */
 export const useCreateResidenceMutationWithCacheUpdate = (variables: GetUserAreaQueryVariables | undefined) =>
@@ -189,3 +196,168 @@ export const useCreatePolygonMutationWithCacheUpdate = (variables: GetUserAreaQu
       });
     },
   });
+
+/** キャッシュを自動更新するミューテーション */
+export const useUpdatePolygonMutationWithCacheUpdate = (target: Polygon, variables: GetUserAreaQueryVariables) => {
+  const [updatePolygonMutation] = useUpdatePolygonMutation();
+
+  const orderdPoints = Enumerable.from(target.points)
+    .orderBy((x) => x.order)
+    .select((x) => ({ lat: x.latitude, lng: x.longitude }))
+    .toArray();
+
+  const resultFunction = async (mutationVariables: UpdatePolygonMutationVariables) => {
+    // 変化がなければスキップ
+    const orderdNewPoints = Enumerable.from(TypeUtil.toArray(mutationVariables.points))
+      .orderBy((x) => x.order)
+      .select((x) => ({ lat: x.latitude, lng: x.longitude }))
+      .toArray();
+    if (equal(orderdPoints, orderdNewPoints)) {
+      return;
+    }
+
+    return updatePolygonMutation({
+      variables: mutationVariables,
+      // 期待値の構築
+      optimisticResponse: {
+        __typename: 'Mutation',
+        updatePolygon: {
+          __typename: 'Polygon',
+          id: mutationVariables.id,
+          points: (Array.isArray(mutationVariables.points) ? mutationVariables.points : [mutationVariables.points]).map(
+            (x) => ({
+              __typename: 'PolygonPoint',
+              id: target.points.find((y) => y.order === x.order)?.id ?? 'PolygonPoint:' + new Date().getDate(),
+              order: TypeUtil.toNonNullable(x.order),
+              latitude: TypeUtil.toNonNullable(x.latitude),
+              longitude: TypeUtil.toNonNullable(x.longitude),
+            }),
+          ),
+        },
+      },
+      update: (cache, { data }) => {
+        if (data == null) {
+          return;
+        }
+
+        // キャッシュデータ取得
+        let copiedData = cache.readQuery<GetUserAreaQuery, GetUserAreaQueryVariables>({
+          query: GetUserAreaDocument,
+          variables: variables,
+        });
+        copiedData = JSON.parse(JSON.stringify(copiedData)) as typeof copiedData;
+
+        const polygon = copiedData?.userAreas[0].area.polygons.find((x) => x.id === mutationVariables.id);
+        if (polygon == null) {
+          return;
+        }
+
+        console.log('update');
+        polygon.points = data.updatePolygon.points;
+
+        // キャッシュデータ更新
+        cache.writeQuery({
+          query: GetUserAreaDocument,
+          variables: variables,
+          data: copiedData,
+        });
+      },
+    });
+  };
+  return resultFunction;
+};
+
+// // この辺も全部含めて切り出せそう。
+// const [updatePolygon] = useUpdatePolygonMutation();
+// const updatePolygonTest = async (points: UpdatePolygonPointInput[]) => {
+//   // 変化がなければスキップ
+//   const orderdNewPoints = Enumerable.from(points)
+//     .orderBy((x) => x.order)
+//     .select((x) => ({ lat: x.latitude, lng: x.longitude }))
+//     .toArray();
+//   if (equal(orderdPoints, orderdNewPoints)) {
+//     return;
+//   }
+
+//   return await updatePolygon({
+//     variables: {
+//       id: props.polygon.id,
+//       points: points,
+//     },
+//     // 期待値の構築
+//     optimisticResponse: {
+//       __typename: 'Mutation',
+//       updatePolygon: {
+//         __typename: 'Polygon',
+//         id: props.polygon.id,
+//         points: points.map((x) => ({
+//           __typename: 'PolygonPoint',
+//           id: props.polygon.points.find((y) => y.order === x.order)?.id ?? 'PolygonPoint:' + new Date().getDate(),
+//           order: toNonNullable(x.order),
+//           latitude: toNonNullable(x.latitude),
+//           longitude: toNonNullable(x.longitude),
+//         })),
+//       },
+//     },
+//     update: (cache, { data }) => {
+//       console.log('update');
+//       if (data == null) {
+//         return;
+//       }
+
+//       // キャッシュデータ取得
+//       let copiedData = cache.readQuery<GetUserAreaQuery, GetUserAreaQueryVariables>({
+//         query: GetUserAreaDocument,
+//         variables: getUserAreaResultVariables,
+//       });
+//       copiedData = JSON.parse(JSON.stringify(copiedData)) as typeof copiedData;
+
+//       const polygon = copiedData?.userAreas[0].area.polygons.find((x) => x.id === selectedPolygonId?.toString());
+//       if (polygon == null) {
+//         return;
+//       }
+
+//       console.log('data');
+//       console.log(JSON.parse(JSON.stringify(data.updatePolygon.points)));
+
+//       console.log('before');
+//       console.log(JSON.parse(JSON.stringify(polygon.points)));
+
+//       polygon.points = data.updatePolygon.points;
+
+//       console.log('after');
+//       console.log(JSON.parse(JSON.stringify(polygon.points)));
+
+//       // .map((x) => {
+//       //   return {
+//       //     id: x.id,
+//       //     latitude: x.latitude,
+//       //     longitude: x.longitude,
+//       //     __typename: x.__typename,
+//       //     order: x.order,
+//       //   };
+//       // });
+
+//       // キャッシュ書き換え
+//       // ここがうまく行ってない！
+//       // polygon.points = newPoints
+//       //   .map((x) => polygon.points.find((y) => y.order === x.order))
+//       //   .filter((x): x is NonNullable<typeof x> => x != null)
+//       //   .map((x) => {
+//       //     x.latitude =
+//       //     __typename: x.__typename,
+//       //     id: x.id,
+//       //     latitude: x.latitude,
+//       //     longitude: x.longitude,
+//       //     order: x.order,
+//       //   });
+
+//       // キャッシュデータ更新
+//       cache.writeQuery({
+//         query: GetUserAreaDocument,
+//         variables: getUserAreaResultVariables,
+//         data: copiedData,
+//       });
+//     },
+//   });
+// };
