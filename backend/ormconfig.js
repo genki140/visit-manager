@@ -3,12 +3,12 @@
 module.exports = {
   type: 'mysql',
   host: process.env.DB_HOST || 'db',
-  port: process.env.DB_PORT || 3306,
+  port: process.env.DB_PORT != null ? Number(process.env.DB_PORT.toString()) : 3306,
   username: process.env.DB_USERNAME || 'username',
   password: process.env.DB_PASSWORD || 'password',
   database: process.env.DB_NAME || 'database',
   synchronize: true,
-  // logging: true, // デバッグにSQLを出力する
+  logging: process.env.DB_LOGGING === 'TRUE' || false, // デバッグにSQLを出力する
 
   // entities: [join(__dirname, '**', '*.model.ts}')],
   // entities: ['./src/entities/**/*.model.ts'],
@@ -20,18 +20,3 @@ module.exports = {
   //   subscribersDir: 'common/subscriber',
   // },
 };
-
-// // ormconfig.js に書くのが多分正解
-// imports: [ConfigModule],
-// inject: [ConfigService],
-// useFactory: (configService: ConfigService<EnvironmentVariables>) => ({
-//   type: 'mysql',
-//   host: configService.get('DB_HOST') || 'db',
-//   port: configService.get('DB_PORT') || 3306,
-//   username: configService.get('DB_USERNAME') || 'username',
-//   password: configService.get('DB_PASSWORD') || 'password',
-//   database: configService.get('DB_NAME') || 'database',
-//   // extra: { socketPath: configService.get('DB_SOCKET_PATH') },
-//   autoLoadEntities: true,
-//   synchronize: true,
-// }),

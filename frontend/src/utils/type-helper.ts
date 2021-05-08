@@ -8,11 +8,5 @@ export class TypeUtil {
   };
 
   /** 配列か単体かに関わりなく配列で返す */
-  static toArray = <T>(value: T | T[]): T[] => {
-    console.log('toArray');
-    console.log(value);
-    const v = Array.isArray(value) ? value : [value];
-    console.log(v);
-    return v;
-  };
+  static toArray = <T>(value: T | T[]): T[] => (Array.isArray(value) ? value : [value]);
 }

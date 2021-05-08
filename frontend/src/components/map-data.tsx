@@ -1,18 +1,11 @@
-import { actions, MapEditType, useAppDispatch, useStoreState } from '@/ducks/store';
-import { Polygon, Residence, useGetUserAreaQuery, useUpdateResidenceMutation } from '@/types/graphql';
+import { MapEditType, useStoreState } from '@/ducks/store';
+import { Polygon, Residence, useGetUserAreaQuery } from '@/types/graphql';
 import { useRouterParams } from '@/utils/use-router-params';
-import { DrawingManager, Marker } from '@react-google-maps/api';
-import React, { memo } from 'react';
 import { MapOutline } from './map-outline';
 import { MapResidence } from './map-residence';
 
 const MapData = () => {
-  // local state
-  // const [markerDragging, setMarkerDragging] = useState(false);
-
   // redux state
-
-  const dispatch = useAppDispatch();
   const selectedResidenceId = useStoreState((x) => x.map.selectedResidenceId);
   const mapEditType = useStoreState((x) => x.map.editType);
 
@@ -52,21 +45,6 @@ const MapData = () => {
             polygon={polygon as Polygon}
             editable={mapEditType === MapEditType.Polygon}
           />
-          // <Polygon
-          //   key={'polygon:' + polygon.id}
-          //   editable={mapEditType === MapEditType.Polygon} // ポイント移動を許可
-          //   draggable={mapEditType === MapEditType.Polygon} // エッジ追加を許可
-          //   options={{
-          //     fillOpacity: 0, // 塗りつぶし無し
-          //     geodesic: false,
-          //     clickable: false, // 全体のクリック禁止
-          //     strokeColor: 'blue',
-          //   }}
-          //   path={polygon.points.map((x) => ({ lat: x.latitude, lng: x.longitude }))}
-          //   onDragEnd={(e) => {
-          //     console.log(e);
-          //   }}
-          // />
         );
       })}
     </>

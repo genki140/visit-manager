@@ -5,8 +5,7 @@ import React, { memo } from 'react';
 import equal from 'fast-deep-equal';
 import { useRef } from 'react';
 import Enumerable from 'linq';
-import { useRouterParams } from '@/utils/use-router-params';
-import { useUpdatePolygonMutationWithCacheUpdate } from '@/queries/map-edit-queries';
+import { MapQueries } from '@/queries/map-edit-queries';
 
 // 頂点取得や削除の参考資料
 // https://developers.google.com/maps/documentation/javascript/examples/delete-vertex-menu
@@ -15,13 +14,15 @@ const CirclePath = 'M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2
 
 export const MapOutline = memo(
   (props: { polygon: Polygon; editable: boolean }) => {
+    // redux states
     const dispatch = useAppDispatch();
     const selectedPolygonId = useStoreState((x) => x.map.selectedPolygonId);
     const selectedPolygonPointId = useStoreState((x) => x.map.selectedPolygonPointId);
 
-    const routerParams = useRouterParams();
-    const getUserAreaResultVariables = { organizationId: routerParams.organizationName, areaId: routerParams.areaName };
-    const updatePolygon = useUpdatePolygonMutationWithCacheUpdate(props.polygon, getUserAreaResultVariables);
+    console.log('MapOutline');
+
+    // mutations
+    const updatePolygon = MapQueries.useUpdatePolygon();
 
     const orderdPoints = Enumerable.from(props.polygon.points)
       .orderBy((x) => x.order)
@@ -33,7 +34,7 @@ export const MapOutline = memo(
     const onEdit = async (e: any) => {
       if (polygonRef.current) {
         // データ更新
-        const result = await updatePolygon({
+        const resultPromise = updatePolygon({
           id: props.polygon.id,
           points: (polygonRef.current.getPath().getArray() as any[]).map((latLng: any, i: number) => ({
             order: i,
@@ -42,17 +43,23 @@ export const MapOutline = memo(
           })),
         });
 
-        // ポリゴンを選択状態とする
-        dispatch(actions.setSelectedPolygonId({ polygonId: Number(props.polygon.id) }));
+        const polygonId = Number(props.polygon.id);
 
         // 頂点の選択
         if (e.vertex != null) {
+          const pointId = Number(props.polygon.points.find((x) => x.order === Number(e.vertex))?.id);
+          console.log(pointId);
           dispatch(
             actions.setSelectedPolygonPointId({
-              pointId: Number(props.polygon.points.find((x) => x.order === Number(e.vertex))?.id),
+              pointId: pointId,
             }),
           );
         }
+
+        // ポリゴンを選択状態とする
+        dispatch(actions.setSelectedPolygonId({ polygonId: polygonId }));
+
+        const result = await resultPromise;
 
         // エッジの選択
         if (result?.data?.updatePolygon != null && e.edge != null) {
@@ -68,6 +75,10 @@ export const MapOutline = memo(
 
     const isSelected = selectedPolygonId === Number(props.polygon.id);
     const selectedPoint = props.polygon.points.find((x) => Number(x.id) === selectedPolygonPointId);
+    // console.log('selectedPoint');
+    // console.log(selectedPoint);
+    // console.log(props.polygon.points);
+
     return (
       <>
         <MapPolygon

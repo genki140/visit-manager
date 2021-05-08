@@ -11,8 +11,8 @@ services:
       - .:/home/hostfiles/project
 
     tty: true
-    ports:
-      - 3333-3339:3000
+    # ports:
+    #   - 3333-3339:3000
 
   # MySQL
   db:
@@ -39,4 +39,4 @@ services:
       - PMA_PASSWORD=password
       - UPLOAD_LIMIT=300M
     ports:
-      - 8888-8999:80
+      - 8000:80

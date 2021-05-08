@@ -4,7 +4,7 @@ import React, { forwardRef, ReactNode, useImperativeHandle, useState } from 'rea
 import { MapEditType, useStoreState } from '@/ducks/store';
 import { useGetUserAreaQuery } from '@/types/graphql';
 import { useRouterParams } from '@/utils/use-router-params';
-import { useCreateResidenceMutationWithCacheUpdate } from '@/queries/map-edit-queries';
+import { MapQueries } from '@/queries/map-edit-queries';
 
 const center = { lat: 37.94181358543269, lng: 139.10948906051917 };
 
@@ -48,7 +48,7 @@ const Map = forwardRef<
   const userArea = getUserAreaResult.data?.userAreas?.[0];
 
   // mutations
-  const [createResidence] = useCreateResidenceMutationWithCacheUpdate(getUserAreaResult.variables);
+  const [createResidence] = MapQueries.useCreateResidence();
 
   // fowardRef
   const getInfo = () => ({

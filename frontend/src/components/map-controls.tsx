@@ -1,6 +1,5 @@
 import { actions, MapEditType, useAppDispatch, useStoreState } from '@/ducks/store';
 import { Fab, makeStyles, Tooltip, Zoom } from '@material-ui/core';
-import { useRouter } from 'next/router';
 import React, { MutableRefObject } from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -9,16 +8,8 @@ import Crop54Icon from '@material-ui/icons/Crop54';
 // import RestoreIcon from '@material-ui/icons/Restore';
 import ApartmentIcon from '@material-ui/icons/Apartment';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useCreatePolygonMutationWithCacheUpdate } from '@/queries/map-edit-queries';
 import { useRouterParams } from '@/utils/use-router-params';
-import {
-  GetUserAreaDocument,
-  GetUserAreaQuery,
-  GetUserAreaQueryVariables,
-  useDeletePolygonMutation,
-  useGetUserAreaQuery,
-  useUpdatePolygonMutation,
-} from '@/types/graphql';
+import { useGetUserAreaQuery } from '@/types/graphql';
 import { MapOutput } from './map';
 
 const useStyle = makeStyles((theme) => ({
@@ -44,21 +35,14 @@ const useStyle = makeStyles((theme) => ({
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
-import SaveIcon from '@material-ui/icons/Save';
-import PrintIcon from '@material-ui/icons/Print';
-import ShareIcon from '@material-ui/icons/Share';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import { truncate } from 'node:fs';
+// import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
+// import SaveIcon from '@material-ui/icons/Save';
+// import PrintIcon from '@material-ui/icons/Print';
+// import ShareIcon from '@material-ui/icons/Share';
+// import FavoriteIcon from '@material-ui/icons/Favorite';
 import DoneIcon from '@material-ui/icons/Done';
 import TimelineIcon from '@material-ui/icons/Timeline';
-import Enumerable from 'linq';
-
-const editButtons = [
-  { type: MapEditType.Residence, icon: <HouseIcon />, tooltip: '住宅の配置' },
-  { type: MapEditType.Room, icon: <ApartmentIcon />, tooltip: '部屋の設定' },
-  { type: MapEditType.Polygon, icon: <Crop54Icon />, tooltip: 'アウトライン' },
-];
+import { MapQueries } from '@/queries/map-edit-queries';
 
 export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
   // styles
@@ -72,7 +56,6 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
   const selectedPolygonPointId = useStoreState((x) => x.map.selectedPolygonPointId);
 
   // router
-  // const router = useRouter();
   const routerParams = useRouterParams();
 
   // queries
@@ -83,38 +66,17 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
   const userArea = getUserAreaResult.data?.userAreas?.[0];
 
   // mutations
-  const [createPolygon] = useCreatePolygonMutationWithCacheUpdate(getUserAreaResult.variables);
-  const [deletePolygon, deletePolygonResult] = useDeletePolygonMutation();
-
-  const [updatePolygon] = useUpdatePolygonMutation();
-  // const updatePolygonTest = async (points: UpdatePolygonPointInput[]) => {
-  //   return await updatePolygon({
-  //     variables: {
-  //       id: props.polygon.id,
-  //       points: points,
-  //     },
-  //     optimisticResponse: {
-  //       // なぜか効かない
-  //       __typename: 'Mutation',
-  //       updatePolygon: {
-  //         __typename: 'Polygon',
-  //         id: props.polygon.id,
-  //         points: props.polygon.points.map((x) => ({
-  //           __typename: 'PolygonPoint',
-  //           id: x.id,
-  //           order: x.order,
-  //           latitude: x.latitude,
-  //           longitude: x.longitude,
-  //         })),
-  //       },
-  //     },
-  //     // update: (cache, { data }) => {
-  //     //   //
-  //     // },
-  //   });
-  // };
+  const [createPolygon] = MapQueries.useCreatePolygon();
+  const deletePolygon = MapQueries.useDeletePolygon();
+  const updatePolygon = MapQueries.useUpdatePolygon();
 
   const [open, setOpen] = React.useState(false);
+
+  const editButtons = [
+    { type: MapEditType.Residence, icon: <HouseIcon />, tooltip: '住宅の配置' },
+    { type: MapEditType.Room, icon: <ApartmentIcon />, tooltip: '部屋の設定' },
+    { type: MapEditType.Polygon, icon: <Crop54Icon />, tooltip: 'アウトライン' },
+  ];
 
   if (userArea == null) {
     return <>ローディング</>;
@@ -225,7 +187,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
                 color={'secondary'}
                 onClick={async () => {
                   if (selectedPolygonId != null) {
-                    deletePolygon({ variables: { id: selectedPolygonId.toString() } });
+                    deletePolygon({ id: selectedPolygonId.toString() });
                   }
                 }}
               >
@@ -249,8 +211,6 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
                     return;
                   }
 
-                  // 削除すると、消せてるように見えて全部同じポイントに収束している!!
-                  // SQLのDELETEが走っていない！！
                   const newPoints = selectedPolygon?.points
                     .filter((x) => x.id !== selectedPolygonPointId.toString())
                     .map((x, i) => ({
@@ -259,54 +219,50 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
                       longitude: x.longitude,
                     }));
 
-                  console.log(newPoints);
-
                   if (selectedPolygon != null) {
-                    updatePolygon({
-                      variables: {
-                        id: selectedPolygon.id,
-                        points: newPoints,
-                      },
-                      update: (cache, { data }) => {
-                        // キャッシュデータ取得
-                        let copiedData = cache.readQuery<GetUserAreaQuery, GetUserAreaQueryVariables>({
-                          query: GetUserAreaDocument,
-                          variables: getUserAreaResult.variables,
-                        });
-                        copiedData = JSON.parse(JSON.stringify(copiedData)) as typeof copiedData;
+                    updatePolygon({ id: selectedPolygon.id, points: newPoints });
 
-                        const polygon = copiedData?.userAreas[0].area.polygons.find(
-                          (x) => x.id === selectedPolygonId?.toString(),
-                        );
-                        if (polygon == null) {
-                          return;
-                        }
-
-                        console.log(JSON.parse(JSON.stringify(polygon)));
-
-                        // キャッシュ書き換え
-                        // ここがうまく行ってない！
-                        // polygon.points = newPoints
-                        //   .map((x) => polygon.points.find((y) => y.order === x.order))
-                        //   .filter((x): x is NonNullable<typeof x> => x != null)
-                        //   .map((x) => {
-                        //     x.latitude =
-                        //     __typename: x.__typename,
-                        //     id: x.id,
-                        //     latitude: x.latitude,
-                        //     longitude: x.longitude,
-                        //     order: x.order,
-                        //   });
-
-                        console.log(JSON.parse(JSON.stringify(polygon)));
-                        // キャッシュデータ更新
-                        cache.writeQuery({
-                          query: GetUserAreaDocument,
-                          variables: getUserAreaResult.variables,
-                          data: copiedData,
-                        });
-                      },
-                    });
+                    // updatePolygon({
+                    //   variables: {
+                    //     id: selectedPolygon.id,
+                    //     points: newPoints,
+                    //   },
+                    //   update: (cache, { data }) => {
+                    //     // キャッシュデータ取得
+                    //     let copiedData = cache.readQuery<GetUserAreaQuery, GetUserAreaQueryVariables>({
+                    //       query: GetUserAreaDocument,
+                    //       variables: getUserAreaResult.variables,
+                    //     });
+                    //     copiedData = JSON.parse(JSON.stringify(copiedData)) as typeof copiedData;
+                    //     const polygon = copiedData?.userAreas[0].area.polygons.find(
+                    //       (x) => x.id === selectedPolygonId?.toString(),
+                    //     );
+                    //     if (polygon == null) {
+                    //       return;
+                    //     }
+                    //     console.log(JSON.parse(JSON.stringify(polygon)));
+                    //     // キャッシュ書き換え
+                    //     // ここがうまく行ってない！
+                    //     // polygon.points = newPoints
+                    //     //   .map((x) => polygon.points.find((y) => y.order === x.order))
+                    //     //   .filter((x): x is NonNullable<typeof x> => x != null)
+                    //     //   .map((x) => {
+                    //     //     x.latitude =
+                    //     //     __typename: x.__typename,
+                    //     //     id: x.id,
+                    //     //     latitude: x.latitude,
+                    //     //     longitude: x.longitude,
+                    //     //     order: x.order,
+                    //     //   });
+                    //     console.log(JSON.parse(JSON.stringify(polygon)));
+                    //     // キャッシュデータ更新
+                    //     cache.writeQuery({
+                    //       query: GetUserAreaDocument,
+                    //       variables: getUserAreaResult.variables,
+                    //       data: copiedData,
+                    //     });
+                    //   },
+                    // });
                   }
                 }}
               >
@@ -320,118 +276,3 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
     </>
   );
 };
-
-{
-  /* 部屋選択 */
-}
-{
-  /* <Drawer
-            anchor="bottom"
-            open={selectedResidenceId != null && roomEditTargetRoomId == null}
-            onClose={() => setSelectedResidenceId(undefined)}
-          >
-            <div>部屋選択</div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateRows: 'repeat(3,50)',
-                gridTemplateColumns: 'repeat(15,1fr)',
-                gap: 5,
-                margin: 5,
-              }}
-            >
-              <Button
-                variant="contained"
-                style={{
-                  gridColumn: 1,
-                  gridRow: 3,
-                  minWidth: 0,
-                }}
-              >
-                101
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  gridColumn: 2,
-                  gridRow: 3,
-                  minWidth: 0,
-                }}
-              >
-                101
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  gridColumn: 2,
-                  gridRow: 2,
-                  minWidth: 0,
-                }}
-              >
-                202
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  gridColumn: 3,
-                  gridRow: 2,
-                  minWidth: 0,
-                }}
-              >
-                203
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  gridColumn: 4,
-                  gridRow: 2,
-                  minWidth: 0,
-                }}
-              >
-                204
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  gridColumn: 15,
-                  gridRow: 1,
-                  minWidth: 0,
-                }}
-                onClick={() => {
-                  setRoomEditTargetRoomId(1);
-                }}
-              >
-                3015
-              </Button>
-            </div>
-          </Drawer>
-
-          <Drawer
-            anchor="bottom"
-            open={roomEditTargetRoomId != null}
-            onClose={() => {
-              setSelectedResidenceId(undefined);
-              setRoomEditTargetRoomId(undefined);
-            }}
-          >
-            <div>操作</div>
-
-            <Button variant="contained" startIcon={<DoneRoundedIcon />}>
-              完了
-            </Button>
-            <Button variant="contained" startIcon={<BlockRoundedIcon />}>
-              拒否
-            </Button>
-            <Button variant="contained">不在</Button>
-
-            <Button
-              variant="contained"
-              startIcon={<KeyboardBackspaceRoundedIcon />}
-              onClick={() => {
-                setRoomEditTargetRoomId(undefined);
-              }}
-            >
-              部屋一覧
-            </Button>
-          </Drawer> */
-}
