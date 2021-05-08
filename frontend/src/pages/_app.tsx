@@ -20,7 +20,26 @@ import { LoadScript } from '@react-google-maps/api';
 const client = new ApolloClient({
   uri: process.env.SITE_URL + (process.env.SITE_PORT == null ? '' : ':' + process.env.SITE_PORT) + '/graphql',
   cache: new InMemoryCache({
-    // addTypename: false,
+    typePolicies: {
+      Polygon: {
+        fields: {
+          points: {
+            merge(_existing, incoming) {
+              return incoming;
+            },
+          },
+        },
+      },
+      Area: {
+        fields: {
+          polygons: {
+            merge(_existing, incoming) {
+              return incoming;
+            },
+          },
+        },
+      },
+    },
   }),
 });
 

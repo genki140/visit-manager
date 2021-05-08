@@ -177,6 +177,7 @@ export class MapQueries {
           );
           polygon.points = data.updatePolygon.points;
 
+          // InMemoryCache の設定で自動マージしています
           userAreaQueryCache.write(cache, cacheData);
         },
       });
@@ -201,6 +202,10 @@ export class MapQueries {
           area.polygons = area.polygons.filter((x) => x.id !== variables.id);
 
           userAreaQueryCache.write(cache, cacheData);
+
+          // // キャッシュから削除
+          // cache.evict({ id: cache.identify({ id: variables.id, __typename: 'Polygon' }) });
+          // cache.gc(); // 関連ポイントを削除
         },
       });
     };

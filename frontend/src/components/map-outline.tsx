@@ -19,8 +19,6 @@ export const MapOutline = memo(
     const selectedPolygonId = useStoreState((x) => x.map.selectedPolygonId);
     const selectedPolygonPointId = useStoreState((x) => x.map.selectedPolygonPointId);
 
-    console.log('MapOutline');
-
     // mutations
     const updatePolygon = MapQueries.useUpdatePolygon();
 
@@ -48,7 +46,7 @@ export const MapOutline = memo(
         // 頂点の選択
         if (e.vertex != null) {
           const pointId = Number(props.polygon.points.find((x) => x.order === Number(e.vertex))?.id);
-          console.log(pointId);
+          // console.log(pointId);
           dispatch(
             actions.setSelectedPolygonPointId({
               pointId: pointId,
@@ -58,17 +56,17 @@ export const MapOutline = memo(
 
         // ポリゴンを選択状態とする
         dispatch(actions.setSelectedPolygonId({ polygonId: polygonId }));
+        // ポリゴン追加の場合はポイント選択を解除する
+        if (e.edge != null) {
+          dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
+        }
 
         const result = await resultPromise;
 
         // エッジの選択
         if (result?.data?.updatePolygon != null && e.edge != null) {
           const newId = Number(result.data.updatePolygon.points.find((x) => x.order == Number(e.edge) + 1)?.id);
-          dispatch(
-            actions.setSelectedPolygonPointId({
-              pointId: Number(newId),
-            }),
-          );
+          dispatch(actions.setSelectedPolygonPointId({ pointId: Number(newId) }));
         }
       }
     };

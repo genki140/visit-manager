@@ -159,7 +159,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
                   const x1 = mapInfo.bounds.southWest.longitude;
                   const x2 = mapInfo.bounds.northEast.longitude;
                   const scale = 0.7;
-                  createPolygon({
+                  const result = await createPolygon({
                     variables: {
                       areaId: userArea.area.id,
                       points: [
@@ -170,6 +170,10 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
                       ],
                     },
                   });
+                  if (result.data != null) {
+                    dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
+                    dispatch(actions.setSelectedPolygonId({ polygonId: Number(result.data.createPolygon.id) }));
+                  }
                 }}
               >
                 <AddIcon />
@@ -187,7 +191,11 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
                 color={'secondary'}
                 onClick={async () => {
                   if (selectedPolygonId != null) {
-                    deletePolygon({ id: selectedPolygonId.toString() });
+                    const result = await deletePolygon({ id: selectedPolygonId.toString() });
+                    if (result.data?.deletePolygon === true) {
+                      dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
+                      dispatch(actions.setSelectedPolygonId({ polygonId: undefined }));
+                    }
                   }
                 }}
               >
@@ -211,58 +219,20 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
                     return;
                   }
 
-                  const newPoints = selectedPolygon?.points
-                    .filter((x) => x.id !== selectedPolygonPointId.toString())
-                    .map((x, i) => ({
-                      order: i,
-                      latitude: x.latitude,
-                      longitude: x.longitude,
-                    }));
-
                   if (selectedPolygon != null) {
-                    updatePolygon({ id: selectedPolygon.id, points: newPoints });
+                    const newPoints = selectedPolygon?.points
+                      .filter((x) => x.id !== selectedPolygonPointId.toString())
+                      .map((x, i) => ({
+                        order: i,
+                        latitude: x.latitude,
+                        longitude: x.longitude,
+                      }));
 
-                    // updatePolygon({
-                    //   variables: {
-                    //     id: selectedPolygon.id,
-                    //     points: newPoints,
-                    //   },
-                    //   update: (cache, { data }) => {
-                    //     // キャッシュデータ取得
-                    //     let copiedData = cache.readQuery<GetUserAreaQuery, GetUserAreaQueryVariables>({
-                    //       query: GetUserAreaDocument,
-                    //       variables: getUserAreaResult.variables,
-                    //     });
-                    //     copiedData = JSON.parse(JSON.stringify(copiedData)) as typeof copiedData;
-                    //     const polygon = copiedData?.userAreas[0].area.polygons.find(
-                    //       (x) => x.id === selectedPolygonId?.toString(),
-                    //     );
-                    //     if (polygon == null) {
-                    //       return;
-                    //     }
-                    //     console.log(JSON.parse(JSON.stringify(polygon)));
-                    //     // キャッシュ書き換え
-                    //     // ここがうまく行ってない！
-                    //     // polygon.points = newPoints
-                    //     //   .map((x) => polygon.points.find((y) => y.order === x.order))
-                    //     //   .filter((x): x is NonNullable<typeof x> => x != null)
-                    //     //   .map((x) => {
-                    //     //     x.latitude =
-                    //     //     __typename: x.__typename,
-                    //     //     id: x.id,
-                    //     //     latitude: x.latitude,
-                    //     //     longitude: x.longitude,
-                    //     //     order: x.order,
-                    //     //   });
-                    //     console.log(JSON.parse(JSON.stringify(polygon)));
-                    //     // キャッシュデータ更新
-                    //     cache.writeQuery({
-                    //       query: GetUserAreaDocument,
-                    //       variables: getUserAreaResult.variables,
-                    //       data: copiedData,
-                    //     });
-                    //   },
-                    // });
+                    const resultPromise = updatePolygon({ id: selectedPolygon.id, points: newPoints });
+
+                    dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
+
+                    const result = await resultPromise;
                   }
                 }}
               >
