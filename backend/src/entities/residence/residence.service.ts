@@ -49,7 +49,7 @@ export class ResidenceService {
     return item;
   }
 
-  // async delete(id: number) {
-  //   await this.userRepository.delete(id);
-  // }
+  async delete(id: number) {
+    return ((await this.residenceRepository.delete(id)).affected ?? 0) > 0;
+  }
 }

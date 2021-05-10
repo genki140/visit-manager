@@ -1,7 +1,7 @@
 import { mapStyles } from '@/styles/map-styles';
 import { GoogleMap } from '@react-google-maps/api';
 import React, { forwardRef, ReactNode, useImperativeHandle, useState } from 'react';
-import { MapEditType, useStoreState } from '@/ducks/store';
+import { actions, MapEditType, useAppDispatch, useStoreState } from '@/ducks/store';
 import { useGetUserAreaQuery } from '@/types/graphql';
 import { useRouterParams } from '@/utils/use-router-params';
 import { MapQueries } from '@/queries/map-edit-queries';
@@ -36,6 +36,8 @@ const Map = forwardRef<
 >((props, ref) => {
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
   const mapEditType = useStoreState((x) => x.map.editType);
+
+  const dispatch = useAppDispatch();
 
   // router
   const routerParams = useRouterParams();
@@ -89,7 +91,7 @@ const Map = forwardRef<
         }
 
         if (userArea != null) {
-          await createResidence({
+          const result = await createResidence({
             variables: {
               areaId: userArea.area.id,
               latitude: e.latLng.lat(),
@@ -108,9 +110,9 @@ const Map = forwardRef<
               },
             }),
           });
-          // if (result.data != null) {
-          //   dispatch(actions.setSelectedResidenceId(Number(result.data?.createResidence.id)));
-          // }
+          if (result.data != null) {
+            dispatch(actions.setSelectedResidenceId({ residenceId: Number(result.data.createResidence.id) }));
+          }
         }
       }}
     >

@@ -16,9 +16,13 @@ const useStyle = makeStyles((theme) => ({
   button: {
     position: 'absolute',
     bottom: theme.spacing(2),
-    right: theme.spacing(12),
+    right: theme.spacing(10),
+    pointerEvents: 'none',
   },
-
+  fab: {
+    pointerEvents: 'auto',
+    marginRight: theme.spacing(1),
+  },
   exampleWrapper: {
     position: 'relative',
     marginTop: theme.spacing(3),
@@ -67,6 +71,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
 
   // mutations
   const [createPolygon] = MapQueries.useCreatePolygon();
+  const deleteResidence = MapQueries.useDeleteResidence();
   const deletePolygon = MapQueries.useDeletePolygon();
   const updatePolygon = MapQueries.useUpdatePolygon();
 
@@ -98,7 +103,12 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
             />
           }
           onClose={() => setOpen(false)}
-          onOpen={() => setOpen(true)}
+          onOpen={(_e, reason) => {
+            // ドロワーなどとの兼ね合いで挙動がおかしくなるのでfocus以外
+            if (reason !== 'focus') {
+              setOpen(true);
+            }
+          }}
           direction="up"
         >
           {editButtons.map((x) => (
@@ -133,10 +143,17 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
       <div className={classes.button}>
         <Zoom in={mapEditType === MapEditType.Residence}>
           <Fab
+            className={classes.fab}
             disabled={selectedResidenceId == null}
             color={'secondary'}
             onClick={async () => {
-              // 住宅削除
+              if (selectedResidenceId != null) {
+                // 住宅削除
+                const result = await deleteResidence({ id: selectedResidenceId.toString() });
+                if (result.data?.deleteResidence === true) {
+                  dispatch(actions.setSelectedResidenceId({ residenceId: undefined }));
+                }
+              }
             }}
           >
             <DeleteIcon />
@@ -151,6 +168,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
             <Zoom in={mapEditType === MapEditType.Polygon}>
               {/* ポリゴンの追加 */}
               <Fab
+                className={classes.fab}
                 // color={'primary'}
                 onClick={async () => {
                   const mapInfo = props.map.current.getInfo();
@@ -187,6 +205,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
           <span>
             <Zoom in={mapEditType === MapEditType.Polygon}>
               <Fab
+                className={classes.fab}
                 disabled={selectedPolygonId == null}
                 color={'secondary'}
                 onClick={async () => {
@@ -211,6 +230,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
           <span>
             <Zoom in={mapEditType === MapEditType.Polygon}>
               <Fab
+                className={classes.fab}
                 disabled={selectedPolygonPointId == null}
                 color={'secondary'}
                 onClick={async () => {
@@ -239,7 +259,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
                 <TimelineIcon />
                 <DeleteIcon />
               </Fab>
-            </Zoom>{' '}
+            </Zoom>
           </span>
         </Tooltip>
       </div>

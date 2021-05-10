@@ -63,9 +63,10 @@ export type Mutation = {
   deleteRole?: Maybe<Role>;
   createPolygon: Polygon;
   updatePolygon: Polygon;
-  deletePolygon?: Maybe<Scalars['Boolean']>;
+  deletePolygon: Scalars['Boolean'];
   createResidence: Residence;
   updateResidence: Residence;
+  deleteResidence: Scalars['Boolean'];
 };
 
 
@@ -106,6 +107,11 @@ export type MutationCreateResidenceArgs = {
 
 export type MutationUpdateResidenceArgs = {
   residence: UpdateResidenceInput;
+};
+
+
+export type MutationDeleteResidenceArgs = {
+  id: Scalars['ID'];
 };
 
 export type Organization = {
@@ -321,6 +327,16 @@ export type UpdateResidenceMutation = (
       & Pick<Resident, 'id' | 'room' | 'floor'>
     )> }
   ) }
+);
+
+export type DeleteResidenceMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteResidenceMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteResidence'>
 );
 
 export type CreatePolygonMutationVariables = Exact<{
@@ -584,6 +600,37 @@ export function useUpdateResidenceMutation(baseOptions?: Apollo.MutationHookOpti
 export type UpdateResidenceMutationHookResult = ReturnType<typeof useUpdateResidenceMutation>;
 export type UpdateResidenceMutationResult = Apollo.MutationResult<UpdateResidenceMutation>;
 export type UpdateResidenceMutationOptions = Apollo.BaseMutationOptions<UpdateResidenceMutation, UpdateResidenceMutationVariables>;
+export const DeleteResidenceDocument = gql`
+    mutation deleteResidence($id: ID!) {
+  deleteResidence(id: $id)
+}
+    `;
+export type DeleteResidenceMutationFn = Apollo.MutationFunction<DeleteResidenceMutation, DeleteResidenceMutationVariables>;
+
+/**
+ * __useDeleteResidenceMutation__
+ *
+ * To run a mutation, you first call `useDeleteResidenceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteResidenceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteResidenceMutation, { data, loading, error }] = useDeleteResidenceMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteResidenceMutation(baseOptions?: Apollo.MutationHookOptions<DeleteResidenceMutation, DeleteResidenceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteResidenceMutation, DeleteResidenceMutationVariables>(DeleteResidenceDocument, options);
+      }
+export type DeleteResidenceMutationHookResult = ReturnType<typeof useDeleteResidenceMutation>;
+export type DeleteResidenceMutationResult = Apollo.MutationResult<DeleteResidenceMutation>;
+export type DeleteResidenceMutationOptions = Apollo.BaseMutationOptions<DeleteResidenceMutation, DeleteResidenceMutationVariables>;
 export const CreatePolygonDocument = gql`
     mutation createPolygon($areaId: ID!, $points: [CreatePolygonPointInput!]!) {
   createPolygon(polygon: {areaId: $areaId, points: $points}) {

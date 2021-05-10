@@ -6,6 +6,8 @@ import MapData from '@/components/map-data';
 import { Custom404 } from '@/pages/404';
 import { MapControls } from '@/components/map-controls';
 import { useRouterParams } from '@/utils/use-router-params';
+import { MapResidents } from '@/components/map-residents';
+import MapUserLocation from '@/components/map-user-location';
 
 // 地図ページ。設定画面と兼用
 
@@ -14,9 +16,6 @@ import { useRouterParams } from '@/utils/use-router-params';
 const AreaPage = () => {
   // refs
   const mapRef = useRef({} as MapOutput);
-
-  // local states
-  // const [roomEditTargetRoomId, setRoomEditTargetRoomId] = useState<number | undefined>();
 
   // router
   const router = useRouter();
@@ -44,9 +43,11 @@ const AreaPage = () => {
     <Layout title={routerParams.areaName} fillContent={true}>
       <Map ref={mapRef}>
         <MapData />
+        <MapUserLocation />
       </Map>
 
       <MapControls map={mapRef} />
+      <MapResidents />
     </Layout>
   );
 };

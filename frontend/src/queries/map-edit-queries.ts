@@ -2,6 +2,7 @@ import { ApolloCache, gql } from '@apollo/client';
 
 import {
   DeletePolygonMutationVariables,
+  DeleteResidenceMutationVariables,
   GetUserAreaDocument,
   GetUserAreaQuery,
   GetUserAreaQueryVariables,
@@ -10,6 +11,7 @@ import {
   useCreatePolygonMutation,
   useCreateResidenceMutation,
   useDeletePolygonMutation,
+  useDeleteResidenceMutation,
   useGetUserAreaQuery,
   useUpdatePolygonMutation,
   useUpdateResidenceMutation,
@@ -95,6 +97,25 @@ export class MapQueries {
         },
       });
     return result;
+  };
+
+  static useDeleteResidence = () => {
+    const userAreaQueryCache = MapQueries.useUserAreaQueryCache();
+    const [deleteResidenceMutation] = useDeleteResidenceMutation();
+    const resultFunction = async (variables: DeleteResidenceMutationVariables) => {
+      return deleteResidenceMutation({
+        variables: variables,
+        update: (cache) => {
+          // const data = TypeUtil.toNonNullable(result.data);
+          const cacheData = userAreaQueryCache.read(cache);
+          // クエリに対するキャッシュデータ書き換え
+          const area = cacheData.userAreas[0].area;
+          area.residences = area.residences.filter((x) => x.id !== variables.id);
+          userAreaQueryCache.write(cache, cacheData);
+        },
+      });
+    };
+    return resultFunction;
   };
 
   /** アウトラインを生成し、キャッシュを更新 */
@@ -276,6 +297,12 @@ gql`
         floor
       }
     }
+  }
+`;
+
+gql`
+  mutation deleteResidence($id: ID!) {
+    deleteResidence(id: $id)
   }
 `;
 

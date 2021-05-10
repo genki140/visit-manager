@@ -28,8 +28,8 @@ export class ResidenceResolver {
     return result;
   }
 
-  // @Mutation(() => User, { nullable: true })
-  // async deleteUser(@Args('id', { type: () => ID }) id: number) {
-  //   return await this.residenceService.delete(id);
-  // }
+  @Mutation(() => Boolean)
+  async deleteResidence(@Args('id', { type: () => ID }) id: number) {
+    return await this.residenceService.delete(id);
+  }
 }

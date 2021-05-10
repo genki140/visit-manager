@@ -24,7 +24,7 @@ export class PolygonResolver {
     return result;
   }
 
-  @Mutation(() => Boolean, { nullable: true })
+  @Mutation(() => Boolean)
   async deletePolygon(@Args('id', { type: () => ID }) id: number) {
     return await this.polygonService.delete(id);
   }

@@ -37,6 +37,11 @@ const client = new ApolloClient({
               return incoming;
             },
           },
+          residences: {
+            merge(_existing, incoming) {
+              return incoming;
+            },
+          },
         },
       },
     },

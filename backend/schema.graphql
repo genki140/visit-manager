@@ -43,8 +43,9 @@ type Polygon {
 
 type Resident {
   id: ID!
-  room: String!
+  name: String!
   floor: Float!
+  room: Float!
   residence: Residence!
 }
 
@@ -103,9 +104,10 @@ type Mutation {
   deleteRole(id: ID!): Role
   createPolygon(polygon: CreatePolygonInput!): Polygon!
   updatePolygon(polygon: UpdatePolygonInput!): Polygon!
-  deletePolygon(id: ID!): Boolean
+  deletePolygon(id: ID!): Boolean!
   createResidence(residence: CreateResidenceInput!): Residence!
   updateResidence(residence: UpdateResidenceInput!): Residence!
+  deleteResidence(id: ID!): Boolean!
 }
 
 input CreateUserInput {

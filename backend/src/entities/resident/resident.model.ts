@@ -13,12 +13,17 @@ export class Resident {
   /** 部屋名 */
   @Field()
   @Column({ length: 100 })
-  room: string = '';
+  name: string = '';
 
   /** フロア番号 */
   @Field()
   @Column()
   floor: number = 0;
+
+  /** 部屋番号(横方向) */
+  @Field()
+  @Column()
+  room: number = 0;
 
   /** 建物 */
   @Field(() => Residence)
