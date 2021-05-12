@@ -1,11 +1,13 @@
 import { Layout } from '@/components/layout';
 import { useState } from 'react';
 // import { Button, createStyles, makeStyles, TextField, Theme } from '@material-ui/core';
-import { asyncLogin, useAppDispatch } from '@/ducks/store';
+import { asyncLogin, useAppDispatch, useStoreState } from '@/ducks/store';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { TextField } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
+import { useApolloClient } from '@apollo/client';
+import { useFormatMessage } from '@/locales';
 
 // const useStyles = makeStyles((theme: Theme) =>
 //   createStyles({
@@ -37,9 +39,39 @@ const LoginPage = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const apolloClient = useApolloClient();
+  const loginSrcRoute = useStoreState((x) => x.loginSrcRoute);
+
+  const f = useFormatMessage();
+
+  const login = async () => {
+    try {
+      unwrapResult(await dispatch(asyncLogin({ username, password })));
+
+      // すべてのクエリを再取得させる。
+      apolloClient.reFetchObservableQueries();
+
+      // router.push(loginSrcPath ?? '/', loginSrcPath ?? '/'); // 前のページに戻る
+      if (loginSrcRoute == null) {
+        router.push('/');
+      } else {
+        console.log(loginSrcRoute);
+        router.push({
+          pathname: loginSrcRoute.pathname,
+          query: loginSrcRoute.query,
+        });
+      }
+    } catch (e) {
+      // console.log(e);
+      // とりあえず適当なエラーメッセージ
+      setError('ログインに失敗しました');
+    }
+  };
 
   return (
-    <Layout title="ログイン" showMenuButton={false}>
+    <Layout title={f((x) => x.login)} showMenuButton={false}>
       <div
         style={{
           maxWidth: 500,
@@ -52,6 +84,11 @@ const LoginPage = () => {
           onChange={(e) => {
             e.preventDefault();
             setUsername(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              login();
+            }
           }}
           style={{
             width: '100%',
@@ -66,69 +103,42 @@ const LoginPage = () => {
             e.preventDefault();
             setPassword(e.target.value);
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              login();
+            }
+          }}
           style={{
             width: '100%',
             display: 'flex',
           }}
         />
-        <Button
-          variant="contained"
-          size="large"
-          color="secondary"
-          onClick={async () => {
-            unwrapResult(await dispatch(asyncLogin({ username, password })));
-            router.push('/');
-          }}
+        <div
           style={{
             display: 'flex',
             marginTop: 10,
-            marginLeft: 'auto',
           }}
         >
-          Login
-        </Button>
-      </div>
-
-      {/* 
-      <Card className={classes.container}>
-        <CardHeader>ログイン</CardHeader>
-        <CardContent>
-          <div>
-            <TextField
-              label="ユーザー名"
-              value={username}
-              onChange={(e) => {
-                e.preventDefault();
-                setUsername(e.target.value);
-              }}
-            />
+          <div
+            style={{
+              marginRight: 'auto',
+            }}
+          >
+            {error}
           </div>
-          <div>
-            <TextField
-              label="パスワード"
-              value={password}
-              type="password"
-              onChange={(e) => {
-                e.preventDefault();
-                setPassword(e.target.value);
-              }}
-            />
-          </div>
-        </CardContent>
-        <CardActions>
           <Button
             variant="contained"
             size="large"
             color="secondary"
-            onClick={async () => {
-              unwrapResult(await dispatch(asyncLogin({ username, password })));
-              Router.push('/');
+            onClick={login}
+            style={{
+              marginLeft: 'auto',
             }}
           >
-            Login
+            ログイン
           </Button>
-        </CardActions> 
-      </Card>*/}
+        </div>
+      </div>
     </Layout>
   );
 };

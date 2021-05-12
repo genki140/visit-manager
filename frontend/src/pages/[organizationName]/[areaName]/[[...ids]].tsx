@@ -15,7 +15,7 @@ import MapUserLocation from '@/components/map-user-location';
 
 const AreaPage = () => {
   // refs
-  const mapRef = useRef({} as MapOutput);
+  const mapRef = useRef<MapOutput | undefined>(undefined);
 
   // router
   const router = useRouter();
@@ -42,7 +42,7 @@ const AreaPage = () => {
   return (
     <Layout title={routerParams.areaName} fillContent={true}>
       <Map ref={mapRef}>
-        <MapData />
+        <MapData map={mapRef} />
         <MapUserLocation />
       </Map>
 

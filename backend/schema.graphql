@@ -88,6 +88,7 @@ type User {
 scalar Date
 
 type Query {
+  currentUser: User!
   users(ids: [ID!] = null, organizationId: ID!): [User!]!
   role(id: ID!): Role
   categories: [Role!]!

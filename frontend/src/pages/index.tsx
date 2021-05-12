@@ -43,7 +43,7 @@ const IndexPage = () => {
       </LoadingContainer>
 
       <Typography gutterBottom variant="h2">
-        組織の操作{' '}
+        組織の操作
       </Typography>
 
       <Button variant="contained" color="primary">

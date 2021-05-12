@@ -28,6 +28,11 @@ import { getConnectionOptions } from 'typeorm';
     ConfigModule.forRoot({ isGlobal: true }), // envファイルを読み込むために使用
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.graphql',
+      playground: {
+        settings: {
+          'request.credentials': 'include',
+        },
+      },
     }), //GraphQL
     // TypeOrmModule.forRoot(),
     TypeOrmModule.forRootAsync({

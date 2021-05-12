@@ -19,3 +19,26 @@ gql`
     }
   }
 `;
+
+gql`
+  query getCurrentUser {
+    currentUser {
+      id
+      username
+      name
+      roledUsers {
+        organization {
+          name
+        }
+        roles {
+          id
+          name
+          abilities {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`;

@@ -1,0 +1,10 @@
+/* html {
+  touch-action: manipulation;
+  max-width: 100;
+} */
+/* Avoid Chrome to see Safari hack */
+/* @supports (-webkit-touch-callout: none) {
+  body {
+    height: -webkit-fill-available;
+  }
+} */

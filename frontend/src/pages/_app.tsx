@@ -10,14 +10,18 @@ import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 // material ui
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import '../styles/global.css';
 
 // project
 import { store } from '@/ducks/store';
 import { theme } from '@/styles/theme';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LoadScript } from '@react-google-maps/api';
+import { LocaleProvider } from '@/components/locale-provider';
+import { LoginUserProvider } from '@/components/login-user-provider';
 
 const client = new ApolloClient({
+  // クライアントからアクセスできるURLであること
   uri: process.env.SITE_URL + (process.env.SITE_PORT == null ? '' : ':' + process.env.SITE_PORT) + '/graphql',
   cache: new InMemoryCache({
     typePolicies: {
@@ -61,13 +65,21 @@ const App: React.FC<AppProps> = (props) => {
 
   // const SafeHydrate = dynamic(() => import('../components/SafeHydrate'), { ssr: false });
 
+  // console.log('app:render');
+
   return (
     <MuiThemeProvider theme={theme}>
       <ApolloProvider client={client}>
         <Provider store={store}>
           <CssBaseline />
           <LoadScript googleMapsApiKey={process.env.GOOGLE_MAP_API_KEY ?? ''} onLoad={() => setMapApiLoaded(true)}>
-            {mapApiLoaded && <props.Component router={props.router} {...props.pageProps} />}
+            {mapApiLoaded && (
+              <LoginUserProvider>
+                <LocaleProvider>
+                  <props.Component router={props.router} {...props.pageProps} />
+                </LocaleProvider>
+              </LoginUserProvider>
+            )}
           </LoadScript>
         </Provider>
       </ApolloProvider>

@@ -30,4 +30,12 @@ export class AuthController {
     response.statusCode = 200;
     return result;
   }
+
+  @NoGuard()
+  @Post('api/logout')
+  async logout(@Res({ passthrough: true }) response: Response) {
+    // クッキーから削除
+    response.clearCookie('access_token');
+    response.statusCode = 200;
+  }
 }

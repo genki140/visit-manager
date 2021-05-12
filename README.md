@@ -46,16 +46,37 @@ Next.js で実装し、Nest.js の API へはプロキシで接続。つまり�
 
 ### ポート管理
 
-本当は環境変数に持たせたいが後回し。
-
-- フロントエンド：3001
-- バックエンド：3005
+- フロントエンド：3000
+- バックエンド：4000
+- phpMyAdmin：8000
 - フロントエンドデバッグ：9228
 - バックエンドデバッグ：9239
 
 ## やりたいことなど
 
 - モデル構造をサーバーとクライアントで共有（同一ファイルを参照できるのが理想）
+
+## GCP で開発＆そのまま運用
+
+Docker コンテナで動かすのであれば本来は GKE でクラスタ組むのが正解かも知れないが、そこまでする必要を感じないので GCE 上で Docker を使って開発＆運用できるようにしたい。(ubuntu でテスト)
+
+https://qiita.com/gorohash/items/608da9050b32db581802
+
+SSH の設定は gcloud コマンドが簡単
+
+https://qiita.com/masaaania/items/7a83c5e44e351b4a3a2c
+
+Docker をインストール
+
+https://qiita.com/tkyonezu/items/0f6da57eb2d823d2611d
+
+docker-compose をインストール
+
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04-ja
+
+git からソースコードのダウンロード
+
+（そのあと vscode から、Linux(GCP:Ubuntu)上の docker にどうやって入る？）
 
 ## 使用ライブラリなど
 

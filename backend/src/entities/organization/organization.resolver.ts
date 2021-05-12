@@ -1,8 +1,6 @@
 import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, ID, Info, Resolver, Query } from '@nestjs/graphql';
-import { GraphQLResolveInfo } from 'graphql';
-import { parseResolveInfo } from 'graphql-parse-resolve-info';
+import { Resolver, Query } from '@nestjs/graphql';
 import { User } from '../user/user.model';
 import { Organization } from './organization.model';
 import { OrganizationService } from './organization.service';

@@ -1,3 +1,4 @@
+import { User } from '@/types/graphql';
 import { AsyncThunk, configureStore, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +14,8 @@ export type MapEditType = typeof MapEditType[keyof typeof MapEditType];
 /** ストアの型 */
 export type StoreState = {
   loading: boolean;
+  loginUser?: User;
+  loginSrcRoute?: { pathname: string; query: any };
   map: {
     // position: {
     //   lat: number;
@@ -68,6 +71,13 @@ export const asyncLogin = createAsyncThunk<asyncLoginResult, asyncLoginProps>(
   },
 );
 
+export const asyncLogout = createAsyncThunk(
+  storeName + '/asyncLogout',
+  async (): Promise<void> => {
+    await axios.post('/api/logout');
+  },
+);
+
 // sliceの定義
 export const storeSlice = createSlice({
   name: storeName,
@@ -82,6 +92,12 @@ export const storeSlice = createSlice({
     // },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
+    },
+    setLoginUser: (state, action: PayloadAction<User | undefined>) => {
+      state.loginUser = action.payload;
+    },
+    setLoginSrcPath: (state, action: PayloadAction<{ pathname: string; query: any } | undefined>) => {
+      state.loginSrcRoute = action.payload;
     },
     setSelectedResidenceId: (state, action: PayloadAction<{ residenceId: number | undefined }>) => {
       state.map.selectedResidenceId = action.payload.residenceId;

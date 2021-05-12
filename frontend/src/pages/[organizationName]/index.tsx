@@ -5,6 +5,7 @@ import LoadingContainer from '@/components/loading-container';
 import { Layout } from '@/components/layout';
 import { Custom404 } from '../404';
 import { useRouterParams } from '@/utils/use-router-params';
+import { useIntl } from 'react-intl';
 
 // スタイル定義
 const useStyles = makeStyles(() => ({

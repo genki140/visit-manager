@@ -14,9 +14,15 @@ import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 export class UserResolver {
   constructor(@Inject(UserService) private userService: UserService) {}
 
+  /** 現在ログインしているユーザーの情報を取得します。 */
+  @UseGuards(GqlAuthGuard)
+  @Query(() => User)
+  async currentUser(@Info() info: GraphQLResolveInfo, @CurrentUser() currentUser: User) {
+    return currentUser;
+  }
+
   /** ユーザー一覧を権限情報と共に取得します */
   @UseGuards(GqlAuthGuard)
-  // @UseGuards(JwtStrategy)
   @Query(() => [User])
   // @RequiredAbilities(AbilityTypes.Administrator)
   async users(
@@ -61,6 +67,7 @@ export class UserResolver {
     if (ids != null && result.length !== ids.length) {
       throw new Error('Some IDs were not found.');
     }
+
     return result;
   }
 

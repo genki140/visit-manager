@@ -8,31 +8,31 @@ import Crop54Icon from '@material-ui/icons/Crop54';
 // import RestoreIcon from '@material-ui/icons/Restore';
 import ApartmentIcon from '@material-ui/icons/Apartment';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
 import { useRouterParams } from '@/utils/use-router-params';
-import { useGetUserAreaQuery } from '@/types/graphql';
+import { useGetUserAreaQuery, UserArea } from '@/types/graphql';
 import { MapOutput } from './map';
 
 const useStyle = makeStyles((theme) => ({
-  button: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(10),
-    pointerEvents: 'none',
-  },
-  fab: {
-    pointerEvents: 'auto',
-    marginRight: theme.spacing(1),
-  },
-  exampleWrapper: {
-    position: 'relative',
-    marginTop: theme.spacing(3),
-    height: 380,
-  },
-
   speedDial: {
     position: 'absolute',
     bottom: theme.spacing(2),
     right: theme.spacing(2),
+  },
+  toolButtons: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: 74,
+    pointerEvents: 'none',
+  },
+  toolButton: {
+    pointerEvents: 'auto',
+    marginRight: theme.spacing(1),
+  },
+  resetButton: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    left: theme.spacing(2),
   },
 }));
 
@@ -47,8 +47,9 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import DoneIcon from '@material-ui/icons/Done';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import { MapQueries } from '@/queries/map-edit-queries';
+import { getMapBoundsFromArea } from './map-data';
 
-export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
+export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined> }) => {
   // styles
   const classes = useStyle();
 
@@ -87,11 +88,33 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
     return <>ローディング</>;
   }
 
+  const selectedPolygon = userArea.area.polygons.find((x) => x.id === selectedPolygonId?.toString());
+
   return (
     <>
+      <div className={classes.resetButton}>
+        <Tooltip title="全体を表示" placement="top">
+          <span>
+            <Fab
+              className={classes.toolButton}
+              onClick={async () => {
+                const bounds = getMapBoundsFromArea(userArea as UserArea);
+                const map = props.map.current?.getInfo().map;
+                if (bounds != null && map != null) {
+                  map.fitBounds(bounds, 0);
+                }
+              }}
+            >
+              <CenterFocusStrongIcon />
+            </Fab>
+          </span>
+        </Tooltip>
+      </div>
+
       {/* 編集モード選択 */}
       <div className={classes.speedDial}>
         <SpeedDial
+          FabProps={{ color: mapEditType === MapEditType.None ? 'default' : 'primary' }}
           ariaLabel="Actions Button"
           open={open}
           icon={
@@ -104,15 +127,15 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
           }
           onClose={() => setOpen(false)}
           onOpen={(_e, reason) => {
-            // ドロワーなどとの兼ね合いで挙動がおかしくなるのでfocus以外
             if (reason !== 'focus') {
-              setOpen(true);
+              setOpen(true); // ドロワーなどとの兼ね合いで挙動がおかしくなるのでfocus以外
             }
           }}
           direction="up"
         >
           {editButtons.map((x) => (
             <SpeedDialAction
+              FabProps={{ color: 'secondary' }}
               key={x.type.toString()}
               icon={x.icon}
               tooltipTitle={x.tooltip}
@@ -140,10 +163,10 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
       </div>
 
       {/* 住宅モードの操作 */}
-      <div className={classes.button}>
+      <div className={classes.toolButtons}>
         <Zoom in={mapEditType === MapEditType.Residence}>
           <Fab
-            className={classes.fab}
+            className={classes.toolButton}
             disabled={selectedResidenceId == null}
             color={'secondary'}
             onClick={async () => {
@@ -162,15 +185,18 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
       </div>
 
       {/* アウトラインモードの操作 */}
-      <div className={classes.button}>
+      <div className={classes.toolButtons}>
         <Tooltip title="新規アウトラインを追加" placement="top">
           <span>
             <Zoom in={mapEditType === MapEditType.Polygon}>
               {/* ポリゴンの追加 */}
               <Fab
-                className={classes.fab}
+                className={classes.toolButton}
                 // color={'primary'}
                 onClick={async () => {
+                  if (props.map.current == null) {
+                    return;
+                  }
                   const mapInfo = props.map.current.getInfo();
                   const y1 = mapInfo.bounds.northEast.latitude;
                   const y2 = mapInfo.bounds.southWest.latitude;
@@ -205,7 +231,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
           <span>
             <Zoom in={mapEditType === MapEditType.Polygon}>
               <Fab
-                className={classes.fab}
+                className={classes.toolButton}
                 disabled={selectedPolygonId == null}
                 color={'secondary'}
                 onClick={async () => {
@@ -218,7 +244,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
                   }
                 }}
               >
-                <Crop54Icon />
+                <Crop54Icon fontSize="small" />
                 <DeleteIcon />
               </Fab>
             </Zoom>
@@ -230,33 +256,31 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput> }) => {
           <span>
             <Zoom in={mapEditType === MapEditType.Polygon}>
               <Fab
-                className={classes.fab}
-                disabled={selectedPolygonPointId == null}
+                className={classes.toolButton}
+                disabled={selectedPolygonPointId == null || (selectedPolygon?.points.length ?? 0) <= 3} // 3点以下は削除不可
                 color={'secondary'}
                 onClick={async () => {
-                  const selectedPolygon = userArea.area.polygons.find((x) => x.id === selectedPolygonId?.toString());
                   if (selectedPolygonPointId == null || selectedPolygon == null) {
                     return;
                   }
 
-                  if (selectedPolygon != null) {
-                    const newPoints = selectedPolygon?.points
-                      .filter((x) => x.id !== selectedPolygonPointId.toString())
-                      .map((x, i) => ({
-                        order: i,
-                        latitude: x.latitude,
-                        longitude: x.longitude,
-                      }));
+                  const newPoints = selectedPolygon?.points
+                    .filter((x) => x.id !== selectedPolygonPointId.toString())
+                    .map((x, i) => ({
+                      order: i,
+                      latitude: x.latitude,
+                      longitude: x.longitude,
+                    }));
 
-                    const resultPromise = updatePolygon({ id: selectedPolygon.id, points: newPoints });
+                  const resultPromise = updatePolygon({ id: selectedPolygon.id, points: newPoints });
 
-                    dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
+                  dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
 
-                    const result = await resultPromise;
-                  }
+                  // const result =
+                  await resultPromise;
                 }}
               >
-                <TimelineIcon />
+                <TimelineIcon fontSize="small" />
                 <DeleteIcon />
               </Fab>
             </Zoom>
