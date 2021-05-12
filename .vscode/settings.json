@@ -8,5 +8,6 @@
     "backend/dist/": true,
     "frontend/.next/": true
   },
-  "graphql-config.load.rootDir": "./frontend"
+  "graphql-config.load.rootDir": "./frontend",
+  "markdown.styles": [".vscode/md-style.css"]
 }

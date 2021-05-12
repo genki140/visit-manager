@@ -3,6 +3,7 @@ import { Button, Card, CardActionArea, CardContent, makeStyles, Typography } fro
 import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
 import Link from 'next/link';
+import { useFormatMessage } from '@/locales';
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -15,10 +16,11 @@ const useStyles = makeStyles(() => ({
 const IndexPage = () => {
   const classes = useStyles();
   const { loading, error, data } = useGetOrganizationsQuery();
+  const f = useFormatMessage();
   return (
     <Layout title="訪問管理">
       <Typography gutterBottom variant="h2">
-        所属している組織
+        {f((x) => x.affiliation_organiozation)}
       </Typography>
 
       <LoadingContainer loading={loading} error={error}>

@@ -189,39 +189,41 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
         <Tooltip title="新規アウトラインを追加" placement="top">
           <span>
             <Zoom in={mapEditType === MapEditType.Polygon}>
-              {/* ポリゴンの追加 */}
-              <Fab
-                className={classes.toolButton}
-                // color={'primary'}
-                onClick={async () => {
-                  if (props.map.current == null) {
-                    return;
-                  }
-                  const mapInfo = props.map.current.getInfo();
-                  const y1 = mapInfo.bounds.northEast.latitude;
-                  const y2 = mapInfo.bounds.southWest.latitude;
-                  const x1 = mapInfo.bounds.southWest.longitude;
-                  const x2 = mapInfo.bounds.northEast.longitude;
-                  const scale = 0.7;
-                  const result = await createPolygon({
-                    variables: {
-                      areaId: userArea.area.id,
-                      points: [
-                        { longitude: x1 * scale + x2 * (1 - scale), latitude: y1 * scale + y2 * (1 - scale) },
-                        { longitude: x2 * scale + x1 * (1 - scale), latitude: y1 * scale + y2 * (1 - scale) },
-                        { longitude: x2 * scale + x1 * (1 - scale), latitude: y2 * scale + y1 * (1 - scale) },
-                        { longitude: x1 * scale + x2 * (1 - scale), latitude: y2 * scale + y1 * (1 - scale) },
-                      ],
-                    },
-                  });
-                  if (result.data != null) {
-                    dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
-                    dispatch(actions.setSelectedPolygonId({ polygonId: Number(result.data.createPolygon.id) }));
-                  }
-                }}
-              >
-                <AddIcon />
-              </Fab>
+              {
+                // ポリゴンの追加
+                <Fab
+                  className={classes.toolButton}
+                  // color={'primary'}
+                  onClick={async () => {
+                    if (props.map.current == null) {
+                      return;
+                    }
+                    const mapInfo = props.map.current.getInfo();
+                    const y1 = mapInfo.bounds.northEast.latitude;
+                    const y2 = mapInfo.bounds.southWest.latitude;
+                    const x1 = mapInfo.bounds.southWest.longitude;
+                    const x2 = mapInfo.bounds.northEast.longitude;
+                    const scale = 0.7;
+                    const result = await createPolygon({
+                      variables: {
+                        areaId: userArea.area.id,
+                        points: [
+                          { longitude: x1 * scale + x2 * (1 - scale), latitude: y1 * scale + y2 * (1 - scale) },
+                          { longitude: x2 * scale + x1 * (1 - scale), latitude: y1 * scale + y2 * (1 - scale) },
+                          { longitude: x2 * scale + x1 * (1 - scale), latitude: y2 * scale + y1 * (1 - scale) },
+                          { longitude: x1 * scale + x2 * (1 - scale), latitude: y2 * scale + y1 * (1 - scale) },
+                        ],
+                      },
+                    });
+                    if (result.data != null) {
+                      dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
+                      dispatch(actions.setSelectedPolygonId({ polygonId: Number(result.data.createPolygon.id) }));
+                    }
+                  }}
+                >
+                  <AddIcon />
+                </Fab>
+              }
             </Zoom>
           </span>
         </Tooltip>
