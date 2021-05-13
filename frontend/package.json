@@ -1,9 +1,10 @@
 {
-  "name": "next-test",
+  "name": "visit-manager-frontend",
   "version": "1.0.0",
-  "description": "next-test",
+  "description": "visit-manager-frontend",
+  "author": "genki",
+  "private": true,
   "license": "MIT",
-  "repository": {},
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect=0.0.0.0:9228' next dev",
     "dev:https": "node ./server.js",

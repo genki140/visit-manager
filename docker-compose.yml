@@ -8,7 +8,7 @@ services:
     build:
       context: ./
       dockerfile: ./.devcontainer/Dockerfile
-    image: nest-next-test:1.0
+    image: visit-manager-develop:1.0
     volumes:
       - .:/home/hostfiles/project
 

@@ -1,10 +1,10 @@
 {
-  "name": "nest-test",
+  "name": "visit-manager-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "visit-manager-backend",
+  "author": "genki",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",

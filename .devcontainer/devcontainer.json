@@ -1,5 +1,5 @@
 {
-  "name": "Nust Next Test",
+  "name": "Visit Manager",
 
   "dockerComposeFile": ["../docker-compose.yml"],
 
