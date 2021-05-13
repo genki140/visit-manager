@@ -19,7 +19,8 @@ services:
 
   # Application-Backend
   backend:
-    image: my-nest-js-app
+    image: genki140/visit-manager-backend
+    # image: my-nest-js-app
     depends_on:
       - db
     environment:
@@ -35,7 +36,8 @@ services:
 
   # Application-Frontend
   frontend:
-    image: my-next-js-app
+    image: genki140/visit-manager-frontend
+    # image: my-next-js-app
     depends_on:
       - backend
     # environment:

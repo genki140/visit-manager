@@ -54,15 +54,24 @@ Next.js で実装し、Nest.js の API へはプロキシで接続。つまり�
 
 ### フロントエンドとバックエンドの docker を作成する。
 
-```
+GitHub にプッシュした段階で、以下の Docker Image が生成される
+genki140/visit-manager-frontend
+genki140/visit-manager-backend
+
+./production/docker-compose.yml の内容で GCP でイメージ作成
+
+curl 'https://raw.githubusercontent.com/genki140/visit-manager/master/production/docker-compose.yml' > docker-compose.yml
+
 docker build ./backend -t my-nest-js-app
 docker build ./frontend -t my-next-js-app
 docker-compose -f ./production/docker-compose.yml up -d
+
 ```
 
 docker で SSL
 https://qiita.com/kuboon/items/f424b84c718619460c6f
 https://qiita.com/muk-ai/items/413ae83b0a241495dd34
+
 
 ## GCP で開発＆そのまま運用
 
@@ -85,3 +94,6 @@ https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-c
 git からソースコードのダウンロード
 
 （そのあと vscode から、Linux(GCP:Ubuntu)上の docker にどうやって入る？）
+
+
+```
