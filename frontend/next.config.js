@@ -25,6 +25,10 @@ module.exports = {
         destination: process.env.API_URL + ':' + process.env.API_PORT + '/' + 'graphql', // Proxy to Backend
         // destination: process.env.SITE_URL + ':' + process.env.API_PORT + '/' + 'graphql', // Proxy to Backend
       },
+      {
+        source: '/phpmyadmin',
+        destination: 'http://phpmyadmin', // Proxy to phpmyadmin
+      },
     ];
     return result;
   },

@@ -13,12 +13,15 @@ services:
     restart: always
     environment:
       DOMAINS: "visit.genkitech.net -> http://frontend:3000"
-      # STAGE: local
       STAGE: "production"
+      # DOMAINS: "localhost -> http://frontend:3000"
+      # STAGE: "local"
+
       # FORCE_RENEW: 'true'
 
   # Application-Backend
   backend:
+    # image: visit-manager-backend
     image: genki140/visit-manager-backend
     # image: my-nest-js-app
     depends_on:
@@ -32,11 +35,12 @@ services:
       DB_NAME: database
       DB_USERNAME: username
       DB_PASSWORD: password
-    # ports:
-    #   - 4000:4000
+    ports:
+      - 4000:4000
 
   # Application-Frontend
   frontend:
+    # image: visit-manager-frontend
     image: genki140/visit-manager-frontend
     # image: my-next-js-app
     depends_on:
@@ -49,8 +53,8 @@ services:
     #   API_URL: http://backend
     #   API_PORT: 4000
     #   NEXT_PUBLIC_SITE_URL: "this is public variable!!"
-    # ports:
-    #   - 80:3000
+    ports:
+      - 3000:3000
 
   # MySQL
   db:

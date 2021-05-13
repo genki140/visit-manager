@@ -110,8 +110,8 @@ $ source ~/.bashrc
 
 curl 'https://raw.githubusercontent.com/genki140/visit-manager/master/production/docker-compose.yml' > docker-compose.yml
 
-docker build ./backend -t my-nest-js-app
-docker build ./frontend -t my-next-js-app
+docker build ./backend -t visit-manager-backend
+docker build ./frontend -t visit-manager-frontend
 docker-compose -f ./production/docker-compose.yml up -d
 
 ```
