@@ -1,4 +1,6 @@
-# Nest & Next サンプルプロジェクト
+# 訪問管理システム
+
+※ 開発中のためまだ実用できません。
 
 ## デプロイ
 
@@ -9,6 +11,8 @@ Docker イメージを使用して Google Cloud Platform に展開する方法�
    - ブートディスク: Container Optimized OS
 
    - HTTP と HTTPS トラフィックを許可
+
+   - IP を固定し、ドメインを割り当てる
 
 2. SSH 接続後、以下のコマンドで docker-compose を実行
 
@@ -27,6 +31,14 @@ Docker イメージを使用して Google Cloud Platform に展開する方法�
 
    > dc up -d --build
    ```
+
+   ※ 現状はまだ外部からドメインの指定はできないが、最終的には docker-compose up の時にパラメータ等で指定できるようにしたい。
+
+### バージョンアップ
+
+バージョンアップは dc down し、 docker-compose.yml を更新し dc up でできるようにしたい。
+
+そのためにはデータベースの永続化と、SSL 情報の永続化のための volume 設定が必要。
 
 ## 開発環境構築
 
