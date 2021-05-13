@@ -6,6 +6,7 @@
   "repository": {},
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect=0.0.0.0:9228' next dev",
+    "dev:https": "node ./server.js",
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
