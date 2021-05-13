@@ -1,22 +1,59 @@
 # Nest & Next サンプルプロジェクト
 
-## 使い方
+## デプロイ
+
+Docker イメージを使用して Google Cloud Platform に展開する方法は次の通り。
+
+1. GCP で VM インスタンスを生成
+
+   - ブートディスク: Container Optimized OS
+
+   - HTTP と HTTPS トラフィックを許可
+
+2. SSH 接続後、以下のコマンドで docker-compose を実行
+
+   ```
+   > docker run docker/compose:1.22.0 version
+
+   > echo alias dc="'"'docker run --rm \
+     -v /var/run/docker.sock:/var/run/docker.sock \
+     -v "$PWD:/$PWD" \
+     -w="/$PWD" \
+     docker/compose:1.22.0'"'" >> ~/.bashrc
+
+   > source ~/.bashrc
+
+   > curl 'https://raw.githubusercontent.com/genki140/visit-manager/master/production/docker-compose.yml' > docker-compose.yml
+
+   > dc up -d --build
+   ```
+
+## 開発環境構築
 
 - git clone で取得したフォルダを vscode で開き、remote development 拡張機能をインストールし、remote container で開く。
 
-- init を実行しソースファイルを取得
+- 以下の様に実行してソースファイルを取得し、パッケージのインストール
 
-- npm ci を実行
+  ```
+  > init
+  > cd frontend
+  > npm ci
+  > cd ../backend
+  > npm ci
+  ```
 
 - デバッグタブから「Debug All」を実行。
 
 ## DB 構造変更等
 
 コードファースト開発のため、バックエンドのモデル、サービス、リゾルバ―を書き換える。
+
+```
 npx nest g mo entities/name
 npx nest g s entities/name (service が必要なら)
 npx nest g r entities/name (resolver が必要なら)
 (.model.ts も作成)
+```
 
 今のところ、サーバー側で自動的に DB マイグレーションが走る。
 
@@ -59,6 +96,17 @@ genki140/visit-manager-frontend
 genki140/visit-manager-backend
 
 ./production/docker-compose.yml の内容で GCP でイメージ作成
+
+https://qiita.com/tentatsu/items/f7b2ee674c03813f5461
+
+docker run docker/compose:1.22.0 version
+
+$ echo alias dc="'"'docker run --rm \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v "$PWD:/$PWD" \
+ -w="/$PWD" \
+    docker/compose:1.22.0'"'" >> ~/.bashrc
+$ source ~/.bashrc
 
 curl 'https://raw.githubusercontent.com/genki140/visit-manager/master/production/docker-compose.yml' > docker-compose.yml
 

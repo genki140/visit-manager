@@ -12,9 +12,9 @@ services:
       - frontend
     restart: always
     environment:
-      DOMAINS: "localhost -> http://frontend:3000"
-      STAGE: local
-      # STAGE: 'production'
+      DOMAINS: "visit.genkitech.net -> http://frontend:3000"
+      # STAGE: local
+      STAGE: "production"
       # FORCE_RENEW: 'true'
 
   # Application-Backend
@@ -23,6 +23,7 @@ services:
     # image: my-nest-js-app
     depends_on:
       - db
+    restart: always
     environment:
       API_PORT: 4000
       # DB_LOGGING: "FALSE"
@@ -40,6 +41,8 @@ services:
     # image: my-next-js-app
     depends_on:
       - backend
+    restart: always
+
     # environment:
     #   SITE_URL: http://192.168.11.5
     #   SITE_PORT: 3000
@@ -52,6 +55,7 @@ services:
   # MySQL
   db:
     image: mysql:5.7
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: database
@@ -67,6 +71,7 @@ services:
     image: phpmyadmin/phpmyadmin
     depends_on:
       - db
+    restart: always
     environment:
       PMA_ARBITRARY: 1
       PMA_HOSTS: db
@@ -74,4 +79,4 @@ services:
       PMA_PASSWORD: password
       UPLOAD_LIMIT: 300M
     ports:
-      - 8010:80
+      - 8000:80
