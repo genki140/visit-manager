@@ -70,7 +70,7 @@ services:
       TZ: "Asia/Tokyo"
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - ./docker/db:/docker-entrypoint-initdb.d
+      - ./docker/db:/var/lib/mysql
 
   # phpMyAdmin
   phpmyadmin:
