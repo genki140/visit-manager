@@ -25,7 +25,7 @@ services:
     depends_on:
       - backend
     environment:
-      SITE_URL: http://192.168.11.5
+      # SITE_URL: http://192.168.11.5
       # SITE_PORT: 3000
       # API_URL: http://backend
       # API_PORT: 4000

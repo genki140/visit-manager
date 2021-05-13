@@ -1,10 +1,8 @@
 module.exports = {
-
-
   //--------------------- ビルド時に決定される設定-----------------------
   env: {
     // ここに書いたものはサーバークライアント両方から参照可能
-    SITE_URL: process.env.SITE_URL,
+    // SITE_URL: process.env.SITE_URL,
     SITE_PORT: process.env.SITE_PORT,
     GOOGLE_MAP_API_KEY: process.env.GOOGLE_MAP_API_KEY,
   },
@@ -32,9 +30,9 @@ module.exports = {
   },
 
   //---------------------実行時に決定される設定---------------------
-  publicRuntimeConfig: {
-    PUBLIC_RUNTIME_SITE_URL: process.env.SITE_URL,
-  },
+  // publicRuntimeConfig: {
+  //   PUBLIC_RUNTIME_SITE_URL: process.env.SITE_URL,
+  // },
 };
 
 // 環境変数周りのメモ

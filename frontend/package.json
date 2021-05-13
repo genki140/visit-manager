@@ -5,9 +5,9 @@
   "license": "MIT",
   "repository": {},
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect=0.0.0.0:9228' next dev -p %SITE_PORT%",
+    "dev": "NODE_OPTIONS='--inspect=0.0.0.0:9228' next dev",
     "build": "next build",
-    "start": "next start -p %SITE_PORT%",
+    "start": "next start",
     "type-check": "tsc",
     "gen": "graphql-codegen"
   },

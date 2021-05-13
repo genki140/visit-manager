@@ -2,7 +2,7 @@ import { actions, useAppDispatch } from '@/ducks/store';
 import { useGetCurrentUserQuery, User } from '@/types/graphql';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import { Loading } from './loading';
+import { Loading } from '../loading';
 
 export const LoginUserProvider = (props: { children: any }) => {
   const router = useRouter();

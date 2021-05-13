@@ -4,9 +4,6 @@ import { AppProps } from 'next/app';
 // redux
 import { Provider } from 'react-redux';
 
-// apollo
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-
 // material ui
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,45 +14,9 @@ import { store } from '@/ducks/store';
 import { theme } from '@/styles/theme';
 import React, { useEffect, useState } from 'react';
 import { LoadScript } from '@react-google-maps/api';
-import { LocaleProvider } from '@/components/locale-provider';
-import { LoginUserProvider } from '@/components/login-user-provider';
-
-import getConfig from 'next/config'
-const { publicRuntimeConfig } = getConfig();
-
-console.log(publicRuntimeConfig.PUBLIC_RUNTIME_SITE_URL);
-
-const client = new ApolloClient({
-  // クライアントからアクセスできるURLであること
-  uri: process.env.SITE_URL + (process.env.SITE_PORT == null ? '' : ':' + process.env.SITE_PORT) + '/graphql',
-  cache: new InMemoryCache({
-    typePolicies: {
-      Polygon: {
-        fields: {
-          points: {
-            merge(_existing, incoming) {
-              return incoming;
-            },
-          },
-        },
-      },
-      Area: {
-        fields: {
-          polygons: {
-            merge(_existing, incoming) {
-              return incoming;
-            },
-          },
-          residences: {
-            merge(_existing, incoming) {
-              return incoming;
-            },
-          },
-        },
-      },
-    },
-  }),
-});
+import { LocaleProvider } from '@/components/environments/locale-provider';
+import { LoginUserProvider } from '@/components/environments/login-user-provider';
+import { ApolloClientProvider } from '@/components/environments/apollo-client-provider';
 
 // エントリポイント。スタイルとストアの適用を行っている。
 const App: React.FC<AppProps> = (props) => {
@@ -69,12 +30,11 @@ const App: React.FC<AppProps> = (props) => {
   }, []);
 
   // const SafeHydrate = dynamic(() => import('../components/SafeHydrate'), { ssr: false });
-
   // console.log('app:render');
 
   return (
     <MuiThemeProvider theme={theme}>
-      <ApolloProvider client={client}>
+      <ApolloClientProvider>
         <Provider store={store}>
           <CssBaseline />
           <LoadScript googleMapsApiKey={process.env.GOOGLE_MAP_API_KEY ?? ''} onLoad={() => setMapApiLoaded(true)}>
@@ -87,7 +47,7 @@ const App: React.FC<AppProps> = (props) => {
             )}
           </LoadScript>
         </Provider>
-      </ApolloProvider>
+      </ApolloClientProvider>
     </MuiThemeProvider>
   );
 };
