@@ -60,6 +60,10 @@ docker build ./frontend -t my-next-js-app
 docker-compose -f ./production/docker-compose.yml up -d
 ```
 
+docker で SSL
+https://qiita.com/kuboon/items/f424b84c718619460c6f
+https://qiita.com/muk-ai/items/413ae83b0a241495dd34
+
 ## GCP で開発＆そのまま運用
 
 Docker コンテナで動かすのであれば本来は GKE でクラスタ組むのが正解かも知れないが、そこまでする必要を感じないので GCE 上で Docker を使って開発＆運用できるようにしたい。(ubuntu でテスト)

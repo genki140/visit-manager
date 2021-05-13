@@ -3,6 +3,20 @@
 version: "3"
 
 services:
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - frontend
+    restart: always
+    environment:
+      DOMAINS: "localhost -> http://frontend:3000"
+      STAGE: local
+      # STAGE: 'production'
+      # FORCE_RENEW: 'true'
+
   # Application-Backend
   backend:
     image: my-nest-js-app
@@ -16,23 +30,22 @@ services:
       DB_NAME: database
       DB_USERNAME: username
       DB_PASSWORD: password
-    ports:
-      - 4000:4000
+    # ports:
+    #   - 4000:4000
 
   # Application-Frontend
   frontend:
     image: my-next-js-app
     depends_on:
       - backend
-    environment:
-      # SITE_URL: http://192.168.11.5
-      # SITE_PORT: 3000
-      # API_URL: http://backend
-      # API_PORT: 4000
-      # NEXT_PUBLIC_SITE_URL: "this is public variable!!"
-    ports:
-      - 3000:3000
-      - 3010:3010
+    # environment:
+    #   SITE_URL: http://192.168.11.5
+    #   SITE_PORT: 3000
+    #   API_URL: http://backend
+    #   API_PORT: 4000
+    #   NEXT_PUBLIC_SITE_URL: "this is public variable!!"
+    # ports:
+    #   - 80:3000
 
   # MySQL
   db:
