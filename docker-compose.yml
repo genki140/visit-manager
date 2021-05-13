@@ -1,3 +1,5 @@
+# vscodeのコンテナ開発環境構築用設定ファイル
+
 version: "3"
 
 services:

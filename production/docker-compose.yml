@@ -1,0 +1,51 @@
+# 製品イメージを使用した展開
+
+version: "3"
+
+services:
+  # Application-Backend
+  backend:
+    image: my-nest-js-app
+    environment:
+      API_PORT: 4010
+      # DB_LOGGING: "FALSE"
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: database
+      DB_USERNAME: username
+      DB_PASSWORD: password
+    ports:
+      - 3010:3000
+
+  # Application-Frontend
+  frontend:
+    image: my-next-js-app
+    environment:
+      SITE_URL: http://localhost
+      SITE_PORT: 3010
+      API_PORT: 4010
+
+  # MySQL
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: database
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+      TZ: "Asia/Tokyo"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./docker/db:/docker-entrypoint-initdb.d
+
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOSTS: db
+      PMA_USER: username
+      PMA_PASSWORD: password
+      UPLOAD_LIMIT: 300M
+    ports:
+      - 8010:80

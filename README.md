@@ -52,9 +52,13 @@ Next.js で実装し、Nest.js の API へはプロキシで接続。つまり�
 
 ## デプロイ
 
-npm run build でオブジェクト生成
+### フロントエンドとバックエンドの docker を作成する。
 
-backend は dist フォルダ
+```
+docker build ./backend -t my-nest-js-app
+docker build ./frontend -t my-next-js-app
+docker-compose -f ./production/docker-compose.yml up -d
+```
 
 ## GCP で開発＆そのまま運用
 
