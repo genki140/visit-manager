@@ -20,6 +20,11 @@ import { LoadScript } from '@react-google-maps/api';
 import { LocaleProvider } from '@/components/locale-provider';
 import { LoginUserProvider } from '@/components/login-user-provider';
 
+import getConfig from 'next/config'
+const { publicRuntimeConfig } = getConfig();
+
+console.log(publicRuntimeConfig.PUBLIC_RUNTIME_SITE_URL);
+
 const client = new ApolloClient({
   // クライアントからアクセスできるURLであること
   uri: process.env.SITE_URL + (process.env.SITE_PORT == null ? '' : ':' + process.env.SITE_PORT) + '/graphql',

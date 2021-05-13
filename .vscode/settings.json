@@ -6,7 +6,9 @@
   "files.exclude": {
     "**/node_modules/": true,
     "backend/dist/": true,
-    "frontend/.next/": true
+    "frontend/.next/": true,
+    "docker": true,
+    "production/docker": true
   },
   "graphql-config.load.rootDir": "./frontend",
   "markdown.styles": [".vscode/md-style.css"]
