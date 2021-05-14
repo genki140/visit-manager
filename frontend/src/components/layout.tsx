@@ -116,6 +116,7 @@ export const Layout = (props: {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta http-equiv="content-language" content={router.locale} />
+        <meta name="google" content="notranslate" />
       </Head>
 
       <header className={classes.header}>
