@@ -29,7 +29,7 @@ module.exports = withPWA({
       },
       {
         source: '/phpmyadmin',
-        destination: 'http://phpmyadmin/', // Proxy to phpmyadmin
+        destination: 'http://phpmyadmin/index.php', // Proxy to phpmyadmin
       },
       {
         source: '/phpmyadmin/:path*',
