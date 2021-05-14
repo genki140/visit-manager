@@ -63,7 +63,7 @@ dc up -d --build
 
 - 開発環境用パラメータを入れる
 
-  .env.development.local に GOOGLE_MAP_API_KEY=<API キー> を追加
+  backend の .env.local に GOOGLE_MAP_API_KEY=<API キー> を追加
 
 - デバッグタブから「Debug All」を実行。
 

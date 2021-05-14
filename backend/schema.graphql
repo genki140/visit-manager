@@ -95,6 +95,7 @@ type Query {
   ability(id: ID!): Ability
   abilities: [Ability!]!
   organizations: [Organization!]!
+  googleMapApiKey: String!
   areas(organizationId: ID!): [Area!]!
   userAreas(ids: [ID!] = null, organizationId: ID!): [UserArea!]!
 }

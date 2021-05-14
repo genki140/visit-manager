@@ -1,26 +1,34 @@
+import { useGetGoogleMapApiKeyQuery } from '@/types/graphql';
+import { gql } from '@apollo/client';
 import { LoadScript } from '@react-google-maps/api';
-import getConfig from 'next/config';
 import React, { useState } from 'react';
+import { Loading } from '../loading';
 
-// next.config.jsで設定した値を取得する
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
+// とりあえず実装。初期設定取得径はまとめたクエリにするとレスポンス良さげ。何ならSSR出来たらもっといい。
+gql`
+  query getGoogleMapApiKey {
+    googleMapApiKey
+  }
+`;
 
 export const GoogleMapProvider = (props: { children: any }) => {
   const [mapApiLoaded, setMapApiLoaded] = useState(false);
 
+  // フロントエンドの動的環境変数がうまく行かないのでバックエンドから取得する
+  const getGoogleMapApiKeyResult = useGetGoogleMapApiKeyQuery();
+
+  if (getGoogleMapApiKeyResult.data == null) {
+    return <Loading />;
+  }
+
   return (
     <>
-      <LoadScript googleMapsApiKey={publicRuntimeConfig.GOOGLE_MAP_API_KEY ?? ''} onLoad={() => setMapApiLoaded(true)}>
+      <LoadScript
+        googleMapsApiKey={getGoogleMapApiKeyResult.data?.googleMapApiKey ?? ''}
+        onLoad={() => setMapApiLoaded(true)}
+      >
         {mapApiLoaded && props.children()}
       </LoadScript>
     </>
   );
-};
-
-export const getServerSideProps = () => {
-  return {
-    props: {
-      GOOGLE_MAP_API_KEY: publicRuntimeConfig.GOOGLE_MAP_API_KEY,
-    },
-  };
 };

@@ -26,4 +26,10 @@ export class OrganizationResolver {
     }
     return result;
   }
+
+  // 本来ここじゃないけどやっつけ実装
+  @Query(() => String)
+  async googleMapApiKey() {
+    return process.env.GOOGLE_MAP_API_KEY?.toString() ?? '';
+  }
 }

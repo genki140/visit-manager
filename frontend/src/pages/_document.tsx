@@ -29,6 +29,10 @@ class CustomDocument extends Document {
         <Head>
           {/* PWA primary color */}
           {/* <meta name="theme-color" content={theme.palette.primary.main} /> */}
+
+          <link rel="icon" sizes="192x192" href="/icon-192x192.png" />
+          {/* <link rel="icon" href="/favicon.ico" /> */}
+          <link rel="manifest" href="/manifest.json" />
         </Head>
         <body>
           <Main />

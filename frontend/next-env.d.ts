@@ -10,6 +10,6 @@ declare namespace NodeJS {
     readonly SITE_PORT: string | undefined;
     readonly API_URL: string | undefined;
     readonly API_PORT: string | undefined;
-    readonly GOOGLE_MAP_API_KEY: string | undefined;
+    // readonly GOOGLE_MAP_API_KEY: string | undefined;
   }
 }

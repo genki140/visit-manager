@@ -4,12 +4,6 @@ import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  // この辺でSSL化出来るみたい。
-  // const httpsOptions = {
-  //   key: fs.readFileSync('./secrets/private-key.pem'),
-  //   cert: fs.readFileSync('./secrets/public-certificate.pem'),
-  // };
-
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();

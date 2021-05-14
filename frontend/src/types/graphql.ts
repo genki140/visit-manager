@@ -146,6 +146,7 @@ export type Query = {
   ability?: Maybe<Ability>;
   abilities: Array<Ability>;
   organizations: Array<Organization>;
+  googleMapApiKey: Scalars['String'];
   areas: Array<Area>;
   userAreas: Array<UserArea>;
 };
@@ -247,6 +248,14 @@ export type UserArea = {
   user: User;
   area: Area;
 };
+
+export type GetGoogleMapApiKeyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetGoogleMapApiKeyQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'googleMapApiKey'>
+);
 
 export type GetAreasQueryVariables = Exact<{
   organizationId: Scalars['ID'];
@@ -441,6 +450,38 @@ export type GetCurrentUserQuery = (
 );
 
 
+export const GetGoogleMapApiKeyDocument = gql`
+    query getGoogleMapApiKey {
+  googleMapApiKey
+}
+    `;
+
+/**
+ * __useGetGoogleMapApiKeyQuery__
+ *
+ * To run a query within a React component, call `useGetGoogleMapApiKeyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGoogleMapApiKeyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetGoogleMapApiKeyQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetGoogleMapApiKeyQuery(baseOptions?: Apollo.QueryHookOptions<GetGoogleMapApiKeyQuery, GetGoogleMapApiKeyQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetGoogleMapApiKeyQuery, GetGoogleMapApiKeyQueryVariables>(GetGoogleMapApiKeyDocument, options);
+      }
+export function useGetGoogleMapApiKeyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGoogleMapApiKeyQuery, GetGoogleMapApiKeyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetGoogleMapApiKeyQuery, GetGoogleMapApiKeyQueryVariables>(GetGoogleMapApiKeyDocument, options);
+        }
+export type GetGoogleMapApiKeyQueryHookResult = ReturnType<typeof useGetGoogleMapApiKeyQuery>;
+export type GetGoogleMapApiKeyLazyQueryHookResult = ReturnType<typeof useGetGoogleMapApiKeyLazyQuery>;
+export type GetGoogleMapApiKeyQueryResult = Apollo.QueryResult<GetGoogleMapApiKeyQuery, GetGoogleMapApiKeyQueryVariables>;
 export const GetAreasDocument = gql`
     query getAreas($organizationId: ID!) {
   areas(organizationId: $organizationId) {

@@ -25,10 +25,10 @@ import { getConnectionOptions } from 'typeorm';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), // envファイルを読み込むために使用
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env.local'] }), // envファイルを読み込むために使用
     GraphQLModule.forRoot({
       // プロダクションモードではファイル出力しない
-      autoSchemaFile: process.env.NODE_ENV === "production" ? true : 'schema.graphql',
+      autoSchemaFile: process.env.NODE_ENV === 'production' ? true : 'schema.graphql',
       playground: {
         settings: {
           'request.credentials': 'include',
