@@ -18,8 +18,6 @@ const sameKeyValueMessages = (() => {
   return copiedMessages;
 })();
 
-// console.log(sameKeyValueMessages);
-
 const abc = (messages: any) => {
   const defaultMessages = enMessages;
   const copiedMessages = Object.assign({}, messages);

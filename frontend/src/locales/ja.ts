@@ -7,6 +7,11 @@ export const jaMessages: messagesType = {
   login: 'ログイン',
   logout: 'ログアウト',
   affiliation_organiozation: '所属組織',
+  settings: '設定',
+  development: '開発',
+
+  username: 'ユーザー名',
+  password: 'パスワード',
 
   locale_ja: '日本語',
   locale_en: '英語',

@@ -6,6 +6,15 @@ export const enMessages = {
   logout: 'Logout',
   affiliation_organiozation: 'Affiliation Organiozation',
 
+  settings: 'Settings',
+  development: 'Development',
+
+  graphql: 'graphql',
+  github: 'GitHub',
+
+  username: 'User Name',
+  password: 'Password',
+
   locale_ja: 'Japanese',
   locale_en: 'English',
 };

@@ -8,7 +8,6 @@ import {
   Drawer,
   FormControl,
   IconButton,
-  InputLabel,
   List,
   ListItem,
   ListItemIcon,
@@ -28,7 +27,8 @@ import MapIcon from '@material-ui/icons/Map';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import GTranslateIcon from '@material-ui/icons/GTranslate';
-// import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import GitHubIcon from '@material-ui/icons/GitHub';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { actions, asyncLogout, useAppDispatch, useStoreState } from '@/ducks/store';
 import { useRouterParams } from '@/utils/use-router-params';
 // import { TypeUtil } from '@/utils/type-helper';
@@ -163,39 +163,48 @@ export const Layout = (props: {
         // メニュー
         <Drawer anchor="right" open={menuVisibled} onClose={() => setMenuVisibled(false)}>
           <List style={{ minWidth: 200 }}>
-            {loginUser && <ListItem>{loginUser.name}</ListItem>}
-            <ListItem
-              button
-              onClick={async () => {
-                unwrapResult(await dispatch(asyncLogout()));
-                dispatch(actions.setLoginUser(undefined));
-                apolloClient.clearStore();
-                router.push('/login');
-              }}
-            >
-              <ListItemIcon>
-                <ExitToAppIcon />
-              </ListItemIcon>
-              <ListItemText>{f((x) => x.logout)}</ListItemText>
-            </ListItem>
-            <Link href="/">
-              <ListItem button>
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText>{f((x) => x.home)}</ListItemText>
-              </ListItem>
-            </Link>
+            {loginUser && (
+              <>
+                <ListItem>
+                  <ListItemIcon>
+                    <AccountCircleIcon />
+                  </ListItemIcon>
+                  <ListItemText>{loginUser.name}</ListItemText>
+                </ListItem>
+                <Divider />
+                <ListItem
+                  button
+                  onClick={async () => {
+                    unwrapResult(await dispatch(asyncLogout()));
+                    dispatch(actions.setLoginUser(undefined));
+                    apolloClient.clearStore();
+                    router.push('/login');
+                  }}
+                >
+                  <ListItemIcon>
+                    <ExitToAppIcon />
+                  </ListItemIcon>
+                  <ListItemText>{f((x) => x.logout)}</ListItemText>
+                </ListItem>
+                <Link href="/">
+                  <ListItem button>
+                    <ListItemIcon>
+                      <HomeIcon />
+                    </ListItemIcon>
+                    <ListItemText>{f((x) => x.home)}</ListItemText>
+                  </ListItem>
+                </Link>
+                <Divider />
+              </>
+            )}
 
-            <Divider />
-
+            <ListSubheader>{f((x) => x.settings)}</ListSubheader>
             <ListItem>
               <ListItemIcon>
                 <GTranslateIcon />
               </ListItemIcon>
               <ListItemText>
                 <FormControl>
-                  {/* <InputLabel id="demo-simple-select-outlined-label">言語</InputLabel> */}
                   <Select
                     value={router.locale}
                     labelId="demo-simple-select-outlined-label"
@@ -228,8 +237,7 @@ export const Layout = (props: {
 
             <Divider />
 
-            <ListSubheader>開発</ListSubheader>
-
+            <ListSubheader>{f((x) => x.development)}</ListSubheader>
             <Link href="/graphql">
               <ListItem button>
                 <ListItemIcon>
@@ -240,24 +248,16 @@ export const Layout = (props: {
                 <ListItemText>Graphql</ListItemText>
               </ListItem>
             </Link>
+
+            <Link href="https://github.com/genki140/visit-manager">
+              <ListItem button>
+                <ListItemIcon>
+                  <GitHubIcon />
+                </ListItemIcon>
+                <ListItemText>{f((x) => x.github)}</ListItemText>
+              </ListItem>
+            </Link>
           </List>
-          {/* <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
         </Drawer>
       }
 

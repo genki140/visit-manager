@@ -1,7 +1,6 @@
-// const withPWA = require('next-pwa');
-// module.exports = withPWA({
-
-module.exports = {
+const withPWA = require('next-pwa');
+module.exports = withPWA({
+  // module.exports = {
   //--------------------- ビルド時に決定される設定-----------------------
   env: {
     // ここに書いたものはサーバークライアント両方から参照可能
@@ -46,7 +45,7 @@ module.exports = {
     disable: process.env.NODE_ENV === 'development',
     // runtimeCaching: []
   },
-};
+});
 
 // 環境変数周りのメモ
 // https://qiita.com/taroodr/items/f8a9eca4db06916d9ed7

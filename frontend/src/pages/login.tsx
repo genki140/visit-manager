@@ -40,10 +40,8 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
   const apolloClient = useApolloClient();
   const loginSrcRoute = useStoreState((x) => x.loginSrcRoute);
-
   const f = useFormatMessage();
 
   const login = async () => {
@@ -71,7 +69,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Layout title={f((x) => x.login)} showMenuButton={false}>
+    <Layout title={f((x) => x.login)}>
       <div
         style={{
           maxWidth: 500,
@@ -79,7 +77,7 @@ const LoginPage = () => {
         }}
       >
         <TextField
-          label="ユーザー名"
+          label={f((x) => x.username)}
           value={username}
           onChange={(e) => {
             e.preventDefault();
@@ -96,7 +94,7 @@ const LoginPage = () => {
           }}
         />
         <TextField
-          label="パスワード"
+          label={f((x) => x.password)}
           value={password}
           type="password"
           onChange={(e) => {
@@ -135,7 +133,7 @@ const LoginPage = () => {
               marginLeft: 'auto',
             }}
           >
-            ログイン
+            {f((x) => x.login)}
           </Button>
         </div>
       </div>
