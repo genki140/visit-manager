@@ -5,6 +5,9 @@ export const enMessages = {
   login: 'Login',
   logout: 'Logout',
   affiliation_organiozation: 'Affiliation Organiozation',
+
+  locale_ja: 'Japanese',
+  locale_en: 'English',
 };
 
 // undefined可能に変換して物をタイプとする

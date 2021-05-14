@@ -12,16 +12,15 @@ import '../styles/global.css';
 // project
 import { store } from '@/ducks/store';
 import { theme } from '@/styles/theme';
-import React, { useEffect, useState } from 'react';
+import React, { Children, useEffect, useState } from 'react';
 import { LoadScript } from '@react-google-maps/api';
 import { LocaleProvider } from '@/components/environments/locale-provider';
 import { LoginUserProvider } from '@/components/environments/login-user-provider';
 import { ApolloClientProvider } from '@/components/environments/apollo-client-provider';
+import { GoogleMapProvider } from '@/components/environments/google-map-provider';
 
 // エントリポイント。スタイルとストアの適用を行っている。
 const App: React.FC<AppProps> = (props) => {
-  const [mapApiLoaded, setMapApiLoaded] = useState(false);
-
   useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles?.parentElement != null) {
@@ -37,15 +36,15 @@ const App: React.FC<AppProps> = (props) => {
       <ApolloClientProvider>
         <Provider store={store}>
           <CssBaseline />
-          <LoadScript googleMapsApiKey={process.env.GOOGLE_MAP_API_KEY ?? ''} onLoad={() => setMapApiLoaded(true)}>
-            {mapApiLoaded && (
+          <GoogleMapProvider>
+            {() => (
               <LoginUserProvider>
                 <LocaleProvider>
                   <props.Component router={props.router} {...props.pageProps} />
                 </LocaleProvider>
               </LoginUserProvider>
             )}
-          </LoadScript>
+          </GoogleMapProvider>
         </Provider>
       </ApolloClientProvider>
     </MuiThemeProvider>

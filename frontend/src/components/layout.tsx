@@ -115,6 +115,7 @@ export const Layout = (props: {
         <title>{props.title}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta http-equiv="content-language" content={router.locale} />
       </Head>
 
       <header className={classes.header}>
@@ -163,7 +164,6 @@ export const Layout = (props: {
         <Drawer anchor="right" open={menuVisibled} onClose={() => setMenuVisibled(false)}>
           <List style={{ minWidth: 200 }}>
             {loginUser && <ListItem>{loginUser.name}</ListItem>}
-            <ListItem>{router.locale}</ListItem>
             <ListItem
               button
               onClick={async () => {
@@ -197,13 +197,30 @@ export const Layout = (props: {
                 <FormControl>
                   {/* <InputLabel id="demo-simple-select-outlined-label">言語</InputLabel> */}
                   <Select
-                    value="ja"
+                    value={router.locale}
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
-                    label="Age"
                   >
-                    <MenuItem value="ja">日本語</MenuItem>
-                    <MenuItem value="en">英語</MenuItem>
+                    {router.locales?.map((x) => (
+                      <MenuItem
+                        key={x}
+                        value={x}
+                        onClick={() => {
+                          router.push(
+                            {
+                              pathname: router.pathname,
+                              query: router.query,
+                            },
+                            router.asPath,
+                            {
+                              locale: x,
+                            },
+                          );
+                        }}
+                      >
+                        {f(() => 'locale_' + x)}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </ListItemText>

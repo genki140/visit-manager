@@ -33,12 +33,19 @@ Docker イメージを使用して Google Cloud Platform に展開する方法�
    ```
 
    ※ 現状はまだ外部からドメインの指定はできないが、最終的には docker-compose up の時にパラメータ等で指定できるようにしたい。
+   dc up 時に外部から渡す値は隣に.env ファイルを置いておけば手軽に更新可能。
 
 ### バージョンアップ
 
-バージョンアップは dc down し、 docker-compose.yml を更新し dc up でできるようにしたい。
+SSL 設定と DB 値は永続化されているため、以下の方法でコンテナ破棄、イメージ削除、再生成で可能。
 
-そのためにはデータベースの永続化と、SSL 情報の永続化のための volume 設定が必要。
+```
+curl 'https://raw.githubusercontent.com/genki140/visit-manager/master/production/docker-compose.yml' > docker-compose.yml
+dc down
+rmi genki140@visit-manager-frontend
+rmi genki140@visit-manager-backend
+dc up -d --build
+```
 
 ## 開発環境構築
 
@@ -53,6 +60,10 @@ Docker イメージを使用して Google Cloud Platform に展開する方法�
   > cd ../backend
   > npm ci
   ```
+
+- 開発環境用パラメータを入れる
+
+  .env.development.local に GOOGLE_MAP_API_KEY=<API キー> を追加
 
 - デバッグタブから「Debug All」を実行。
 

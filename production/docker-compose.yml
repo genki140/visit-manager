@@ -14,7 +14,7 @@ services:
     volumes:
       - ./docker/certs:/var/lib/https-portal
     environment:
-      DOMAINS: "visit.genkitech.net -> http://frontend:3000"
+      DOMAINS: "${SITE_DOMAIN} -> http://frontend:3000"
       STAGE: "production"
       # DOMAINS: "localhost -> http://frontend:3000"
       # STAGE: "local"
@@ -25,7 +25,6 @@ services:
   backend:
     # image: visit-manager-backend
     image: genki140/visit-manager-backend
-    # image: my-nest-js-app
     depends_on:
       - db
     restart: always
@@ -44,12 +43,13 @@ services:
   frontend:
     # image: visit-manager-frontend
     image: genki140/visit-manager-frontend
-    # image: my-next-js-app
     depends_on:
       - backend
     restart: always
 
-    # environment:
+    environment:
+      GOOGLE_MAP_API_KEY: ${GOOGLE_MAP_API_KEY}
+
     #   SITE_URL: http://192.168.11.5
     #   SITE_PORT: 3000
     #   API_URL: http://backend

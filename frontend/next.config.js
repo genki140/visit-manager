@@ -34,9 +34,9 @@ module.exports = {
   },
 
   //---------------------実行時に決定される設定---------------------
-  // publicRuntimeConfig: {
-  //   PUBLIC_RUNTIME_SITE_URL: process.env.SITE_URL,
-  // },
+  publicRuntimeConfig: {
+    GOOGLE_MAP_API_KEY: process.env.GOOGLE_MAP_API_KEY,
+  },
 };
 
 // 環境変数周りのメモ
