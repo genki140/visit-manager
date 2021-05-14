@@ -31,9 +31,15 @@ module.exports = withPWA({
         source: '/phpmyadmin',
         destination: 'http://phpmyadmin/', // Proxy to phpmyadmin
       },
+      {
+        source: '/phpmyadmin/:path',
+        destination: 'http://phpmyadmin/:path', // Proxy to phpmyadmin
+      },
     ];
     return result;
   },
+
+  // trailingSlash: true,
 
   //---------------------実行時に決定される設定---------------------
   // publicRuntimeConfig: {
