@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout';
+import { Layout } from '@/components/layouts';
 import { Button, Card, CardActionArea, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';

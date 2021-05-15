@@ -4,7 +4,7 @@ import React from 'react';
 const client = new ApolloClient({
   // クライアントからアクセスできるURLであること
   // uri: process.env.SITE_URL + (process.env.SITE_PORT == null ? '' : ':' + process.env.SITE_PORT) + '/graphql',
-  uri: '/graphql',
+  uri: '/system/graphql',
   cache: new InMemoryCache({
     typePolicies: {
       Polygon: {

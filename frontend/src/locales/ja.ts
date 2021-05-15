@@ -9,6 +9,7 @@ export const jaMessages: messagesType = {
   affiliation_organiozation: '所属組織',
   settings: '設定',
   development: '開発',
+  database: 'データベース',
 
   username: 'ユーザー名',
   password: 'パスワード',

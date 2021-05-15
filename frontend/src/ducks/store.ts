@@ -63,7 +63,7 @@ export interface asyncLoginResult {
 export const asyncLogin = createAsyncThunk<asyncLoginResult, asyncLoginProps>(
   storeName + '/asyncLogin',
   async (props: asyncLoginProps): Promise<asyncLoginResult> => {
-    const result = await axios.post<{ access_token: string }>('/api/login', {
+    const result = await axios.post<{ access_token: string }>('/system/api/login', {
       username: props.username,
       password: props.password,
     });
@@ -71,12 +71,9 @@ export const asyncLogin = createAsyncThunk<asyncLoginResult, asyncLoginProps>(
   },
 );
 
-export const asyncLogout = createAsyncThunk(
-  storeName + '/asyncLogout',
-  async (): Promise<void> => {
-    await axios.post('/api/logout');
-  },
-);
+export const asyncLogout = createAsyncThunk(storeName + '/asyncLogout', async (): Promise<void> => {
+  await axios.post('/system/api/logout');
+});
 
 // sliceの定義
 export const storeSlice = createSlice({

@@ -1,4 +1,4 @@
-import { Layout } from '@/components/layout';
+import { Layout } from '@/components/layouts';
 import { Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
 

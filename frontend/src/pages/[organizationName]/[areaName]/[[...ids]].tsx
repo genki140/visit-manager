@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useRouter } from 'next/router';
-import { Layout } from '@/components/layout';
+import { Layout } from '@/components/layouts';
 import Map, { MapOutput } from '@/components/map';
 import MapData from '@/components/map-data';
 import { Custom404 } from '@/pages/404';

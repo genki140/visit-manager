@@ -1,11 +1,11 @@
 import React from 'react';
 import { Tab, Tabs } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import { Layout } from '@/components/layout';
+import { Layout } from '@/components/layouts';
 import MainSettings from '@/components/settings/main';
 import UserSettings from '@/components/settings/users';
 import Link from 'next/link';
-import { Custom404 } from '../404';
+import { Custom404 } from '../../404';
 
 // ファイル名[[...id]].tsxは、settings以降の存在する全てのパスに対応する。
 

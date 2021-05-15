@@ -10,6 +10,7 @@ export const enMessages = {
   development: 'Development',
 
   graphql: 'graphql',
+  database: 'Database',
   github: 'GitHub',
 
   username: 'User Name',

@@ -2,7 +2,7 @@ import { Card, CardActionArea, CardContent, makeStyles, Typography } from '@mate
 import Link from 'next/link';
 import { useGetUserAreasQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
-import { Layout } from '@/components/layout';
+import { Layout } from '@/components/layouts';
 import { Custom404 } from '../404';
 import { useRouterParams } from '@/utils/use-router-params';
 import { useIntl } from 'react-intl';
