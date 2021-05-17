@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tab, Tabs } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import { Layout } from '@/components/layouts/layout';
+import { Layout } from '@/components/layouts';
 import MainSettings from '@/components/settings/main';
 import Link from 'next/link';
 import AreaSettings from '@/components/settings/area-settings';

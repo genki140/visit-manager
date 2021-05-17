@@ -186,8 +186,11 @@ export const Layout = (props: {
                   onClick={async () => {
                     unwrapResult(await dispatch(asyncLogout()));
                     dispatch(actions.setLoginUser(undefined));
-                    apolloClient.clearStore();
-                    router.push('/system/login');
+                    await apolloClient.clearStore();
+                    await router.push('/system/login');
+                    // try {
+                    //   await apolloClient.reFetchObservableQueries(); // すべてのクエリを再取得させる。
+                    // } catch {}
                   }}
                 >
                   <ListItemIcon>

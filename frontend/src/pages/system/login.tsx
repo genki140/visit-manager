@@ -48,15 +48,14 @@ const LoginPage = () => {
     try {
       unwrapResult(await dispatch(asyncLogin({ username, password })));
 
-      // すべてのクエリを再取得させる。
-      apolloClient.reFetchObservableQueries();
+      await apolloClient.reFetchObservableQueries(); // すべてのクエリを再取得させる。
 
       // router.push(loginSrcPath ?? '/', loginSrcPath ?? '/'); // 前のページに戻る
       if (loginSrcRoute == null) {
-        router.push('/');
+        await router.push('/');
       } else {
-        console.log(loginSrcRoute);
-        router.push({
+        // console.log(loginSrcRoute);
+        await router.push({
           pathname: loginSrcRoute.pathname,
           query: loginSrcRoute.query,
         });

@@ -14,6 +14,8 @@ export const LoginUserProvider = (props: { children: any }) => {
   // ユーザー情報の取得（ログインページであれば無視）
   const getCurrentUserResult = useGetCurrentUserQuery();
 
+  console.log(getCurrentUserResult.data);
+
   useEffect(() => {
     if (router.isReady) {
       if (getCurrentUserResult.error != null && isNoLimitPage === false) {
