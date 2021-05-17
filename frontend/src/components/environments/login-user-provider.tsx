@@ -7,7 +7,7 @@ import { Loading } from '../loading';
 export const LoginUserProvider = (props: { children: any }) => {
   const router = useRouter();
 
-  const isNoLimitPage = router.pathname === '/system/login';
+  const isNoLimitPage = router.pathname === '/system/login' || router.pathname.startsWith('/system/documents');
 
   const dispatch = useAppDispatch();
 

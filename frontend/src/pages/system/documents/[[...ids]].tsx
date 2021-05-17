@@ -21,7 +21,8 @@ const Blog = (props: {
   // const filePath = 'src/' + props.filePath;
   // console.log(filePath);
   // // ホットリロードのために読み込む
-  // const Mdx = dynamic(() => import('' + filePath));
+  // const filePath = '/home/project/frontend/src/documents/dir/index.ja.mdx';
+  // const Mdx = dynamic(() => import(`${filePath}`), {});
 
   return (
     <Layout title="ドキュメント">
@@ -45,6 +46,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
       pathes.push({ params: { ids: pathGroup.key() === '' ? [] : pathGroup.key().split('/') }, locale });
     }
   }
+
   return {
     paths: pathes,
     fallback: false, // 開発時はtrueが良いかもしれない
@@ -53,7 +55,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
 
 // ページ情報生成
 export const getStaticProps: GetStaticProps = async (context) => {
-  const jointIds = TypeUtil.toArray(context.params?.ids ?? []).join(',');
+  const jointIds = TypeUtil.toArray(context.params?.ids ?? []).join('/');
   const pathGroup = TypeUtil.toNonNullable(getDocuments().find((x) => x.key() === jointIds)).toArray();
 
   // pathGroupには [ja] 等用意されているものが入る。context.localesは、必要な全言語 [ja,en] 等が入る。
@@ -65,7 +67,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
   // HTML化
   const html = (await markdownToHtml(markdown.content)).toString();
 
-  // console.log('getStaticProps');
+  // console.log(pathInfo.fullPath);
+  // const Mdx = dynamic(() => import(pathInfo.fullPath), {});
+  // console.log(Mdx);
 
   const srcDir = path.join(process.cwd(), 'src/');
 

@@ -12,12 +12,12 @@ import '../styles/global.css';
 // project
 import { store } from '@/ducks/store';
 import { theme } from '@/styles/theme';
-import React, { Children, useEffect, useState } from 'react';
-import { LoadScript } from '@react-google-maps/api';
+import React, { useEffect } from 'react';
 import { LocaleProvider } from '@/components/environments/locale-provider';
 import { LoginUserProvider } from '@/components/environments/login-user-provider';
 import { ApolloClientProvider } from '@/components/environments/apollo-client-provider';
 import { GoogleMapProvider } from '@/components/environments/google-map-provider';
+import { MdxCustomProvider } from '@/components/environments/mdx-custom-provider';
 
 // エントリポイント。スタイルとストアの適用を行っている。
 const App: React.FC<AppProps> = (props) => {
@@ -40,7 +40,9 @@ const App: React.FC<AppProps> = (props) => {
             {() => (
               <LoginUserProvider>
                 <LocaleProvider>
-                  <props.Component router={props.router} {...props.pageProps} />
+                  <MdxCustomProvider>
+                    <props.Component router={props.router} {...props.pageProps} />
+                  </MdxCustomProvider>
                 </LocaleProvider>
               </LoginUserProvider>
             )}

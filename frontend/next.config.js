@@ -1,3 +1,5 @@
+const path = require('path');
+
 let config = {
   //--------------------- ビルド時に決定される設定-----------------------
   env: {
@@ -26,6 +28,12 @@ let config = {
         // destination: process.env.SITE_URL + ':' + process.env.API_PORT + '/' + 'graphql', // Proxy to Backend
       },
       {
+        // /ja/system/documents で日本語ドキュメントにアクセスできるよう設定
+        source: '/:locale/system/documents/:path*',
+        destination: '/:locale/system/documents/:locale/:path*',
+        locale: false,
+      },
+      {
         source: '/system/phpmyadmin/:path*',
         destination: 'http://phpmyadmin/:path*', // Proxy to phpmyadmin
       },
@@ -44,21 +52,46 @@ let config = {
     // runtimeCaching: []
   },
 
-  // pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
 };
 
-const withPWA = require('next-pwa');
-config = withPWA(config);
+// const withMdxEnhanced = require('next-mdx-enhanced');
 
-const withMDX = require('@next/mdx')({
+const next_mdx =
+  (pluginOptions = {}) =>
+  (nextConfig = {}) => {
+    const extension = pluginOptions.extension || /\.mdx$/;
+
+    return Object.assign({}, nextConfig, {
+      webpack(config, options) {
+        config.module.rules.push({
+          test: extension,
+          use: [
+            options.defaultLoaders.babel,
+            {
+              loader: require.resolve('@mdx-js/loader'),
+              options: pluginOptions.options,
+            },
+            path.join(__dirname, './src/utils/fm-loader'),
+          ],
+        });
+
+        if (typeof nextConfig.webpack === 'function') {
+          return nextConfig.webpack(config, options);
+        }
+
+        return config;
+      },
+    });
+  };
+
+const withMDX = next_mdx({
   extension: /\.mdx?$/,
 });
 config = withMDX(config);
 
-// const withMdxFm = require('next-mdx-frontmatter')({
-//   extension: /\.mdx?$/,
-// });
-// config = withMdxFm(config);
+const withPWA = require('next-pwa');
+config = withPWA(config);
 
 module.exports = config;
 
