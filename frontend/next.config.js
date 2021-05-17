@@ -57,6 +57,7 @@ let config = {
 
 // const withMdxEnhanced = require('next-mdx-enhanced');
 
+// この部分utilに移したい
 const next_mdx =
   (pluginOptions = {}) =>
   (nextConfig = {}) => {
