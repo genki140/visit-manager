@@ -1,11 +1,39 @@
 ---
-title: ドキュメントトップ
+title: 操作説明
 ---
 
-## これは日本語サイトのルート
+## これは日本語ドキュメントのルートです。
+
+mdx ファイルで作成でき、Fast Refresh に対応しています。
+
+## 多言語に対応しています
+
+/documents/ja/、documents/en/ 以下にある mdx ファイルのルーティングを next の locale 機能と統合しています。
+
+### h1 タグは frontmatter で定義できます。
+
+```
+---
+title: 操作説明
+---
+```
+
+### 見出しスタイルは material-ui typography を引き継ぎます。
+
+#### h4
+
+##### h5
+
+##### h6
+
+本文
+
+### リンクは next/link に置き換えられます。
 
 [ページ 1](page1)
 
 [ページ 2](page2)
 
-![](/ja/system/documents/ja/img.jpg)
+### 画像は next/image に置き換えられます。
+
+![](/img.jpg)

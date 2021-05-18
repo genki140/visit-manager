@@ -41,21 +41,13 @@ let config = {
     return result;
   },
 
-  //---------------------実行時に決定される設定---------------------
-  // publicRuntimeConfig: {
-  //   GOOGLE_MAP_API_KEY: process.env.GOOGLE_MAP_API_KEY,
-  // },
-
   pwa: {
     dest: '.next', // swの出力ディレクトリ
     disable: process.env.NODE_ENV === 'development',
-    // runtimeCaching: []
   },
 
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
 };
-
-// const withMdxEnhanced = require('next-mdx-enhanced');
 
 // この部分utilに移したい
 const next_mdx =
@@ -86,36 +78,14 @@ const next_mdx =
     });
   };
 
+// MDX
 const withMDX = next_mdx({
   extension: /\.mdx?$/,
 });
 config = withMDX(config);
 
+// PWA
 const withPWA = require('next-pwa');
 config = withPWA(config);
 
 module.exports = config;
-
-// https://www.npmjs.com/package/next-mdx-enhanced
-// const withMdxEnhanced = require('next-mdx-enhanced');
-
-// 不採用になった方法など
-// https://mdxjs.com/getting-started/next
-// https://qiita.com/IKEA_dless/items/a6fb1a4e5eeab7263a06
-
-// module.exports = withMdxEnhanced({
-//   layoutPath: 'src/components/layouts',
-//   defaultLayout: true,
-//   fileExtensions: ['mdx', 'md'],
-//   // remarkPlugins: [],
-//   // rehypePlugins: [],
-//   // usesSrc: false,
-//   // extendFrontMatter: {
-//   //   process: (mdxContent, frontMatter) => {},
-//   //   phase: 'prebuild|loader|both',
-//   // },
-//   // reExportDataFetching: false,
-// })(
-
-// 環境変数周りのメモ
-// https://qiita.com/taroodr/items/f8a9eca4db06916d9ed7
