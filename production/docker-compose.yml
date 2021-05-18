@@ -24,7 +24,7 @@ services:
   # Application-Backend
   backend:
     # image: visit-manager-backend
-    image: genki140/visit-manager-backend
+    image: genki140/visit-manager-backend:${VERSION}
     depends_on:
       - db
     restart: always
@@ -43,7 +43,7 @@ services:
   # Application-Frontend
   frontend:
     # image: visit-manager-frontend
-    image: genki140/visit-manager-frontend
+    image: genki140/visit-manager-frontend:${VERSION}
     depends_on:
       - backend
     restart: always
