@@ -50,14 +50,10 @@ dc up -d --build
 
 - git clone で取得したフォルダを vscode で開き、remote development 拡張機能をインストールし、remote container で開く。
 
-- 以下の様に実行してソースファイルを取得し、パッケージのインストール
+- 以下の様に実行すると最新のソースファイルが取得され、必要なパッケージがインストールされる。
 
   ```
   > init
-  > cd frontend
-  > npm ci
-  > cd ../backend
-  > npm ci
   ```
 
 - 開発環境用パラメータを入れる
