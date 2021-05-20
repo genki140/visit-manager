@@ -4,7 +4,6 @@ import { ExtractJwt, Strategy as BaseJwtStrategy } from 'passport-jwt';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Request } from 'express';
 import { User } from '@/entities/user/user.model';
 
 // cookie
@@ -17,12 +16,18 @@ import { User } from '@/entities/user/user.model';
 export class JwtStrategy extends PassportStrategy(BaseJwtStrategy) {
   constructor(private readonly configService: ConfigService) {
     super({
-      // クッキーからトークンを読み込む関数を返す
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => {
-          return request?.cookies?.access_token;
-        },
-      ]),
+      // // Authorization bearerからトークンを読み込む関数を返す
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+
+      // // クッキーからトークンを読み込む関数を返す
+      // jwtFromRequest: ExtractJwt.fromExtractors([
+      //   (request: Request) => {
+      //     const auth = request.headers.Authorization;
+      //     console.log(auth);
+      //     return auth?.toString() ?? '';
+      //   },
+      // ]),
+
       // 有効期間を無視するかどうか
       ignoreExpiration: false,
       // envファイルから秘密鍵を渡す
@@ -89,6 +94,3 @@ Kv3w3+N8MLQard8THBGklUjMQV+V+rqU4wche3HmNB1pa2PqcpcXS6KfS991V3q+
     return payload;
   }
 }
-
-//パブリックキーは以下の
-//ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDa8aqKdU8gj9kinXU+jeLF9QHH2LsGXnMHjr294u/PA2XwM7MCGAG3cTPMhlb1Z4dWGPDfEzWv3FzPjCDJj/ihoZN91bYMsU77UdyWQ4A25ndKEYBaKcEQf2UvYuePfgEaTqfj+w0D3Kwpjn6SgeGo89wsjPbGXXUuuUMUF1DLT1pbkaEekmYTiwi3nuNRhPcmJmduU+LPRamxNOhILrB9/qZnExZUFmke3+HVYBOL/cHdaXW/ikT8aJSYAYs7XculjqzEqRYVLdf6nsquRA4R3YEL2vnA9zJnCsaENgKqqPhDyoIpIijQeAR3IpMqS4IMaSEnsW7g6NxLoM3O8ujWAx4roLKTtN1W+pyq48PMNqD2TMY7qEtC4eJybB27b2i0WHpqiiCssmhKOX5avNQr/OKA4L2x6SLru60k8epZ+xee9YsaxIJe9l0VyT9daJJxw0RI4tzoIlf5UwL3XvLirs2CCgevWGr8dV1qK4/uy0usdx2D1Jh114+D5Ifdr5FtUB96+uGVPuTzOSstHCxpts/gyh0minX2LJtNrSBTJmpy2RbSbSlE3JG4kmYWcAexJVc7ZjbwHhv2Ml6bAUxKxAixHDW7oiAnbfpTcueB9YyyT8gtxrT87eifNLOnocatfb2ycP7Xeb8iFGzNhQs8rGNySTG9ahS3eCwxOXGouQ== root@524530b037fe

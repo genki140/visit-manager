@@ -16,6 +16,7 @@ services:
     environment:
       DOMAINS: "${SITE_DOMAIN} -> http://frontend:3000"
       STAGE: "production"
+      WEBSOCKET: "true"
       # DOMAINS: "localhost -> http://frontend:3000"
       # STAGE: "local"
 

@@ -17,7 +17,7 @@ export class UserResolver {
   /** 現在ログインしているユーザーの情報を取得します。 */
   @UseGuards(GqlAuthGuard)
   @Query(() => User)
-  async currentUser(@Info() info: GraphQLResolveInfo, @CurrentUser() currentUser: User) {
+  async currentUser(@CurrentUser() currentUser: User) {
     return currentUser;
   }
 

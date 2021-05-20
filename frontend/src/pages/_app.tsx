@@ -27,26 +27,30 @@ const App: React.FC<AppProps> = (props) => {
     }
   }, []);
 
-  // const SafeHydrate = dynamic(() => import('../components/SafeHydrate'), { ssr: false });
-  // console.log('app:render');
-
   return (
     <MuiThemeProvider theme={theme}>
-      <ApolloClientProvider>
-        <Provider store={store}>
-          <CssBaseline />
-          <GoogleMapProvider>
-            {() => (
-              <LoginUserProvider>
-                <LocaleProvider>
-                  <props.Component router={props.router} {...props.pageProps} />
-                </LocaleProvider>
-              </LoginUserProvider>
-            )}
-          </GoogleMapProvider>
-        </Provider>
-      </ApolloClientProvider>
+      <Provider store={store}>
+        <CssBaseline />
+        <SafeHydrate>
+          <ApolloClientProvider>
+            <GoogleMapProvider>
+              {() => (
+                <LoginUserProvider>
+                  <LocaleProvider>
+                    <props.Component router={props.router} {...props.pageProps} />
+                  </LocaleProvider>
+                </LoginUserProvider>
+              )}
+            </GoogleMapProvider>
+          </ApolloClientProvider>
+        </SafeHydrate>
+      </Provider>
     </MuiThemeProvider>
   );
 };
 export default App;
+
+// このコンポーネント以降はサーバーサイドではレンダリングされない
+function SafeHydrate(props: { children: any }) {
+  return <div suppressHydrationWarning>{typeof window === 'undefined' ? null : props.children}</div>;
+}

@@ -26,16 +26,32 @@ import { getConnectionOptions } from 'typeorm';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env.local'] }), // envファイルを読み込むために使用
-    GraphQLModule.forRoot({
-      // プロダクションモードではファイル出力しない
-      autoSchemaFile: process.env.NODE_ENV === 'production' ? true : 'schema.graphql',
-      playground: {
-        settings: {
-          'request.credentials': 'include',
+    GraphQLModule.forRootAsync({
+      useFactory: async () => ({
+        // プロダクションモードではファイル出力しない
+        autoSchemaFile: process.env.NODE_ENV === 'production' ? true : 'schema.graphql',
+        installSubscriptionHandlers: true, //websocket
+
+        context: ({ req, connection }) => {
+          // websocketモードの場合にguardやjwt.strategyで認証できるよう調整
+          return connection ? { req: { headers: connection.context } } : { req };
         },
-      },
+
+        // playground: {
+        //   settings: {
+        //     'request.credentials': 'include',
+        //   },
+        // },
+        // cors: {
+        //   credentials: true,
+        //   origin: ['http://localhost:3000'],
+        // },
+        // subscriptions: {
+        //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        //   onConnect: async (params, websocket) => params,
+        // },
+      }),
     }), //GraphQL
-    // TypeOrmModule.forRoot(),
     TypeOrmModule.forRootAsync({
       useFactory: async () =>
         Object.assign(await getConnectionOptions(), {

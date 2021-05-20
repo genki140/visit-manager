@@ -13,20 +13,39 @@ let config = {
     locales: ['en', 'ja'],
     defaultLocale: 'en', // デバッグも兼ねてjaアクセス時サブパスが着くようにして開発（最終的には余計なサブパス付けたくないので消す）
   },
+  async redirects() {
+    // ドキュメント内の言語フォルダにアクセスさせない
+    return [
+      {
+        source: '/:locale/system/documents/en/:path*',
+        destination: '/en/system/documents/:path*',
+        permanent: false,
+        locale: false,
+      },
+      {
+        source: '/:locale/system/documents/ja/:path*',
+        destination: '/ja/system/documents/:path*',
+        permanent: false,
+        locale: false,
+      },
+    ];
+  },
   async rewrites() {
     const result = [
       {
         source: '/system/api/:path',
-        // ここは常にlocalhostでいいみたい。(サーバーサイドのlocalhostってことかな。httpsにする必要もないかも)
         destination: process.env.API_URL + ':' + process.env.API_PORT + '/api/:path', // Proxy to Backend
-        // destination: process.env.SITE_URL + ':' + process.env.API_PORT + '/api/:path', // Proxy to Backend
       },
       {
         source: '/system/graphql',
-        // ここは常にlocalhostでいいみたい。(サーバーサイドのlocalhostってことかな。httpsにする必要もないかも)
         destination: process.env.API_URL + ':' + process.env.API_PORT + '/' + 'graphql', // Proxy to Backend
-        // destination: process.env.SITE_URL + ':' + process.env.API_PORT + '/' + 'graphql', // Proxy to Backend
       },
+
+      // {
+      //   source: 'ws://localhost:3000/system/graphql',
+      //   destination: 'ws://localhost:4000/graphql',
+      // },
+
       {
         // /ja/system/documents で日本語ドキュメントにアクセスできるよう設定
         source: '/:locale/system/documents/:path*',
