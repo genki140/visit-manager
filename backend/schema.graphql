@@ -96,6 +96,7 @@ type Query {
   abilities: [Ability!]!
   organizations: [Organization!]!
   googleMapApiKey: String!
+  getTest: Float!
   areas(organizationId: ID!): [Area!]!
   userAreas(ids: [ID!] = null, organizationId: ID!): [UserArea!]!
 }
@@ -104,6 +105,7 @@ type Mutation {
   createUser(user: CreateUserInput!): User!
   deleteUser(id: ID!): Ability
   deleteRole(id: ID!): Role
+  addTest: Float!
   createPolygon(polygon: CreatePolygonInput!): Polygon!
   updatePolygon(polygon: UpdatePolygonInput!): Polygon!
   deletePolygon(id: ID!): Boolean!
@@ -150,4 +152,8 @@ input UpdateResidenceInput {
   name: String = ""
   latitude: Float = 0
   longitude: Float = 0
+}
+
+type Subscription {
+  testAdded: Float!
 }

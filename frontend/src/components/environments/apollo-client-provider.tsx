@@ -19,7 +19,7 @@ export const ApolloClientProvider = (props: { children: any }) => {
       // }),
 
       link: new WebSocketLink({
-        uri: 'ws://localhost:4000/graphql',
+        uri: `ws://${location.hostname}:4000/graphql`,
         options: {
           reconnect: true,
           connectionParams: {

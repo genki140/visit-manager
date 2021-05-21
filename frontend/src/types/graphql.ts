@@ -61,6 +61,7 @@ export type Mutation = {
   createUser: User;
   deleteUser?: Maybe<Ability>;
   deleteRole?: Maybe<Role>;
+  addTest: Scalars['Float'];
   createPolygon: Polygon;
   updatePolygon: Polygon;
   deletePolygon: Scalars['Boolean'];
@@ -147,6 +148,7 @@ export type Query = {
   abilities: Array<Ability>;
   organizations: Array<Organization>;
   googleMapApiKey: Scalars['String'];
+  getTest: Scalars['Float'];
   areas: Array<Area>;
   userAreas: Array<UserArea>;
 };
@@ -213,6 +215,11 @@ export type RoledUser = {
   roles: Array<Role>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  testAdded: Scalars['Float'];
+};
+
 export type UpdatePolygonInput = {
   id?: Maybe<Scalars['ID']>;
   points?: Maybe<Array<UpdatePolygonPointInput>>;
@@ -268,6 +275,22 @@ export type GetAreasQuery = (
     { __typename?: 'Area' }
     & Pick<Area, 'id' | 'name'>
   )> }
+);
+
+export type TestAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TestAddedSubscription = (
+  { __typename?: 'Subscription' }
+  & Pick<Subscription, 'testAdded'>
+);
+
+export type AddTestMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AddTestMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'addTest'>
 );
 
 export type GetUserAreaQueryVariables = Exact<{
@@ -518,6 +541,63 @@ export function useGetAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetAreasQueryHookResult = ReturnType<typeof useGetAreasQuery>;
 export type GetAreasLazyQueryHookResult = ReturnType<typeof useGetAreasLazyQuery>;
 export type GetAreasQueryResult = Apollo.QueryResult<GetAreasQuery, GetAreasQueryVariables>;
+export const TestAddedDocument = gql`
+    subscription testAdded {
+  testAdded
+}
+    `;
+
+/**
+ * __useTestAddedSubscription__
+ *
+ * To run a query within a React component, call `useTestAddedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useTestAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTestAddedSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTestAddedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<TestAddedSubscription, TestAddedSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<TestAddedSubscription, TestAddedSubscriptionVariables>(TestAddedDocument, options);
+      }
+export type TestAddedSubscriptionHookResult = ReturnType<typeof useTestAddedSubscription>;
+export type TestAddedSubscriptionResult = Apollo.SubscriptionResult<TestAddedSubscription>;
+export const AddTestDocument = gql`
+    mutation addTest {
+  addTest
+}
+    `;
+export type AddTestMutationFn = Apollo.MutationFunction<AddTestMutation, AddTestMutationVariables>;
+
+/**
+ * __useAddTestMutation__
+ *
+ * To run a mutation, you first call `useAddTestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTestMutation, { data, loading, error }] = useAddTestMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAddTestMutation(baseOptions?: Apollo.MutationHookOptions<AddTestMutation, AddTestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddTestMutation, AddTestMutationVariables>(AddTestDocument, options);
+      }
+export type AddTestMutationHookResult = ReturnType<typeof useAddTestMutation>;
+export type AddTestMutationResult = Apollo.MutationResult<AddTestMutation>;
+export type AddTestMutationOptions = Apollo.BaseMutationOptions<AddTestMutation, AddTestMutationVariables>;
 export const GetUserAreaDocument = gql`
     query getUserArea($organizationId: ID!, $areaId: ID!) {
   userAreas(organizationId: $organizationId, ids: [$areaId]) {

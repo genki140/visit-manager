@@ -31,6 +31,7 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import StorageIcon from '@material-ui/icons/Storage';
 import DescriptionIcon from '@material-ui/icons/Description';
+import ToysIcon from '@material-ui/icons/Toys';
 import { actions, asyncLogout, useAppDispatch, useStoreState } from '@/ducks/store';
 import { useRouterParams } from '@/utils/use-router-params';
 // import { TypeUtil } from '@/utils/type-helper';
@@ -281,6 +282,15 @@ export const Layout = (props: {
                     <GitHubIcon />
                   </ListItemIcon>
                   <ListItemText>{f((x) => x.github)}</ListItemText>
+                </ListItem>
+              </Link>
+
+              <Link href="/system/test">
+                <ListItem button>
+                  <ListItemIcon>
+                    <ToysIcon />
+                  </ListItemIcon>
+                  <ListItemText>実験室</ListItemText>
                 </ListItem>
               </Link>
             </List>

@@ -23,6 +23,6 @@
     },
     "noEmit": true
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules, next.config.js"],
   "include": ["**/*.ts", "**/*.tsx"]
 }

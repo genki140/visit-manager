@@ -36,16 +36,10 @@ let config = {
         source: '/system/api/:path',
         destination: process.env.API_URL + ':' + process.env.API_PORT + '/api/:path', // Proxy to Backend
       },
-      {
-        source: '/system/graphql',
-        destination: process.env.API_URL + ':' + process.env.API_PORT + '/' + 'graphql', // Proxy to Backend
-      },
-
       // {
-      //   source: 'ws://localhost:3000/system/graphql',
-      //   destination: 'ws://localhost:4000/graphql',
+      //   source: '/system/graphql',
+      //   destination: process.env.API_URL + ':' + process.env.API_PORT + '/' + 'graphql', // Proxy to Backend
       // },
-
       {
         // /ja/system/documents で日本語ドキュメントにアクセスできるよう設定
         source: '/:locale/system/documents/:path*',
