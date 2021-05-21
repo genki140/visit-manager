@@ -65,10 +65,8 @@ SSL 設定と DB 値は永続化されているため、以下の方法でコン
    curl 'https://raw.githubusercontent.com/genki140/visit-manager/master/production/docker-compose.yml' > docker-compose.yml
 
    dc down
-
    docker rmi genki140/visit-manager-frontend
    docker rmi genki140/visit-manager-backend
-
    dc up -d --build
    ```
 
