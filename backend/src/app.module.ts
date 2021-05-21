@@ -33,6 +33,11 @@ import { getConnectionOptions } from 'typeorm';
 
         installSubscriptionHandlers: true, //websocket
         context: ({ req, connection }) => {
+          // console.log('req');
+          // console.log(req);
+          // console.log('connection');
+          // console.log(connection);
+
           // websocketモードの場合にguardやjwt.strategyで認証できるよう調整
           return connection ? { req: { headers: connection.context } } : { req };
         },
@@ -40,21 +45,34 @@ import { getConnectionOptions } from 'typeorm';
         playground: {
           // endpoint: process.env.NODE_ENV === 'production' ? '/system/graphql' : undefined, // クライアントサイドからプロキシ表示されるためそちらのパスに合わせる。
           endpoint: '/system/graphql', // クライアントサイドからプロキシ表示されるためそちらのパスに合わせる。
+          settings: {
+            'request.credentials': 'include',
+          },
         },
+        // cors: { Credential: true },
 
-        // playground: {
-        //   settings: {
-        //     'request.credentials': 'include',
-        //   },
-        // },
         // cors: {
         //   credentials: true,
         //   origin: ['http://localhost:3000'],
         // },
-        // subscriptions: {
-        //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        //   onConnect: async (params, websocket) => params,
-        // },
+        subscriptions: {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          onConnect: async (params, websocket) => {
+            // クッキーのトークンを引き渡す
+            const tokenKey = 'access_token';
+            const tokenKeyValue = ((websocket as any).upgradeReq.headers.cookie as string)
+              .split(';')
+              .map((x) => x.trim())
+              .filter((x) => x.startsWith(tokenKey + '='))?.[0];
+            const tokenValue = tokenKeyValue?.substring(tokenKey.length + 1) ?? '';
+            // console.log(tokenValue);
+            return {
+              access_token: tokenValue,
+            };
+            // console.log(tokenValue);
+            // return params;
+          },
+        },
       }),
     }), //GraphQL
     TypeOrmModule.forRootAsync({

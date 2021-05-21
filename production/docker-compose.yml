@@ -19,7 +19,9 @@ services:
       WEBSOCKET: "true"
       # DOMAINS: "localhost -> http://frontend:3000"
       # STAGE: "local"
-
+    volumes:
+      - ./docker/keys:/var/keys
+  
       # FORCE_RENEW: 'true'
 
   # Application-Backend
