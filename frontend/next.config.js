@@ -56,7 +56,7 @@ let config = {
 
   pwa: {
     dest: '.next', // swの出力ディレクトリ
-    disable: process.env.NODE_ENV === 'development',
+    disable: process.env.NODE_ENV !== 'production',
   },
 
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],

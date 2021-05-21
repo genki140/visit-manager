@@ -30,11 +30,16 @@ import { getConnectionOptions } from 'typeorm';
       useFactory: async () => ({
         // プロダクションモードではファイル出力しない
         autoSchemaFile: process.env.NODE_ENV === 'production' ? true : 'schema.graphql',
-        installSubscriptionHandlers: true, //websocket
 
+        installSubscriptionHandlers: true, //websocket
         context: ({ req, connection }) => {
           // websocketモードの場合にguardやjwt.strategyで認証できるよう調整
           return connection ? { req: { headers: connection.context } } : { req };
+        },
+
+        playground: {
+          // endpoint: process.env.NODE_ENV === 'production' ? '/system/graphql' : undefined, // クライアントサイドからプロキシ表示されるためそちらのパスに合わせる。
+          endpoint: '/system/graphql', // クライアントサイドからプロキシ表示されるためそちらのパスに合わせる。
         },
 
         // playground: {

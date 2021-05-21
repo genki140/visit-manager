@@ -256,7 +256,7 @@ export const Layout = (props: {
               <Divider />
 
               <ListSubheader>{f((x) => x.development)}</ListSubheader>
-              <Link href="/system/graphql">
+              <a href="/system/graphql">
                 <ListItem button>
                   <ListItemIcon>
                     <SvgIcon viewBox="0 0 256 288" fillRule="evenodd">
@@ -265,16 +265,16 @@ export const Layout = (props: {
                   </ListItemIcon>
                   <ListItemText>{f((x) => x.graphql)}</ListItemText>
                 </ListItem>
-              </Link>
+              </a>
 
-              <Link href="/system/phpmyadmin/index.php">
+              <a href="/system/phpmyadmin/index.php">
                 <ListItem button>
                   <ListItemIcon>
                     <StorageIcon />
                   </ListItemIcon>
                   <ListItemText>{f((x) => x.database)}</ListItemText>
                 </ListItem>
-              </Link>
+              </a>
 
               <Link href="https://github.com/genki140/visit-manager">
                 <ListItem button>

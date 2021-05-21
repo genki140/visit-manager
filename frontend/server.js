@@ -1,3 +1,5 @@
+// 本番環境運用時に使用する
+
 // @ts-ignore
 const express = require('express');
 const next = require('next');
@@ -9,22 +11,24 @@ const port = 3000;
 const dev = process.env.NODE_ENV !== 'production';
 const host = '0.0.0.0';
 // const API_URL = process.env.API_URL || 'http://localhost:8000/graphql'
-const API_URL = process.env.API_URL || '{APIのURL}';
+// const API_URL = process.env.API_URL || '{APIのURL}';
 
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   const server = express();
-
-  // server.use('/system/graphql', createProxyMiddleware({ target: 'http://backend:4000/graphql', changeOrigin: true, ws: true }));
-
-  // server.use('/graphql', (req, res) => {
-  //   return createProxyMiddleware({
-  //     target: 'http://localhost:4000/graphql',
-  //     changeOrigin: true,
-  //   })(req, res);
-  // });
+  server.use(
+    '/system/graphql',
+    createProxyMiddleware({
+      target: 'http://backend:4000',
+      changeOrigin: true,
+      ws: true,
+      pathRewrite: {
+        '^/system/graphql': '/graphql', // rewrite path
+      },
+    }),
+  );
 
   server.all('*', (req, res) => {
     return handle(req, res);
@@ -32,8 +36,10 @@ app.prepare().then(() => {
 
   server.listen(port, host, (err) => {
     if (err) throw err;
-    console.log(`> Ready on http://${host}:${port}`);
+    // console.log(`> Ready on http://${host}:${port}`);
   });
+
+  // server.on('upgrade', wsProxy.upgrade); // <-- subscribe to http 'upgrade'
 });
 
 // // server.js
