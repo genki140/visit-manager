@@ -9,7 +9,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const port = 3000;
 // @ts-ignore
 const dev = process.env.NODE_ENV !== 'production';
-const host = '0.0.0.0';
+// const host = '0.0.0.0';
 // const API_URL = process.env.API_URL || 'http://localhost:8000/graphql'
 // const API_URL = process.env.API_URL || '{APIのURL}';
 
@@ -34,10 +34,12 @@ app.prepare().then(() => {
     return handle(req, res);
   });
 
-  server.listen(port, host, (err) => {
-    if (err) throw err;
-    // console.log(`> Ready on http://${host}:${port}`);
-  });
+  server.listen(port);
+
+  // server.listen(port, host, (err) => {
+  //   if (err) throw err;
+  //   // console.log(`> Ready on http://${host}:${port}`);
+  // });
 
   // server.on('upgrade', wsProxy.upgrade); // <-- subscribe to http 'upgrade'
 });
