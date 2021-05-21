@@ -39,15 +39,14 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const apolloClient = useApolloClient();
+  // const apolloClient = useApolloClient();
   const loginSrcRoute = useStoreState((x) => x.loginSrcRoute);
   const f = useFormatMessage();
 
   const login = async () => {
     try {
       unwrapResult(await dispatch(asyncLogin({ username, password })));
-
-      await apolloClient.reFetchObservableQueries(); // すべてのクエリを再取得させる。
+      // await apolloClient.reFetchObservableQueries(); // すべてのクエリを再取得させる。
 
       // router.push(loginSrcPath ?? '/', loginSrcPath ?? '/'); // 前のページに戻る
       if (loginSrcRoute == null) {
@@ -60,7 +59,7 @@ const LoginPage = () => {
         });
       }
     } catch (e) {
-      // console.log(e);
+      console.log(e);
       // とりあえず適当なエラーメッセージ
       setError('ログインに失敗しました');
     }

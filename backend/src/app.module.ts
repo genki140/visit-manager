@@ -33,13 +33,16 @@ import { getConnectionOptions } from 'typeorm';
 
         installSubscriptionHandlers: true, //websocket
         context: ({ req, connection }) => {
+          // console.log(connection);
+          // return req; //.cookies;
+
           // console.log('req');
           // console.log(req);
           // console.log('connection');
           // console.log(connection);
 
-          // websocketモードの場合にguardやjwt.strategyで認証できるよう調整
-          return connection ? { req: { headers: connection.context } } : { req };
+          // // websocketモードの場合にguardやjwt.strategyで認証できるよう調整
+          return connection ? { req: { cookies: connection.context } } : { req };
         },
 
         playground: {

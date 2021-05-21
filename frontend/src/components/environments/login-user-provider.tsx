@@ -20,8 +20,8 @@ export const LoginUserProvider = (props: { children: any }) => {
     if (router.isReady) {
       if (getCurrentUserResult.error != null && isNoLimitPage === false) {
         // ログインページにリダイレクト
+        console.log('redirect login');
         dispatch(actions.setLoginSrcPath({ pathname: router.pathname, query: router.query }));
-        // console.log('redirect login');
         router.push('/system/login');
       } else if (getCurrentUserResult.data != null) {
         // console.log('success login');

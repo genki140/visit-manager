@@ -18,14 +18,14 @@ export class AuthController {
     // JwtToken を取得
     const result = this.authService.getToken(req.user);
 
-    console.log('succeed login:' + result);
+    // console.log('succeed login:' + result);
 
     // 有効期限を定めてクッキーに格納
     const expireDate = new Date();
     expireDate.setUTCMinutes(expireDate.getUTCMinutes() + 60 * 24 * 7);
     response.cookie('access_token', result, {
       httpOnly: true,
-      expires: expireDate,
+      expires: undefined, // expireDate,
     });
     response.statusCode = 200;
     return result;

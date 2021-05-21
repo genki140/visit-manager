@@ -23,9 +23,11 @@ export class JwtStrategy extends PassportStrategy(BaseJwtStrategy) {
       // クッキーからトークンを読み込む関数を返す
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: any) => {
-          const auth = request.headers.access_token;
+          const auth = request?.cookies?.access_token ?? '';
           // console.log(auth);
-          return auth?.toString() ?? '';
+          // return auth?.toString() ?? '';
+          // console.log(auth);
+          return auth;
         },
       ]),
 
