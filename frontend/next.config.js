@@ -55,7 +55,7 @@ let config = {
   },
 
   pwa: {
-    dest: '.next', // swの出力ディレクトリ
+    dest: 'public', // swの出力ディレクトリ
     disable: process.env.NODE_ENV !== 'production',
   },
 
