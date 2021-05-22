@@ -45,6 +45,7 @@ import { getConnectionOptions } from 'typeorm';
           return connection ? { req: { cookies: connection.context } } : { req };
         },
 
+        introspection: true, // 本番環境でのplaygroundを許可
         playground: {
           // endpoint: process.env.NODE_ENV === 'production' ? '/system/graphql' : undefined, // クライアントサイドからプロキシ表示されるためそちらのパスに合わせる。
           endpoint: '/system/graphql', // クライアントサイドからプロキシ表示されるためそちらのパスに合わせる。
