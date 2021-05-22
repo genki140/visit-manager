@@ -63,11 +63,13 @@ import { getConnectionOptions } from 'typeorm';
           onConnect: async (params, websocket) => {
             // クッキーのトークンを引き渡す
             const tokenKey = 'access_token';
-            const tokenKeyValue = ((websocket as any).upgradeReq.headers.cookie as string)
-              .split(';')
-              .map((x) => x.trim())
-              .filter((x) => x.startsWith(tokenKey + '='))?.[0];
-            const tokenValue = tokenKeyValue?.substring(tokenKey.length + 1) ?? '';
+            const cookie = (websocket as any).upgradeReq.headers.cookie as string | undefined;
+            const tokenValue =
+              cookie
+                ?.split(';')
+                ?.map((x) => x.trim())
+                ?.filter((x) => x.startsWith(tokenKey + '='))?.[0]
+                ?.substring(tokenKey.length + 1) ?? '';
             // console.log(tokenValue);
             return {
               access_token: tokenValue,
