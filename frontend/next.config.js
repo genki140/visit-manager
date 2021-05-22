@@ -56,8 +56,8 @@ let config = {
 
   pwa: {
     dest: 'public', // swの出力ディレクトリ
-    // disable: process.env.NODE_ENV !== 'production',
-    disable: true, // キャッシュが残ってしまうので開発中とりあえず無効
+    disable: process.env.NODE_ENV !== 'production',
+    // disable: true, // キャッシュが残ってしまうので開発中とりあえず無効
   },
 
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
