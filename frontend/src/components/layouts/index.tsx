@@ -32,11 +32,10 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import StorageIcon from '@material-ui/icons/Storage';
 import DescriptionIcon from '@material-ui/icons/Description';
 import ToysIcon from '@material-ui/icons/Toys';
-import { actions, asyncLogout, useAppDispatch, useStoreState } from '@/ducks/store';
+import { actions, asyncLogout, asyncRefreshLoginUser, useAppDispatch, useStoreState } from '@/ducks/store';
 import { useRouterParams } from '@/utils/use-router-params';
 // import { TypeUtil } from '@/utils/type-helper';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { useApolloClient } from '@apollo/client';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useFormatMessage } from '@/locales';
@@ -107,7 +106,6 @@ export const Layout = (props: {
   const appLoading = useStoreState((x) => x.loading);
   const loginUser = useStoreState((x) => x.loginUser);
   const routerParams = useRouterParams();
-  const apolloClient = useApolloClient();
   const [menuVisibled, setMenuVisibled] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -191,9 +189,9 @@ export const Layout = (props: {
                     button
                     onClick={async () => {
                       unwrapResult(await dispatch(asyncLogout()));
-                      dispatch(actions.setLoginUser(undefined));
+                      dispatch(actions.setLoginUser(undefined)); // LoginUserProviderによって自動でリダイレクトされる
                       await apolloClient.clearStore();
-                      await router.push('/system/login');
+                      // await router.push('/system/login');
                       // try {
                       //   await apolloClient.reFetchObservableQueries(); // すべてのクエリを再取得させる。
                       // } catch {}
@@ -206,6 +204,19 @@ export const Layout = (props: {
                   </ListItem>
                 </>
               )}
+
+              <ListItem
+                button
+                onClick={async () => {
+                  const user = unwrapResult(await dispatch(asyncRefreshLoginUser()));
+                  // console.log(user);
+                }}
+              >
+                <ListItemIcon>
+                  <ExitToAppIcon />
+                </ListItemIcon>
+                <ListItemText>リフレッシュ</ListItemText>
+              </ListItem>
 
               <Link href="/">
                 <ListItem button>

@@ -21,33 +21,14 @@ export class Organization {
 
   /** ユーザーとのリレーション */
   @Field(() => [RoledUser])
-  @OneToMany(() => RoledUser, (roledUser) => roledUser.organization)
+  @OneToMany(() => RoledUser, (roledUser) => roledUser.organization, { cascade: true })
   roledUsers?: RoledUser[];
-
-  // /** ユーザー */
-  // @Field(() => [User])
-  // @ManyToMany(() => User, (user) => user.organizations)
-  // @JoinTable({
-  //   name: 'organization_users',
-  //   joinColumn: {
-  //     name: 'organization_id',
-  //     referencedColumnName: 'id',
-  //   },
-  //   inverseJoinColumn: {
-  //     name: 'user_id',
-  //     referencedColumnName: 'id',
-  //   },
-  // })
-  // users?: User[];
 }
 
 @InputType()
-export class CreateUserInput {
+export class CreateOrganizationInput {
+  /** 組織名 */
   @Field()
-  @MaxLength(1000)
-  userId: string = '';
-
-  @Field()
-  @MaxLength(1000)
-  password: string = '';
+  @MaxLength(100)
+  name: string = '';
 }

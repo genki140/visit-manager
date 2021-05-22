@@ -48,10 +48,10 @@ export class User {
 @InputType()
 export class CreateUserInput {
   @Field()
-  @MaxLength(1000)
+  @MaxLength(100)
   userId: string = '';
 
   @Field()
-  @MaxLength(1000)
+  @MaxLength(100)
   password: string = '';
 }

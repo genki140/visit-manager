@@ -9,8 +9,8 @@ export class PolygonService {
   constructor(
     @InjectRepository(Polygon)
     private readonly polygonRepository: Repository<Polygon>,
-    @InjectRepository(PolygonPoint)
-    private readonly polygonPointRepository: Repository<PolygonPoint>,
+    // @InjectRepository(PolygonPoint)
+    // private readonly polygonPointRepository: Repository<PolygonPoint>,
     private connection: Connection,
   ) {}
 

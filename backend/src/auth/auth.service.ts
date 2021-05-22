@@ -13,14 +13,18 @@ export class AuthService {
 
   // ユーザーを認証する
   async validateUser(username: string, password: string): Promise<User | undefined> {
+    return this.getUser(username, password);
+  }
+
+  async getUser(username: string, password?: string): Promise<User | undefined> {
     const user = (
       await this.usersService.find(undefined, {
-        where: { username },
+        where: password != null ? { username, password } : { username },
         relations: ['roledUsers', 'roledUsers.organization', 'roledUsers.roles', 'roledUsers.roles.abilities'],
       })
-    )[0];
+    )?.[0];
 
-    if (user != null && user.password === password) {
+    if (user != null) {
       user.password = '';
       return user;
     }

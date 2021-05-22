@@ -33,15 +33,13 @@ const App: React.FC<AppProps> = (props) => {
         <CssBaseline />
         <SafeHydrate>
           <ApolloClientProvider>
-            <GoogleMapProvider>
-              {() => (
-                <LoginUserProvider>
-                  <LocaleProvider>
-                    <props.Component router={props.router} {...props.pageProps} />
-                  </LocaleProvider>
-                </LoginUserProvider>
-              )}
-            </GoogleMapProvider>
+            <LoginUserProvider>
+              <LocaleProvider>
+                <GoogleMapProvider>
+                  {() => <props.Component router={props.router} {...props.pageProps} />}
+                </GoogleMapProvider>
+              </LocaleProvider>
+            </LoginUserProvider>
           </ApolloClientProvider>
         </SafeHydrate>
       </Provider>

@@ -11,6 +11,9 @@ export const jaMessages: messagesType = {
   development: '開発',
   database: 'データベース',
 
+  create: '作成',
+  cancel: 'キャンセル',
+
   username: 'ユーザー名',
   password: 'パスワード',
 

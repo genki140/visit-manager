@@ -17,25 +17,20 @@ import * as fs from 'fs';
 export class JwtStrategy extends PassportStrategy(BaseJwtStrategy) {
   constructor(private readonly configService: ConfigService) {
     super({
-      // // Authorization bearerからトークンを読み込む関数を返す
-      // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-
       // クッキーからトークンを読み込む関数を返す
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: any) => {
           const auth = request?.cookies?.access_token ?? '';
-          // console.log(auth);
-          // return auth?.toString() ?? '';
-          // console.log(auth);
           return auth;
         },
       ]),
-
+      // ファイルから秘密鍵を渡す
+      secretOrKey: fs.readFileSync('/home/nestjs/keys/id_rsa', 'utf8'),
       // 有効期間を無視するかどうか
       ignoreExpiration: false,
 
-      // ファイルから秘密鍵を渡す
-      secretOrKey: fs.readFileSync('/home/nestjs/keys/id_rsa', 'utf8'),
+      // // Authorization bearerからトークンを読み込む関数を返す
+      // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
 

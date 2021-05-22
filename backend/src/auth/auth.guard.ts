@@ -54,7 +54,14 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
 
 export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext) => {
   const ctx = GqlExecutionContext.create(context);
-  return ctx.getContext().req.user;
+  const user = ctx.getContext().req?.user;
+  if (user != null) {
+    return user;
+  }
+
+  // graphqlでない場合こっちにセットされている(APIの場合など)
+  const user2 = (context as any)?.args?.[0]?.user;
+  return user2;
 });
 
 export const NoGuard = () => SetMetadata('noGuard', true);

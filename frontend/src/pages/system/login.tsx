@@ -1,11 +1,11 @@
 import { Layout } from '@/components/layouts';
 import { useState } from 'react';
-import { asyncLogin, useAppDispatch, useStoreState } from '@/ducks/store';
+import { actions, asyncLogin, useAppDispatch, useStoreState } from '@/ducks/store';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { TextField } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import { useApolloClient } from '@apollo/client';
+import { ApolloClient, useApolloClient } from '@apollo/client';
 import { useFormatMessage } from '@/locales';
 
 // const useStyles = makeStyles((theme: Theme) =>
@@ -39,16 +39,13 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  // const apolloClient = useApolloClient();
   const loginSrcRoute = useStoreState((x) => x.loginSrcRoute);
   const f = useFormatMessage();
 
   const login = async () => {
     try {
-      unwrapResult(await dispatch(asyncLogin({ username, password })));
-      // await apolloClient.reFetchObservableQueries(); // すべてのクエリを再取得させる。
+      dispatch(actions.setLoginUser(unwrapResult(await dispatch(asyncLogin({ username, password })))));
 
-      // router.push(loginSrcPath ?? '/', loginSrcPath ?? '/'); // 前のページに戻る
       if (loginSrcRoute == null) {
         await router.push('/');
       } else {

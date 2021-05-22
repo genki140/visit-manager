@@ -56,18 +56,26 @@ export interface asyncLoginProps {
   username: string;
   password: string;
 }
-export interface asyncLoginResult {
-  token: string;
-}
+// export interface asyncLoginResult {
+//   token: string;
+// }
 
-export const asyncLogin = createAsyncThunk<asyncLoginResult, asyncLoginProps>(
+export const asyncLogin = createAsyncThunk<User, asyncLoginProps>(
   storeName + '/asyncLogin',
-  async (props: asyncLoginProps): Promise<asyncLoginResult> => {
-    const result = await axios.post<{ access_token: string }>('/system/api/login', {
+  async (props: asyncLoginProps): Promise<User> => {
+    const result = await axios.post<User>('/system/api/login', {
       username: props.username,
       password: props.password,
     });
-    return { token: result.data.access_token };
+    return result.data;
+  },
+);
+
+export const asyncRefreshLoginUser = createAsyncThunk<User>(
+  storeName + '/asyncRefreshLoginUser',
+  async (): Promise<User> => {
+    const result = await axios.post<User>('/system/api/current-user');
+    return result.data;
   },
 );
 
@@ -116,6 +124,10 @@ export const storeSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(asyncRefreshLoginUser.fulfilled, (state, action) => {
+      state.loginUser = action.payload;
+    });
+
     // 非同期実行時Loading状態を自動調整します
     builder.addMatcher<PendingAction>(
       (action) => action.type.endsWith('/pending'),

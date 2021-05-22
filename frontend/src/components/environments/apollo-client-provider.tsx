@@ -1,9 +1,14 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import React, { useMemo } from 'react';
 import { WebSocketLink } from '@apollo/client/link/ws';
+import { useStoreState } from '@/ducks/store';
 
 export const ApolloClientProvider = (props: { children: any }) => {
+  const loginUser = useStoreState((x) => x.loginUser);
+
+  // ログインユーザーが変わった場合はApolloClient再生成
   const client = useMemo(() => {
+    console.log('ApolloClient-Start');
     const developGraphql = `ws://${location.hostname}:3000/system/graphql`;
     const productGraphql = `wss://${location.hostname}/system/graphql`;
 
@@ -46,7 +51,7 @@ export const ApolloClientProvider = (props: { children: any }) => {
         },
       }),
     });
-  }, []);
+  }, [loginUser?.id]);
 
   return (
     <>

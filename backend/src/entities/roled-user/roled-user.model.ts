@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../user/user.model';
 import { Organization } from '../organization/organization.model';
 import { Role } from '../role/role.model';
@@ -21,6 +21,9 @@ export class RoledUser {
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.roledUsers, { nullable: false })
   user?: User;
+
+  @Column({ type: 'int', nullable: false })
+  userId?: number;
 
   /** 役割 */
   @Field(() => [Role])

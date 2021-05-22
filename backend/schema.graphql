@@ -105,6 +105,7 @@ type Mutation {
   createUser(user: CreateUserInput!): User!
   deleteUser(id: ID!): Ability
   deleteRole(id: ID!): Role
+  createOrganization(organization: CreateOrganizationInput!): Organization!
   addTest: Float!
   createPolygon(polygon: CreatePolygonInput!): Polygon!
   updatePolygon(polygon: UpdatePolygonInput!): Polygon!
@@ -117,6 +118,10 @@ type Mutation {
 input CreateUserInput {
   userId: String = ""
   password: String = ""
+}
+
+input CreateOrganizationInput {
+  name: String = ""
 }
 
 input CreatePolygonInput {

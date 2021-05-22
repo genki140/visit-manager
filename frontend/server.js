@@ -27,6 +27,7 @@ app.prepare().then(() => {
       pathRewrite: {
         '^/system/graphql': '/graphql', // rewrite path
       },
+      logLevel: 'warn', // 情報が大量に出力されるので警告以上のみ表示
     }),
   );
 
