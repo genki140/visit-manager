@@ -23,9 +23,7 @@ ENV NODE_ENV production
 
 RUN apk add --no-cache openssh-keygen && \
     addgroup -g 1001 -S nodejs && \
-    adduser -S nestjs -u 1001 && \
-    mkdir -p /var/keys && \
-    chmod -R 666 /var/keys
+    adduser -S nestjs -u 1001
 
 COPY --from=builder /app/ormconfig.js ./
 # COPY --from=builder /app/schema.graphql ./
@@ -35,16 +33,6 @@ COPY --from=builder /app/ormconfig.js ./
 COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-
-# # ログイン用RSAキーの生成（外部から渡されていたら何もしない）
-# # ※ここでやるとイメージに焼かれるのでダメ
-# RUN apk add openssh-keygen && \
-#     cd /var && \
-#     mkdir keys && \
-#     cd keys && \
-#     if [ ! -e id_rsa ]; then && \
-#       ssh-keygen -t rsa -b 4096 -f ./id_rsa -q -N "" && \
-#     fi
 
 USER nestjs
 

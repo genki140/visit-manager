@@ -21,7 +21,7 @@ import * as fs from 'fs';
       useFactory: async (configService: ConfigService) => {
         return {
           // ファイルから秘密鍵を渡す
-          secret: fs.readFileSync('/var/keys/id_rsa', 'utf8'),
+          secret: fs.readFileSync('/home/nestjs/keys/id_rsa', 'utf8'),
           // signOptions: {
           //   // 有効期間を設定
           //   // 指定する値は以下を参照

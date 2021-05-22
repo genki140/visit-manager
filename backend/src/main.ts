@@ -7,9 +7,9 @@ import * as fs from 'fs';
 
 async function bootstrap() {
   // 作成されていなければRSAキーを生成
-  if (fs.existsSync('/var/keys/id_rsa') === false) {
-    // fs.mkdirSync('/var/keys', { recursive: true });
-    execSync('ssh-keygen -t rsa -b 4096 -f /var/keys/id_rsa -q -N ""');
+  if (fs.existsSync('/home/nestjs/keys/id_rsa') === false) {
+    fs.mkdirSync('/home/nestjs/keys', { recursive: true });
+    execSync('ssh-keygen -t rsa -b 4096 -f /home/nestjs/keys/id_rsa -q -N ""');
     console.log('Generate RSA key for JWT.');
   }
 

@@ -35,7 +35,7 @@ export class JwtStrategy extends PassportStrategy(BaseJwtStrategy) {
       ignoreExpiration: false,
 
       // ファイルから秘密鍵を渡す
-      secretOrKey: fs.readFileSync('/var/keys/id_rsa', 'utf8'),
+      secretOrKey: fs.readFileSync('/home/nestjs/keys/id_rsa', 'utf8'),
     });
   }
 
