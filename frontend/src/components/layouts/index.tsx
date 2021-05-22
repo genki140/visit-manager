@@ -190,11 +190,6 @@ export const Layout = (props: {
                     onClick={async () => {
                       unwrapResult(await dispatch(asyncLogout()));
                       dispatch(actions.setLoginUser(undefined)); // LoginUserProviderによって自動でリダイレクトされる
-                      await apolloClient.clearStore();
-                      // await router.push('/system/login');
-                      // try {
-                      //   await apolloClient.reFetchObservableQueries(); // すべてのクエリを再取得させる。
-                      // } catch {}
                     }}
                   >
                     <ListItemIcon>
