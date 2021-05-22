@@ -21,8 +21,10 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nestjs -u 1001
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nestjs -u 1001 && \
+    mkdir -p /var/keys && \
+    chmod -R 666 /var/keys
 
 COPY --from=builder /app/ormconfig.js ./
 # COPY --from=builder /app/schema.graphql ./
