@@ -24,9 +24,6 @@ export const LoginUserProvider = (props: { children: any }) => {
           try {
             // ログインユーザー情報取得
             unwrapResult(await dispatch(asyncRefreshLoginUser()));
-            // if (!unmounted) {
-            //   dispatch(actions.setLoginUser(user));
-            // }
           } catch (e) {
             // ログインエラー時、現在のURLを記録してログイン画面に転送
             if (!unmounted) {
@@ -52,7 +49,7 @@ export const LoginUserProvider = (props: { children: any }) => {
         }
       }
     }
-  }, [loginUserId, router.asPath]);
+  }, [loginUserId, router.asPath, router.isReady]);
 
   if (isLimitedPage && loginUserId == null) {
     return <Loading />;
