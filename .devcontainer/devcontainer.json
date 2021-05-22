@@ -13,6 +13,6 @@
     "github.vscode-pull-request-github",
     "msjsdiag.debugger-for-chrome",
     "mhutchie.git-graph",
-    "apollographql.vscode-apollo"
+    "graphql.vscode-graphql"
   ]
 }

@@ -188,8 +188,7 @@ export const Layout = (props: {
                   <ListItem
                     button
                     onClick={async () => {
-                      unwrapResult(await dispatch(asyncLogout()));
-                      dispatch(actions.setLoginUser(undefined)); // LoginUserProviderによって自動でリダイレクトされる
+                      unwrapResult(await dispatch(asyncLogout())); // 自動でリダイレクトされる
                     }}
                   >
                     <ListItemIcon>
@@ -199,19 +198,6 @@ export const Layout = (props: {
                   </ListItem>
                 </>
               )}
-
-              <ListItem
-                button
-                onClick={async () => {
-                  const user = unwrapResult(await dispatch(asyncRefreshLoginUser()));
-                  // console.log(user);
-                }}
-              >
-                <ListItemIcon>
-                  <ExitToAppIcon />
-                </ListItemIcon>
-                <ListItemText>リフレッシュ</ListItemText>
-              </ListItem>
 
               <Link href="/">
                 <ListItem button>

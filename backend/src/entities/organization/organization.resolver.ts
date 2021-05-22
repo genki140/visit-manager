@@ -23,7 +23,6 @@ export class OrganizationResolver {
 
     const ids = currentUser.roledUsers?.map((x) => x.organization?.id as number) ?? [];
 
-    console.log(ids);
     // const relations: string[] = [];
     const result = await this.organizationService.find(ids);
     if (ids != null && result.length !== ids.length) {

@@ -23,15 +23,15 @@ export const LoginUserProvider = (props: { children: any }) => {
         const f = async () => {
           try {
             // ログインユーザー情報取得
-            const user = unwrapResult(await dispatch(asyncRefreshLoginUser()));
-            if (!unmounted) {
-              dispatch(actions.setLoginUser(user));
-            }
+            unwrapResult(await dispatch(asyncRefreshLoginUser()));
+            // if (!unmounted) {
+            //   dispatch(actions.setLoginUser(user));
+            // }
           } catch (e) {
             // ログインエラー時、現在のURLを記録してログイン画面に転送
             if (!unmounted) {
               if (isLimitedPage) {
-                console.log('redirect login');
+                console.log('redirect to login');
                 dispatch(actions.setLoginSrcPath({ pathname: router.pathname, query: router.query }));
                 router.push('/system/login');
               }

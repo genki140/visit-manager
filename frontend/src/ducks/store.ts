@@ -127,6 +127,9 @@ export const storeSlice = createSlice({
     builder.addCase(asyncRefreshLoginUser.fulfilled, (state, action) => {
       state.loginUser = action.payload;
     });
+    builder.addCase(asyncLogout.fulfilled, (state) => {
+      state.loginUser = undefined;
+    });
 
     // 非同期実行時Loading状態を自動調整します
     builder.addMatcher<PendingAction>(

@@ -19,6 +19,7 @@ import LoadingContainer from '@/components/loading-container';
 import Link from 'next/link';
 import { useFormatMessage } from '@/locales';
 import React, { useState } from 'react';
+import gql from 'graphql-tag';
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -27,6 +28,18 @@ const useStyles = makeStyles(() => ({
     gap: 10,
   },
 }));
+
+// mutation createResidence($areaId: ID!, $latitude: Float!, $longitude: Float!) {
+//   createResidence(residence: { areaId: $areaId, name: "", latitude: $latitude, longitude: $longitude }) {
+
+gql`
+  mutation createOrganization($name: String!) {
+    createOrganization(organization: { name: $name }) {
+      id
+      name
+    }
+  }
+`;
 
 /** 新規組織作成ダイアログを表示ボタン */
 const OrganizationCreateButton = () => {
@@ -43,6 +56,8 @@ const OrganizationCreateButton = () => {
       >
         新規組織の作成
       </Button>
+
+      {/* unwrapResult(await dispatch(asyncLogout())); // 自動でリダイレクトされる */}
 
       <Dialog open={open} fullWidth={true} maxWidth="sm" disableBackdropClick disableEscapeKeyDown>
         <DialogTitle>新規組織の追加 </DialogTitle>
