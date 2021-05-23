@@ -32,15 +32,15 @@ const App: React.FC<AppProps> = (props) => {
       <Provider store={store}>
         <CssBaseline />
         <SafeHydrate>
-          <ApolloClientProvider>
-            <LoginUserProvider>
+          <LoginUserProvider>
+            <ApolloClientProvider>
               <LocaleProvider>
                 <GoogleMapProvider>
                   {() => <props.Component router={props.router} {...props.pageProps} />}
                 </GoogleMapProvider>
               </LocaleProvider>
-            </LoginUserProvider>
-          </ApolloClientProvider>
+            </ApolloClientProvider>
+          </LoginUserProvider>
         </SafeHydrate>
       </Provider>
     </MuiThemeProvider>

@@ -18,6 +18,30 @@ export const theme = createMuiTheme({
     },
   },
 
+  palette: {
+    // type: 'dark',
+    // primary: '#5b3c88',
+    // primary: {
+    //   main: '#aaaaaa',
+    //   light: '#ffffff',
+    //   dark: '#000000',
+    //   // dark: '#002884',
+    //   // contrastText: '#fff',
+    // },
+    // primary: {
+    //   // light: '#757ce8',
+    //   main: '#5b3c88',
+    //   // dark: '#002884',
+    //   // contrastText: '#fff',
+    // },
+    // secondary: {
+    //   light: '#ff7961',
+    //   main: '#f44336',
+    //   dark: '#ba000d',
+    //   contrastText: '#000',
+    // },
+  },
+
   // palette: {
   //   // background: {
   //   //   default: '#EEEEEE',
@@ -25,3 +49,8 @@ export const theme = createMuiTheme({
   //   type: 'dark',
   // },
 });
+
+// 5b3c88
+
+// 型の拡張
+// https://qiita.com/tachibanayu24/items/b93537fced5c17f3d42d

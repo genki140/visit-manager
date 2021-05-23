@@ -15,6 +15,7 @@ export type MapEditType = typeof MapEditType[keyof typeof MapEditType];
 export type StoreState = {
   loading: boolean;
   loginUser?: User;
+  loginLoaded: boolean;
   loginSrcRoute?: { pathname: string; query: any };
   map: {
     // position: {
@@ -37,6 +38,7 @@ export type StoreState = {
 const createStoreInitial = () => {
   const value: StoreState = {
     loading: false,
+    loginLoaded: false,
     map: {
       // position: {
       //   lat: 0,
@@ -126,6 +128,10 @@ export const storeSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(asyncRefreshLoginUser.fulfilled, (state, action) => {
       state.loginUser = action.payload;
+      state.loginLoaded = true;
+    });
+    builder.addCase(asyncRefreshLoginUser.rejected, (state) => {
+      state.loginLoaded = true;
     });
     builder.addCase(asyncLogout.fulfilled, (state) => {
       state.loginUser = undefined;

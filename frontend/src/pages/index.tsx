@@ -1,25 +1,11 @@
 import { Layout } from '@/components/layouts';
-import {
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  List,
-  ListItem,
-  makeStyles,
-  Modal,
-  Typography,
-} from '@material-ui/core';
+import { Card, CardActionArea, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
 import Link from 'next/link';
 import { useFormatMessage } from '@/locales';
-import React, { useState } from 'react';
 import gql from 'graphql-tag';
+import { OrganizationCreateButton } from '@/components/dialogs/OrganizationCreateButton';
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -40,40 +26,6 @@ gql`
     }
   }
 `;
-
-/** 新規組織作成ダイアログを表示ボタン */
-const OrganizationCreateButton = () => {
-  const [open, setOpen] = useState(false);
-  const f = useFormatMessage();
-  return (
-    <>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        新規組織の作成
-      </Button>
-
-      {/* unwrapResult(await dispatch(asyncLogout())); // 自動でリダイレクトされる */}
-
-      <Dialog open={open} fullWidth={true} maxWidth="sm" disableBackdropClick disableEscapeKeyDown>
-        <DialogTitle>新規組織の追加 </DialogTitle>
-        <DialogContent>ダイアログの中身</DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)} color="primary">
-            {f((x) => x.create)}
-          </Button>
-          <Button variant="outlined" onClick={() => setOpen(false)} color="primary">
-            {f((x) => x.cancel)}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
-};
 
 const IndexPage = () => {
   const classes = useStyles();
