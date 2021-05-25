@@ -7,19 +7,41 @@ import {
   DialogContentText,
   TextField,
   DialogActions,
-  Input,
   makeStyles,
   Theme,
+  FormLabel,
+  Fab,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import AddIcon from '@material-ui/icons/Add';
+
+import gql from 'graphql-tag';
+import { useCreateOrganizationMutation } from '@/types/graphql';
+import { trimedValidate } from '@/utils/field-validate';
+import { useConfirmDialog } from './confirm-dialog';
+
+gql`
+  mutation createOrganization($name: String!) {
+    createOrganization(organization: { name: $name }) {
+      id
+      name
+    }
+  }
+`;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  // '& .MuiTextField-root': { marginBottom: theme.spacing(2) },
+  // '& .MuiTextField-root': { marginBottom: theme.spacing(10) },
 
   // エラーは右寄せ
   helperText: {
     marginLeft: 'auto',
+  },
+
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
   },
 }));
 
@@ -27,7 +49,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const OrganizationCreateButton = () => {
   const [open, setOpen] = useState(false);
   const f = useFormatMessage();
+  const [createOrganizationMutation] = useCreateOrganizationMutation();
   const classes = useStyles();
+  const [error, setError] = useState('');
+  const confirmDialog = useConfirmDialog();
 
   const defaultValues = {
     name: '',
@@ -35,24 +60,33 @@ export const OrganizationCreateButton = () => {
 
   const { control, handleSubmit, formState, reset } = useForm({ defaultValues });
 
-  // console.log('isDirty:' + formState.isDirty);
-
-  const onSubmit = (data: typeof defaultValues) => {
-    console.table(data);
-    setOpen(false);
+  const onSubmit = async (data: typeof defaultValues) => {
+    try {
+      const result = await createOrganizationMutation({
+        variables: {
+          name: data.name.trim(),
+        },
+      });
+      result.errors;
+      setOpen(false);
+    } catch (e) {
+      const code = e.graphQLErrors?.[0]?.extensions?.code;
+      setError(code);
+    }
   };
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="primary"
+      <Fab
+        className={classes.fab}
         onClick={() => {
+          reset();
+          setError('');
           setOpen(true);
         }}
       >
-        新規組織の作成
-      </Button>
+        <AddIcon />
+      </Fab>
 
       <Dialog open={open} fullWidth={true} maxWidth="sm" disableBackdropClick disableEscapeKeyDown>
         <DialogTitle>新規組織の追加</DialogTitle>
@@ -63,25 +97,17 @@ export const OrganizationCreateButton = () => {
             <Controller
               name="name"
               control={control}
-              rules={{
-                // validate: (v) => {
-                //   const value = v.trim();
-                //   if (value.length >= 10) {
-                //     return '10文字以内で入力してください';
-                //   }
-                // },
-                required: '入力は必須です',
-                maxLength: {
-                  value: 5,
-                  message: '5文字以内で入力してください',
-                },
-              }}
+              rules={trimedValidate({
+                required: true,
+                maxLength: 10,
+              })}
               render={(x) => (
                 <TextField
                   label="組織名"
                   required
                   fullWidth
                   autoFocus
+                  margin="normal"
                   helperText={x.fieldState.error?.message}
                   error={!!x.fieldState.error}
                   {...x.field}
@@ -90,7 +116,9 @@ export const OrganizationCreateButton = () => {
               )}
             />
 
-            {/* <TextField helperText="エラー内容" margin="dense" id="name" label="組織名" type="email" fullWidth /> */}
+            <DialogContentText>
+              <FormLabel error>{error}</FormLabel>
+            </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button variant="contained" color="primary" type="submit">
@@ -99,12 +127,16 @@ export const OrganizationCreateButton = () => {
             <Button
               variant="outlined"
               onClick={() => {
-                // if (formState.isDirty) {
-                //   // 確認ダイアログ
-                //   return;
-                // }
-                reset();
-                setOpen(false);
+                if (formState.isDirty) {
+                  confirmDialog.open({
+                    description: '新規組織は追加されていません。キャンセルしますか？',
+                    action: () => {
+                      setOpen(false);
+                    },
+                  });
+                } else {
+                  setOpen(false);
+                }
               }}
               color="primary"
             >
@@ -113,6 +145,7 @@ export const OrganizationCreateButton = () => {
           </DialogActions>
         </form>
       </Dialog>
+      {confirmDialog.dialog}
     </>
   );
 };

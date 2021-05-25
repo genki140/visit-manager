@@ -13,8 +13,11 @@ export const enMessages = {
   database: 'Database',
   github: 'GitHub',
 
-  create: 'Create',
+  ok: 'OK',
   cancel: 'Cancel',
+  yes: 'Yes',
+  no: 'No',
+  create: 'Create',
 
   username: 'User Name',
   password: 'Password',

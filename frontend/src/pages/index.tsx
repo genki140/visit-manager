@@ -4,7 +4,6 @@ import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
 import Link from 'next/link';
 import { useFormatMessage } from '@/locales';
-import gql from 'graphql-tag';
 import { OrganizationCreateButton } from '@/components/dialogs/OrganizationCreateButton';
 
 const useStyles = makeStyles(() => ({
@@ -14,18 +13,6 @@ const useStyles = makeStyles(() => ({
     gap: 10,
   },
 }));
-
-// mutation createResidence($areaId: ID!, $latitude: Float!, $longitude: Float!) {
-//   createResidence(residence: { areaId: $areaId, name: "", latitude: $latitude, longitude: $longitude }) {
-
-gql`
-  mutation createOrganization($name: String!) {
-    createOrganization(organization: { name: $name }) {
-      id
-      name
-    }
-  }
-`;
 
 const IndexPage = () => {
   const classes = useStyles();
@@ -58,10 +45,6 @@ const IndexPage = () => {
           ))}
         </div>
       </LoadingContainer>
-
-      <Typography gutterBottom variant="h2">
-        組織の操作
-      </Typography>
 
       <OrganizationCreateButton />
     </Layout>

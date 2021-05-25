@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserInputError } from 'apollo-server-errors';
+import { ApolloError } from 'apollo-server-express';
 import { Connection, FindManyOptions, Repository } from 'typeorm';
 import { CreateOrganizationInput, Organization } from './organization.model';
 
@@ -25,10 +27,11 @@ export class OrganizationService {
     //   const polygonPointRepository = manager.getRepository(PolygonPoint);
     // }
 
-    // トリムした結果、同名、system、index は使用できない。
+    // throw new ApolloError('メッセージ', 'EXISTED_NAME');
 
+    // トリムした結果、同名、system、index は使用できない。
     const result = await this.organizationRepository.save({
-      name: payload.name,
+      name: payload.name.trim(),
       roledUsers: [
         {
           userId: userId,
@@ -40,10 +43,9 @@ export class OrganizationService {
         },
       ],
     });
-
-    console.log(result);
-
+    // console.log(result);
     return result;
+
     // return await this.organizationRepository.findOne(result.id, {
     //   relations: ['residents'],
     // });

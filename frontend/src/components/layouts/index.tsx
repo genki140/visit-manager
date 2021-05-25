@@ -3,6 +3,7 @@ import Head from 'next/head';
 import {
   AppBar,
   Backdrop,
+  Box,
   CircularProgress,
   Divider,
   Drawer,
@@ -111,7 +112,7 @@ export const Layout = (props: {
   return (
     <>
       <Head>
-        <title>{props.title}</title>
+        <title>{(routerParams.organizationName !== '' ? '訪問管理 | ' : '') + props.title}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta http-equiv="content-language" content={router.locale} />
@@ -174,7 +175,7 @@ export const Layout = (props: {
           // メニュー
           <Drawer anchor="right" open={menuVisibled} onClose={() => setMenuVisibled(false)}>
             <List style={{ minWidth: 200 }}>
-              {loginUser && (
+              {loginUser != null ? (
                 <>
                   <ListItem>
                     <ListItemIcon>
@@ -182,7 +183,6 @@ export const Layout = (props: {
                     </ListItemIcon>
                     <ListItemText>{loginUser.name}</ListItemText>
                   </ListItem>
-                  <Divider />
                   <ListItem
                     button
                     onClick={async () => {
@@ -194,17 +194,29 @@ export const Layout = (props: {
                     </ListItemIcon>
                     <ListItemText>{f((x) => x.logout)}</ListItemText>
                   </ListItem>
+                  <Divider />
+                  <Link href="/">
+                    <ListItem button>
+                      <ListItemIcon>
+                        <HomeIcon />
+                      </ListItemIcon>
+                      <ListItemText>{f((x) => x.home)}</ListItemText>
+                    </ListItem>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/">
+                    <ListItem button>
+                      <ListItemIcon>
+                        <AccountCircleIcon />
+                      </ListItemIcon>
+                      <ListItemText>{f((x) => x.login)}</ListItemText>
+                    </ListItem>
+                  </Link>
                 </>
               )}
 
-              <Link href="/">
-                <ListItem button>
-                  <ListItemIcon>
-                    <HomeIcon />
-                  </ListItemIcon>
-                  <ListItemText>{f((x) => x.home)}</ListItemText>
-                </ListItem>
-              </Link>
               <Divider />
               <ListSubheader>{f((x) => x.settings)}</ListSubheader>
               <ListItem>
