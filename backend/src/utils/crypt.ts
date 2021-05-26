@@ -1,6 +1,6 @@
 // パスワードハッシュか方式として、bcryptを採用
 
-import { hashSync, compareSync } from 'bcrypt';
+import { hashSync, compareSync } from 'bcryptjs';
 
 export class CryptUtil {
   static create = (password: string) => {
