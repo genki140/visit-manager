@@ -42,23 +42,62 @@ function getStyle(style: any) {
   return style;
 }
 
-// const DragContainer = () => {
+const DragContainer = (props: { children: () => React.ReactNode[] }) => {
+  const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    console.log(result);
+    // console.log('old:' + result. + ', new:' + result.addedIndex);
+  };
 
-// }
-
-// const DragContainer = () => {
-
-// }
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="organizations">
+        {(provided) => (
+          <div className="organizations" {...provided.droppableProps} ref={provided.innerRef}>
+            <List>
+              {props.children().map((item, index) => (
+                <Draggable key={(item as any).key} draggableId={(item as any).key} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={getStyle(provided.draggableProps.style)}
+                    >
+                      {item}
+                      {/* <ListItem>
+                        <Card style={{ width: '100%' }}>
+                          <CardHeader
+                            title={x.name}
+                            action={
+                              <div {...provided.dragHandleProps}>
+                                <DragHandleIcon className="drag-handle" style={{ margin: 5 }} />
+                              </div>
+                            }
+                          />
+                          <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                              区域数：100。ユーザー数：100。その他情報色々
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </ListItem> */}
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+            </List>
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
+};
 
 export const OrganizationList = () => {
   const classes = useStyles();
   const { loading, error, data } = useGetOrganizationsQuery();
   const f = useFormatMessage();
-
-  const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    console.log(result);
-    // console.log('old:' + result. + ', new:' + result.addedIndex);
-  };
 
   return (
     <Layout layoutType="center">
@@ -66,48 +105,31 @@ export const OrganizationList = () => {
         <Typography gutterBottom variant="h2" align="center">
           {f((x) => x.affiliation_organiozation)}
         </Typography>
-
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="organizations">
-            {(provided) => (
-              <div className="organizations" {...provided.droppableProps} ref={provided.innerRef}>
-                <List>
-                  {data?.organizations.map((x, index) => (
-                    <Draggable key={x.id} draggableId={x.id} index={index}>
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          style={getStyle(provided.draggableProps.style)}
-                        >
-                          <ListItem>
-                            <Card style={{ width: '100%' }}>
-                              <CardHeader
-                                title={x.name}
-                                action={
-                                  <div {...provided.dragHandleProps}>
-                                    <DragHandleIcon className="drag-handle" style={{ margin: 5 }} />
-                                  </div>
-                                }
-                              />
-                              <CardContent>
-                                <Typography variant="body2" color="textSecondary" component="p">
-                                  区域数：100。ユーザー数：100。その他情報色々
-                                </Typography>
-                              </CardContent>
-                            </Card>
-                          </ListItem>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                </List>
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
       </Box>
+
+      <DragContainer>
+        {() =>
+          (data?.organizations ?? []).map((x) => (
+            <ListItem key={x.id}>
+              <Card style={{ width: '100%' }}>
+                <CardHeader
+                  title={x.name}
+                  action={
+                    <div>
+                      <DragHandleIcon className="drag-handle" style={{ margin: 5 }} />
+                    </div>
+                  }
+                />
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary" component="p">
+                    区域数：100。ユーザー数：100。その他情報色々
+                  </Typography>
+                </CardContent>
+              </Card>
+            </ListItem>
+          ))
+        }
+      </DragContainer>
 
       {/* {data?.organizations.map((x, index) =>
             SortableElement(({ index }) => (
