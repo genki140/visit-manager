@@ -24,7 +24,7 @@ module.exports = async function (src) {
     `
 ${content}
 
-import { MdxCustomProvider } from '@/components/environments/mdx-custom-provider';
+import { MdxCustomProvider } from '@/components/providers/mdx-custom-provider';
 import { Image } from 'next/image';
 import { Layout } from '@/components/layouts';
 export default ({ children }) => (

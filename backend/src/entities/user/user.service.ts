@@ -1,3 +1,4 @@
+import { ErrorCodes } from '@/types/error-types';
 import { CryptUtil } from '@/utils/crypt';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -42,11 +43,11 @@ export class UserService {
   async create(payload: CreateUserInput) {
     // 同名チェック
     if ((await this.userRepository.count({ where: { username: payload.username.trim() } })) > 0) {
-      throw new ApolloError('userId is already used.', 'EXISTING_USERNAME');
+      throw new ApolloError('username is already used.', ErrorCodes.EXISTING_USERNAME);
     }
     return await this.userRepository.save({
-      name: payload.name,
-      username: payload.username,
+      name: payload.name.trim(),
+      username: payload.username.trim(),
       password: CryptUtil.create(payload.password),
     });
   }

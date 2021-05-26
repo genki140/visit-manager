@@ -11,12 +11,12 @@ import '../styles/global.css';
 
 // project
 import { store } from '@/ducks/store';
-import { theme } from '@/styles/theme';
+import { theme } from '@/styles/material-theme';
 import React, { useEffect } from 'react';
-import { LocaleProvider } from '@/components/environments/locale-provider';
-import { LoginUserProvider } from '@/components/environments/login-user-provider';
-import { ApolloClientProvider } from '@/components/environments/apollo-client-provider';
-import { GoogleMapProvider } from '@/components/environments/google-map-provider';
+import { LocaleProvider } from '@/components/providers/locale-provider';
+import { LoginUserProvider } from '@/components/providers/login-user-provider';
+import { ApolloClientProvider } from '@/components/providers/apollo-client-provider';
+import { GoogleMapProvider } from '@/components/providers/google-map-provider';
 
 // エントリポイント。スタイルとストアの適用を行っている。
 const App: React.FC<AppProps> = (props) => {

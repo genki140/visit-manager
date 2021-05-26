@@ -40,6 +40,12 @@ export const theme = createMuiTheme({
     //   dark: '#ba000d',
     //   contrastText: '#000',
     // },
+    // contrastThreshold: 0.1,
+    // tonalOffset: 0.2,
+    // background: {
+    //   default: '#e4f0e2',
+    // },
+    // type: 'dark',
   },
 
   // palette: {

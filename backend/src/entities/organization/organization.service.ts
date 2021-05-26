@@ -1,3 +1,4 @@
+import { ErrorCodes } from '@/types/error-types';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserInputError } from 'apollo-server-errors';
@@ -22,6 +23,11 @@ export class OrganizationService {
   }
 
   async create(payload: CreateOrganizationInput, userId: number) {
+    // 同名チェック
+    if ((await this.organizationRepository.count({ where: { name: payload.name.trim() } })) > 0) {
+      throw new ApolloError('Organization name is already used.', ErrorCodes.EXISTING_ORGANIZATION_NAME);
+    }
+
     // return await this.connection.transaction(async (manager) => {
     //   const polygonRepository = manager.getRepository(Organization);
     //   const polygonPointRepository = manager.getRepository(PolygonPoint);

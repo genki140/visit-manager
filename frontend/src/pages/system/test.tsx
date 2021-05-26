@@ -18,7 +18,7 @@ export const SubscriptionTest = () => {
   const [addTestMutation] = useAddTestMutation();
 
   return (
-    <Layout title="実験場">
+    <Layout title="実験室">
       <h2>Graphql Subscription</h2>
       <Button
         variant="contained"

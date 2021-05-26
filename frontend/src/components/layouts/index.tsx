@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 export const Layout = (props: {
   children: ReactNode;
   title?: string;
-  fillContent?: boolean;
+  layoutType?: 'normal' | 'fill' | 'center';
   showMenuButton?: boolean;
 }) => {
   const classes = useStyles();
@@ -172,7 +172,15 @@ export const Layout = (props: {
           //   {props.fillContent === true ? props.children : <div className={classes.content}>{props.children}</div>}
           // </div>
           <div className={classes.body}>
-            {props.fillContent === true ? props.children : <div className={classes.content}>{props.children}</div>}
+            {props.layoutType === 'fill' ? (
+              props.children
+            ) : props.layoutType === 'center' ? (
+              <Box minHeight="100%" display="flex" alignItems="center" justifyContent="center">
+                {props.children}
+              </Box>
+            ) : (
+              <div className={classes.content}>{props.children}</div>
+            )}
           </div>
         }
         {
