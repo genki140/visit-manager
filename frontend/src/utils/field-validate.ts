@@ -1,4 +1,8 @@
-export const trimedValidate = (props: { required?: boolean; maxLength?: number }) => {
+export const trimedValidate = (props: {
+  required?: boolean;
+  maxLength?: number;
+  other?: (v: any) => string | undefined;
+}) => {
   //
 
   const validate = (v: any) => {
@@ -14,6 +18,10 @@ export const trimedValidate = (props: { required?: boolean; maxLength?: number }
       if (value.length >= props.maxLength) {
         return props.maxLength + '文字以内で入力してください';
       }
+    }
+
+    if (props.other != null) {
+      return props.other(v);
     }
   };
 

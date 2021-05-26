@@ -17,12 +17,12 @@ import { useForm, Controller } from 'react-hook-form';
 import gql from 'graphql-tag';
 import { trimedValidate } from '@/utils/field-validate';
 import { useConfirmDialog } from './confirm-dialog';
+import { useCreateUserMutation } from '@/types/graphql';
 
 gql`
-  mutation createOrganization($name: String!) {
-    createOrganization(organization: { name: $name }) {
+  mutation createUser($user: CreateUserInput!) {
+    createUser(user: $user) {
       id
-      name
     }
   }
 `;
@@ -45,13 +45,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 /** 新規組織作成ダイアログを表示ボタン */
-export const UserCreateButton = () => {
+export const UserCreateButton = (props: { onCreated: (username: string, password: string) => void }) => {
   const [open, setOpen] = useState(false);
   const f = useFormatMessage();
   // const [createOrganizationMutation] = useCreateOrganizationMutation();
   const classes = useStyles();
   const [error, setError] = useState('');
   const confirmDialog = useConfirmDialog();
+  const [createUserMutation] = useCreateUserMutation();
 
   const defaultValues = {
     name: '',
@@ -60,21 +61,25 @@ export const UserCreateButton = () => {
     confirmPassword: '',
   };
 
-  const { control, handleSubmit, formState, reset } = useForm({ defaultValues });
+  const { control, handleSubmit, formState, reset, getValues } = useForm({ defaultValues });
 
   const onSubmit = async (data: typeof defaultValues) => {
-    console.log(data);
-    // try {
-    //   await createOrganizationMutation({
-    //     variables: {
-    //       name: data.name.trim(),
-    //     },
-    //   });
-    //   setOpen(false);
-    // } catch (e) {
-    //   const code = e.graphQLErrors?.[0]?.extensions?.code;
-    //   setError(code);
-    // }
+    try {
+      await createUserMutation({
+        variables: {
+          user: {
+            name: data.name,
+            username: data.username,
+            password: data.password,
+          },
+        },
+      });
+      setOpen(false);
+      props.onCreated(data.username, data.password);
+    } catch (e) {
+      const code = e.graphQLErrors?.[0]?.extensions?.code;
+      setError(code);
+    }
   };
 
   return (
@@ -89,14 +94,14 @@ export const UserCreateButton = () => {
           setOpen(true);
         }}
       >
-        {'新規アカウント作成'}
+        {f((x) => x.create_new_account)}
       </Button>
 
       <Dialog open={open} fullWidth={true} maxWidth="sm" disableBackdropClick disableEscapeKeyDown>
-        <DialogTitle>新規アカウントの追加</DialogTitle>
+        <DialogTitle>{f((x) => x.create_new_account)}</DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <DialogContent>
-            <DialogContentText>組織に参加または組織を作成するためのユーザーを作成します。</DialogContentText>
+            <DialogContentText>{f((x) => x.create_new_account_description)}</DialogContentText>
 
             <Controller
               name="name"
@@ -107,7 +112,7 @@ export const UserCreateButton = () => {
               })}
               render={(x) => (
                 <TextField
-                  label="名前"
+                  label={f((x) => x.user_name)}
                   required
                   fullWidth
                   autoFocus
@@ -130,9 +135,10 @@ export const UserCreateButton = () => {
               })}
               render={(x) => (
                 <TextField
-                  label="ユーザーID"
+                  label={f((x) => x.user_id)}
                   required
                   fullWidth
+                  autoCapitalize="off"
                   margin="dense"
                   helperText={x.fieldState.error?.message}
                   error={!!x.fieldState.error}
@@ -152,7 +158,7 @@ export const UserCreateButton = () => {
               })}
               render={(x) => (
                 <TextField
-                  label="パスワード"
+                  label={f((x) => x.password)}
                   required
                   fullWidth
                   margin="dense"
@@ -166,15 +172,18 @@ export const UserCreateButton = () => {
             />
 
             <Controller
-              name="password"
+              name="confirmPassword"
               control={control}
               rules={trimedValidate({
                 required: true,
                 maxLength: 100,
+                other: (v) => {
+                  return (v?.toString() ?? '') === getValues('password') ? undefined : '入力したパスワードと異なります';
+                },
               })}
               render={(x) => (
                 <TextField
-                  label="パスワード（確認）"
+                  label={f((x) => x.password_confirm)}
                   required
                   fullWidth
                   margin="dense"

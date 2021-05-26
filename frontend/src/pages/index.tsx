@@ -4,7 +4,7 @@ import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
 import Link from 'next/link';
 import { useFormatMessage } from '@/locales';
-import { OrganizationCreateButton } from '@/components/dialogs/OrganizationCreateButton';
+import { OrganizationCreateButton } from '@/components/dialogs/organization-create-button';
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -20,7 +20,7 @@ const IndexPage = () => {
   const f = useFormatMessage();
 
   return (
-    <Layout title="訪問管理">
+    <Layout>
       <Typography gutterBottom variant="h2">
         {f((x) => x.affiliation_organiozation)}
       </Typography>

@@ -49,9 +49,13 @@ export class User {
 export class CreateUserInput {
   @Field()
   @MaxLength(100)
-  userId: string = '';
+  username: string = '';
 
   @Field()
   @MaxLength(100)
   password: string = '';
+
+  @Field()
+  @MaxLength(100)
+  name: string = '';
 }

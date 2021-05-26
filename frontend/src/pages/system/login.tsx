@@ -5,9 +5,8 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { Box, Card, CardActions, CardContent, makeStyles, TextField, Theme, Typography } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import { ApolloClient, useApolloClient } from '@apollo/client';
 import { useFormatMessage } from '@/locales';
-import { UserCreateButton } from '@/components/dialogs/UserCreateButton';
+import { UserCreateButton } from '@/components/dialogs/user-create-button';
 
 const useStyles = makeStyles((theme: Theme) => ({
   // inlineBlock: {
@@ -62,14 +61,14 @@ const LoginPage = () => {
         });
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       // とりあえず適当なエラーメッセージ
       setError('ログインに失敗しました');
     }
   };
 
   return (
-    <Layout title={f((x) => x.login)} fillContent={true}>
+    <Layout fillContent={true}>
       <Box height="100%" display="flex" alignItems="center" justifyContent="center">
         <Box minWidth={300}>
           <Card variant="outlined">
@@ -80,48 +79,52 @@ const LoginPage = () => {
                     {f((x) => x.login)}
                   </Typography>
                 </Box>
-
-                <Box my={1}>
-                  <TextField
-                    label={f((x) => x.username)}
-                    value={username}
-                    onChange={(e) => {
-                      e.preventDefault();
-                      setUsername(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        login();
-                      }
-                    }}
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                    }}
-                  />
-                </Box>
-
-                <Box my={1}>
-                  <TextField
-                    label={f((x) => x.password)}
-                    value={password}
-                    type="password"
-                    onChange={(e) => {
-                      e.preventDefault();
-                      setPassword(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        login();
-                      }
-                    }}
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                    }}
-                  />
-                </Box>
-
+                {
+                  // username
+                  <Box my={1}>
+                    <TextField
+                      label={f((x) => x.user_id)}
+                      value={username}
+                      autoCapitalize="off"
+                      onChange={(e) => {
+                        e.preventDefault();
+                        setUsername(e.target.value);
+                      }}
+                      onKeyDown={async (e) => {
+                        if (e.key === 'Enter') {
+                          await login();
+                        }
+                      }}
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                      }}
+                    />
+                  </Box>
+                }
+                {
+                  // password
+                  <Box my={1}>
+                    <TextField
+                      label={f((x) => x.password)}
+                      value={password}
+                      type="password"
+                      onChange={(e) => {
+                        e.preventDefault();
+                        setPassword(e.target.value);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          login();
+                        }
+                      }}
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                      }}
+                    />
+                  </Box>
+                }
                 <Box my={1}>{error}</Box>
               </CardContent>
               <CardActions>
@@ -138,7 +141,13 @@ const LoginPage = () => {
                   >
                     {f((x) => x.login)}
                   </Button>
-                  <UserCreateButton />
+                  <UserCreateButton
+                    onCreated={async (username, password) => {
+                      setUsername(username);
+                      setPassword(password);
+                      await login();
+                    }}
+                  />
                 </Box>
               </CardActions>
             </Box>

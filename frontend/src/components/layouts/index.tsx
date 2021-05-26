@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
 // ヘッダーとフッターを構成します。
 export const Layout = (props: {
   children: ReactNode;
-  title: string;
+  title?: string;
   fillContent?: boolean;
   showMenuButton?: boolean;
 }) => {
@@ -109,10 +109,14 @@ export const Layout = (props: {
   const router = useRouter();
   const f = useFormatMessage();
 
+  // const projectTitle = f((x) => x.visit_manager);
+  // const title = props.title ?? projectTitle;
+
   return (
     <>
       <Head>
-        <title>{(routerParams.organizationName !== '' ? '訪問管理 | ' : '') + props.title}</title>
+        {/* <title>{(routerParams.organizationName !== '' ? '訪問管理 | ' : '') + props.title}</title> */}
+        <title>{(props.title == null ? '' : props.title + ' | ') + f((x) => x.visit_manager)}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta http-equiv="content-language" content={router.locale} />
@@ -140,7 +144,7 @@ export const Layout = (props: {
               }
               {
                 // タイトル
-                <Typography variant="h1">{props.title}</Typography>
+                <Typography variant="h1">{props.title ?? f((x) => x.visit_manager)}</Typography>
               }
               {
                 // 右メニュー

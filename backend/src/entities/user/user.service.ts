@@ -1,5 +1,7 @@
+import { CryptUtil } from '@/utils/crypt';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ApolloError } from 'apollo-server-errors';
 import { DeleteResult, FindManyOptions, Repository } from 'typeorm';
 
 import { CreateUserInput, User } from './user.model';
@@ -39,10 +41,14 @@ export class UserService {
 
   async create(payload: CreateUserInput) {
     // 同名チェック
-    if ((await this.userRepository.count({ where: { username: payload.userId } })) > 0) {
-      throw new Error('userId is already used.');
+    if ((await this.userRepository.count({ where: { username: payload.username.trim() } })) > 0) {
+      throw new ApolloError('userId is already used.', 'EXISTING_USERNAME');
     }
-    return await this.userRepository.save({ ...payload });
+    return await this.userRepository.save({
+      name: payload.name,
+      username: payload.username,
+      password: CryptUtil.create(payload.password),
+    });
   }
 
   async delete(id: number) {

@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 import { User } from '@/entities/user/user.model';
 import { UserService } from '@/entities/user/user.service';
+import { CryptUtil } from '@/utils/crypt';
 
 /**
  * @description Passportでは出来ない認証処理をするクラス
@@ -19,10 +20,14 @@ export class AuthService {
   async getUser(username: string, password?: string): Promise<User | undefined> {
     const user = (
       await this.usersService.find(undefined, {
-        where: password != null ? { username, password } : { username },
+        where: { username },
         relations: ['roledUsers', 'roledUsers.organization', 'roledUsers.roles', 'roledUsers.roles.abilities'],
       })
     )?.[0];
+
+    if (password != null && CryptUtil.check(password, user.password) === false) {
+      return undefined;
+    }
 
     if (user != null) {
       user.password = '';

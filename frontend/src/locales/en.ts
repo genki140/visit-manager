@@ -1,7 +1,7 @@
 // 英語のメッセージを定義
 export const enMessages = {
   home: 'Home',
-  visit_manage: 'Visit Manage',
+  visit_manager: 'Visit Manage',
   login: 'Login',
   logout: 'Logout',
   affiliation_organiozation: 'Affiliation Organiozation',
@@ -19,8 +19,13 @@ export const enMessages = {
   no: 'No',
   create: 'Create',
 
-  username: 'User Name',
+  user_id: 'User ID',
+  user_name: 'User Name',
   password: 'Password',
+  password_confirm: 'Password(Confirm)',
+
+  create_new_account: 'Create New Account',
+  create_new_account_description: 'Create a user to join or create an organization',
 
   locale_ja: 'Japanese',
   locale_en: 'English',

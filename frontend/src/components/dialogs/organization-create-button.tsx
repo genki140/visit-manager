@@ -107,11 +107,11 @@ export const OrganizationCreateButton = () => {
                   required
                   fullWidth
                   autoFocus
-                  margin="normal"
+                  margin="dense"
                   helperText={x.fieldState.error?.message}
                   error={!!x.fieldState.error}
-                  {...x.field}
                   FormHelperTextProps={{ classes: { root: classes.helperText } }}
+                  {...x.field}
                 />
               )}
             />

@@ -116,8 +116,9 @@ type Mutation {
 }
 
 input CreateUserInput {
-  userId: String = ""
+  username: String = ""
   password: String = ""
+  name: String = ""
 }
 
 input CreateOrganizationInput {
