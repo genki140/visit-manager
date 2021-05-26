@@ -176,7 +176,7 @@ export const Layout = (props: {
               props.children
             ) : props.layoutType === 'center' ? (
               <Box minHeight="100%" display="flex" alignItems="center" justifyContent="center">
-                {props.children}
+                <Box>{props.children}</Box>
               </Box>
             ) : (
               <div className={classes.content}>{props.children}</div>
