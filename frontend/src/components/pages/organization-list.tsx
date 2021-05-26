@@ -20,7 +20,7 @@ import { useFormatMessage } from '@/locales';
 import { OrganizationCreateButton } from '@/components/dialogs/organization-create-button';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import React from 'react';
-import { Container, Draggable, DropResult } from 'react-smooth-dnd';
+import { DragDropContext, Draggable, Droppable, DropResult, ResponderProvided } from 'react-beautiful-dnd';
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -30,13 +30,34 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+// 縦移動に限定刺せるためのラッパー
+function getStyle(style: any) {
+  if (style.transform) {
+    const axisLockY = 'translate(0px' + style.transform.slice(style.transform.indexOf(','), style.transform.length);
+    return {
+      ...style,
+      transform: axisLockY,
+    };
+  }
+  return style;
+}
+
+// const DragContainer = () => {
+
+// }
+
+// const DragContainer = () => {
+
+// }
+
 export const OrganizationList = () => {
   const classes = useStyles();
   const { loading, error, data } = useGetOrganizationsQuery();
   const f = useFormatMessage();
 
-  const onDrop = (result: DropResult) => {
-    console.log('old:' + result.removedIndex + ', new:' + result.addedIndex);
+  const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    console.log(result);
+    // console.log('old:' + result. + ', new:' + result.addedIndex);
   };
 
   return (
@@ -46,27 +67,46 @@ export const OrganizationList = () => {
           {f((x) => x.affiliation_organiozation)}
         </Typography>
 
-        <Container dragHandleSelector=".drag-handle" lockAxis="y" onDrop={onDrop}>
-          {data?.organizations.map((x) => (
-            //
-            <Draggable key={x.id}>
-              <ListItem>
-                <Card>
-                  <CardHeader title={x.name} />
-                  <CardContent>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      This impressive paella is a perfect party dish and a fun meal to cook together with your guests.
-                      Add 1 cup of frozen peas along with the mussels, if you like.
-                    </Typography>
-                  </CardContent>
-                </Card>
-                <ListItemIcon className="drag-handle">
-                  <DragHandleIcon />
-                </ListItemIcon>
-              </ListItem>
-            </Draggable>
-          ))}
-        </Container>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="organizations">
+            {(provided) => (
+              <div className="organizations" {...provided.droppableProps} ref={provided.innerRef}>
+                <List>
+                  {data?.organizations.map((x, index) => (
+                    <Draggable key={x.id} draggableId={x.id} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          style={getStyle(provided.draggableProps.style)}
+                        >
+                          <ListItem>
+                            <Card style={{ width: '100%' }}>
+                              <CardHeader
+                                title={x.name}
+                                action={
+                                  <div {...provided.dragHandleProps}>
+                                    <DragHandleIcon className="drag-handle" style={{ margin: 5 }} />
+                                  </div>
+                                }
+                              />
+                              <CardContent>
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                  区域数：100。ユーザー数：100。その他情報色々
+                                </Typography>
+                              </CardContent>
+                            </Card>
+                          </ListItem>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                </List>
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </Box>
 
       {/* {data?.organizations.map((x, index) =>
