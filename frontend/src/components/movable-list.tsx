@@ -6,7 +6,6 @@ import {
   Droppable,
   DropResult,
 } from 'react-beautiful-dnd';
-import { TypeUtil } from '@/utils/type-helper';
 
 // 縦移動に限定刺せるためのラッパー
 function getStyle(style: any) {
@@ -25,7 +24,9 @@ export const MovableList = (props: {
   onMove: (oldIndex: number, newIndex: number) => void;
 }) => {
   const onDragEnd = (result: DropResult /* , provided: ResponderProvided */) => {
-    props.onMove(result.source.index, TypeUtil.toNonNullable(result.destination).index);
+    if (result.destination != null) {
+      props.onMove(result.source.index, result.destination.index);
+    }
   };
 
   return (

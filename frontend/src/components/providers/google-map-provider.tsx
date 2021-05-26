@@ -17,7 +17,7 @@ export const GoogleMapProvider = (props: { children: any }) => {
 
   // フロントエンドの動的環境変数がうまく行かないのでバックエンドから取得する
   const getGoogleMapApiKeyResult = useGetGoogleMapApiKeyQuery();
-  const resultKey = getGoogleMapApiKeyResult.data?.googleMapApiKey ?? '';
+  const resultKey = getGoogleMapApiKeyResult.loading ? '' : getGoogleMapApiKeyResult.data?.googleMapApiKey ?? 'error';
 
   // キーを取得出来たら保持しておく
   useEffect(() => {

@@ -58,7 +58,7 @@ export const Login = () => {
   const f = useFormatMessage();
   const classes = useStyles();
 
-  const login = async () => {
+  const login = async (username: string, password: string) => {
     try {
       dispatch(actions.setLoginUser(unwrapResult(await dispatch(asyncLogin({ username, password })))));
 
@@ -103,7 +103,7 @@ export const Login = () => {
                       }}
                       onKeyDown={async (e) => {
                         if (e.key === 'Enter') {
-                          await login();
+                          await login(username, password);
                         }
                       }}
                       style={{
@@ -124,9 +124,9 @@ export const Login = () => {
                         e.preventDefault();
                         setPassword(e.target.value);
                       }}
-                      onKeyDown={(e) => {
+                      onKeyDown={async (e) => {
                         if (e.key === 'Enter') {
-                          login();
+                          await login(username, password);
                         }
                       }}
                       style={{
@@ -144,7 +144,7 @@ export const Login = () => {
                     variant="contained"
                     size="large"
                     color="secondary"
-                    onClick={login}
+                    onClick={() => login(username, password)}
                     fullWidth
                     style={{
                       marginBottom: 10,
@@ -156,7 +156,7 @@ export const Login = () => {
                     onCreated={async (username, password) => {
                       setUsername(username);
                       setPassword(password);
-                      await login();
+                      await login(username, password);
                     }}
                   />
                 </Box>
