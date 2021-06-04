@@ -27,17 +27,17 @@ type RoledUser {
   roles: [Role!]!
 }
 
-type PolygonPoint {
+type OutlinePoint {
   id: ID!
   order: Float!
   latitude: Float!
   longitude: Float!
-  polygon: Polygon!
+  outline: Outline!
 }
 
-type Polygon {
+type Outline {
   id: ID!
-  points: [PolygonPoint!]!
+  points: [OutlinePoint!]!
   area: Area!
 }
 
@@ -65,7 +65,7 @@ type Area {
   organization: Organization!
   userAreas: [UserArea!]!
   residences: [Residence!]!
-  polygons: [Polygon!]!
+  outlines: [Outline!]!
 }
 
 type UserArea {
@@ -108,9 +108,9 @@ type Mutation {
   createOrganization(organization: CreateOrganizationInput!): Organization!
   addTest: Float!
   createArea(area: CreateAreaInput!): Area!
-  createPolygon(polygon: CreatePolygonInput!): Polygon!
-  updatePolygon(polygon: UpdatePolygonInput!): Polygon!
-  deletePolygon(id: ID!): Boolean!
+  createOutline(outline: CreateOutlineInput!): Outline!
+  updateOutline(outline: UpdateOutlineInput!): Outline!
+  deleteOutline(id: ID!): Boolean!
   createResidence(residence: CreateResidenceInput!): Residence!
   updateResidence(residence: UpdateResidenceInput!): Residence!
   deleteResidence(id: ID!): Boolean!
@@ -132,22 +132,22 @@ input CreateAreaInput {
   description: String = ""
 }
 
-input CreatePolygonInput {
-  points: [CreatePolygonPointInput!] = []
+input CreateOutlineInput {
+  points: [CreateOutlinePointInput!] = []
   areaId: ID!
 }
 
-input CreatePolygonPointInput {
+input CreateOutlinePointInput {
   latitude: Float = 0
   longitude: Float = 0
 }
 
-input UpdatePolygonInput {
+input UpdateOutlineInput {
   id: ID = 0
-  points: [UpdatePolygonPointInput!] = []
+  points: [UpdateOutlinePointInput!] = []
 }
 
-input UpdatePolygonPointInput {
+input UpdateOutlinePointInput {
   order: Float = 0
   latitude: Float = 0
   longitude: Float = 0

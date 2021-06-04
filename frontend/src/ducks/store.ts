@@ -7,7 +7,7 @@ export const MapEditType = {
   None: 'None',
   Residence: 'Residence',
   Room: 'Room',
-  Polygon: 'Polygon',
+  Outline: 'Outline',
 } as const;
 export type MapEditType = typeof MapEditType[keyof typeof MapEditType];
 
@@ -24,8 +24,8 @@ export type StoreState = {
     // };
     // zoom: number;
     selectedResidenceId?: number;
-    selectedPolygonId?: number;
-    selectedPolygonPointId?: number;
+    selectedOutlineId?: number;
+    selectedOutlinePointId?: number;
     editType: MapEditType;
   };
   // residences: {
@@ -109,17 +109,17 @@ export const storeSlice = createSlice({
     setSelectedResidenceId: (state, action: PayloadAction<{ residenceId: number | undefined }>) => {
       state.map.selectedResidenceId = action.payload.residenceId;
     },
-    setSelectedPolygonId: (state, action: PayloadAction<{ polygonId: number | undefined }>) => {
-      state.map.selectedPolygonId = action.payload.polygonId;
+    setSelectedOutlineId: (state, action: PayloadAction<{ outlineId: number | undefined }>) => {
+      state.map.selectedOutlineId = action.payload.outlineId;
     },
-    setSelectedPolygonPointId: (state, action: PayloadAction<{ pointId: number | undefined }>) => {
-      state.map.selectedPolygonPointId = action.payload.pointId;
+    setSelectedOutlinePointId: (state, action: PayloadAction<{ pointId: number | undefined }>) => {
+      state.map.selectedOutlinePointId = action.payload.pointId;
     },
     setMapEditType: (state, action: PayloadAction<{ editType: MapEditType }>) => {
       state.map.editType = action.payload.editType;
       state.map.selectedResidenceId = undefined;
-      state.map.selectedPolygonId = undefined;
-      state.map.selectedPolygonPointId = undefined;
+      state.map.selectedOutlineId = undefined;
+      state.map.selectedOutlinePointId = undefined;
       // if (action.payload.editType === MapEditType.Residence) {
       //   state.map.selectedResidenceId = undefined;
       // }

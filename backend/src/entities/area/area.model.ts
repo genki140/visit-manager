@@ -3,7 +3,7 @@ import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Organization } from '../organization/organization.model';
 import { UserArea } from '../user-area/user-area.model';
-import { Polygon } from '../polygon/polygon.model';
+import { Outline } from '../outline/outline.model';
 import { Residence } from '../residence/residence.model';
 import { MaxLength } from 'class-validator';
 
@@ -46,9 +46,9 @@ export class Area {
   residences?: Residence[];
 
   /** ポリゴン */
-  @Field(() => [Polygon])
-  @OneToMany(() => Polygon, (polygon) => polygon.area)
-  polygons?: Polygon[];
+  @Field(() => [Outline])
+  @OneToMany(() => Outline, (outline) => outline.area)
+  outlines?: Outline[];
 }
 
 @InputType()

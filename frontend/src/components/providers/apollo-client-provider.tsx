@@ -29,7 +29,7 @@ export const ApolloClientProvider = (props: { children: any }) => {
 
           cache: new InMemoryCache({
             typePolicies: {
-              Polygon: {
+              Outline: {
                 fields: {
                   points: {
                     merge(_existing, incoming) {
@@ -40,7 +40,7 @@ export const ApolloClientProvider = (props: { children: any }) => {
               },
               Area: {
                 fields: {
-                  polygons: {
+                  outlines: {
                     merge(_existing, incoming) {
                       return incoming;
                     },

@@ -30,7 +30,7 @@ export type Area = {
   organization: Organization;
   userAreas: Array<UserArea>;
   residences: Array<Residence>;
-  polygons: Array<Polygon>;
+  outlines: Array<Outline>;
 };
 
 export type CreateAreaInput = {
@@ -43,12 +43,12 @@ export type CreateOrganizationInput = {
   name?: Maybe<Scalars['String']>;
 };
 
-export type CreatePolygonInput = {
-  points?: Maybe<Array<CreatePolygonPointInput>>;
+export type CreateOutlineInput = {
+  points?: Maybe<Array<CreateOutlinePointInput>>;
   areaId: Scalars['ID'];
 };
 
-export type CreatePolygonPointInput = {
+export type CreateOutlinePointInput = {
   latitude?: Maybe<Scalars['Float']>;
   longitude?: Maybe<Scalars['Float']>;
 };
@@ -75,9 +75,9 @@ export type Mutation = {
   createOrganization: Organization;
   addTest: Scalars['Float'];
   createArea: Area;
-  createPolygon: Polygon;
-  updatePolygon: Polygon;
-  deletePolygon: Scalars['Boolean'];
+  createOutline: Outline;
+  updateOutline: Outline;
+  deleteOutline: Scalars['Boolean'];
   createResidence: Residence;
   updateResidence: Residence;
   deleteResidence: Scalars['Boolean'];
@@ -109,17 +109,17 @@ export type MutationCreateAreaArgs = {
 };
 
 
-export type MutationCreatePolygonArgs = {
-  polygon: CreatePolygonInput;
+export type MutationCreateOutlineArgs = {
+  outline: CreateOutlineInput;
 };
 
 
-export type MutationUpdatePolygonArgs = {
-  polygon: UpdatePolygonInput;
+export type MutationUpdateOutlineArgs = {
+  outline: UpdateOutlineInput;
 };
 
 
-export type MutationDeletePolygonArgs = {
+export type MutationDeleteOutlineArgs = {
   id: Scalars['ID'];
 };
 
@@ -145,20 +145,20 @@ export type Organization = {
   roledUsers: Array<RoledUser>;
 };
 
-export type Polygon = {
-  __typename?: 'Polygon';
+export type Outline = {
+  __typename?: 'Outline';
   id: Scalars['ID'];
-  points: Array<PolygonPoint>;
+  points: Array<OutlinePoint>;
   area: Area;
 };
 
-export type PolygonPoint = {
-  __typename?: 'PolygonPoint';
+export type OutlinePoint = {
+  __typename?: 'OutlinePoint';
   id: Scalars['ID'];
   order: Scalars['Float'];
   latitude: Scalars['Float'];
   longitude: Scalars['Float'];
-  polygon: Polygon;
+  outline: Outline;
 };
 
 export type Query = {
@@ -243,12 +243,12 @@ export type Subscription = {
   testAdded: Scalars['Float'];
 };
 
-export type UpdatePolygonInput = {
+export type UpdateOutlineInput = {
   id?: Maybe<Scalars['ID']>;
-  points?: Maybe<Array<UpdatePolygonPointInput>>;
+  points?: Maybe<Array<UpdateOutlinePointInput>>;
 };
 
-export type UpdatePolygonPointInput = {
+export type UpdateOutlinePointInput = {
   order?: Maybe<Scalars['Float']>;
   latitude?: Maybe<Scalars['Float']>;
   longitude?: Maybe<Scalars['Float']>;
@@ -377,12 +377,12 @@ export type GetUserAreaQuery = (
           { __typename?: 'Resident' }
           & Pick<Resident, 'id' | 'room' | 'floor'>
         )> }
-      )>, polygons: Array<(
-        { __typename?: 'Polygon' }
-        & Pick<Polygon, 'id'>
+      )>, outlines: Array<(
+        { __typename?: 'Outline' }
+        & Pick<Outline, 'id'>
         & { points: Array<(
-          { __typename?: 'PolygonPoint' }
-          & Pick<PolygonPoint, 'id' | 'order' | 'latitude' | 'longitude'>
+          { __typename?: 'OutlinePoint' }
+          & Pick<OutlinePoint, 'id' | 'order' | 'latitude' | 'longitude'>
         )> }
       )> }
     ) }
@@ -437,50 +437,50 @@ export type DeleteResidenceMutation = (
   & Pick<Mutation, 'deleteResidence'>
 );
 
-export type CreatePolygonMutationVariables = Exact<{
+export type CreateOutlineMutationVariables = Exact<{
   areaId: Scalars['ID'];
-  points: Array<CreatePolygonPointInput> | CreatePolygonPointInput;
+  points: Array<CreateOutlinePointInput> | CreateOutlinePointInput;
 }>;
 
 
-export type CreatePolygonMutation = (
+export type CreateOutlineMutation = (
   { __typename?: 'Mutation' }
-  & { createPolygon: (
-    { __typename?: 'Polygon' }
-    & Pick<Polygon, 'id'>
+  & { createOutline: (
+    { __typename?: 'Outline' }
+    & Pick<Outline, 'id'>
     & { points: Array<(
-      { __typename?: 'PolygonPoint' }
-      & Pick<PolygonPoint, 'id' | 'order' | 'latitude' | 'longitude'>
+      { __typename?: 'OutlinePoint' }
+      & Pick<OutlinePoint, 'id' | 'order' | 'latitude' | 'longitude'>
     )> }
   ) }
 );
 
-export type UpdatePolygonMutationVariables = Exact<{
+export type UpdateOutlineMutationVariables = Exact<{
   id: Scalars['ID'];
-  points: Array<UpdatePolygonPointInput> | UpdatePolygonPointInput;
+  points: Array<UpdateOutlinePointInput> | UpdateOutlinePointInput;
 }>;
 
 
-export type UpdatePolygonMutation = (
+export type UpdateOutlineMutation = (
   { __typename?: 'Mutation' }
-  & { updatePolygon: (
-    { __typename?: 'Polygon' }
-    & Pick<Polygon, 'id'>
+  & { updateOutline: (
+    { __typename?: 'Outline' }
+    & Pick<Outline, 'id'>
     & { points: Array<(
-      { __typename?: 'PolygonPoint' }
-      & Pick<PolygonPoint, 'id' | 'order' | 'latitude' | 'longitude'>
+      { __typename?: 'OutlinePoint' }
+      & Pick<OutlinePoint, 'id' | 'order' | 'latitude' | 'longitude'>
     )> }
   ) }
 );
 
-export type DeletePolygonMutationVariables = Exact<{
+export type DeleteOutlineMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type DeletePolygonMutation = (
+export type DeleteOutlineMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deletePolygon'>
+  & Pick<Mutation, 'deleteOutline'>
 );
 
 export type GetOrganizationsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -785,7 +785,7 @@ export const GetUserAreaDocument = gql`
           floor
         }
       }
-      polygons {
+      outlines {
         id
         points {
           id
@@ -948,9 +948,9 @@ export function useDeleteResidenceMutation(baseOptions?: Apollo.MutationHookOpti
 export type DeleteResidenceMutationHookResult = ReturnType<typeof useDeleteResidenceMutation>;
 export type DeleteResidenceMutationResult = Apollo.MutationResult<DeleteResidenceMutation>;
 export type DeleteResidenceMutationOptions = Apollo.BaseMutationOptions<DeleteResidenceMutation, DeleteResidenceMutationVariables>;
-export const CreatePolygonDocument = gql`
-    mutation createPolygon($areaId: ID!, $points: [CreatePolygonPointInput!]!) {
-  createPolygon(polygon: {areaId: $areaId, points: $points}) {
+export const CreateOutlineDocument = gql`
+    mutation createOutline($areaId: ID!, $points: [CreateOutlinePointInput!]!) {
+  createOutline(outline: {areaId: $areaId, points: $points}) {
     id
     points {
       id
@@ -961,36 +961,36 @@ export const CreatePolygonDocument = gql`
   }
 }
     `;
-export type CreatePolygonMutationFn = Apollo.MutationFunction<CreatePolygonMutation, CreatePolygonMutationVariables>;
+export type CreateOutlineMutationFn = Apollo.MutationFunction<CreateOutlineMutation, CreateOutlineMutationVariables>;
 
 /**
- * __useCreatePolygonMutation__
+ * __useCreateOutlineMutation__
  *
- * To run a mutation, you first call `useCreatePolygonMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatePolygonMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateOutlineMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOutlineMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createPolygonMutation, { data, loading, error }] = useCreatePolygonMutation({
+ * const [createOutlineMutation, { data, loading, error }] = useCreateOutlineMutation({
  *   variables: {
  *      areaId: // value for 'areaId'
  *      points: // value for 'points'
  *   },
  * });
  */
-export function useCreatePolygonMutation(baseOptions?: Apollo.MutationHookOptions<CreatePolygonMutation, CreatePolygonMutationVariables>) {
+export function useCreateOutlineMutation(baseOptions?: Apollo.MutationHookOptions<CreateOutlineMutation, CreateOutlineMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePolygonMutation, CreatePolygonMutationVariables>(CreatePolygonDocument, options);
+        return Apollo.useMutation<CreateOutlineMutation, CreateOutlineMutationVariables>(CreateOutlineDocument, options);
       }
-export type CreatePolygonMutationHookResult = ReturnType<typeof useCreatePolygonMutation>;
-export type CreatePolygonMutationResult = Apollo.MutationResult<CreatePolygonMutation>;
-export type CreatePolygonMutationOptions = Apollo.BaseMutationOptions<CreatePolygonMutation, CreatePolygonMutationVariables>;
-export const UpdatePolygonDocument = gql`
-    mutation updatePolygon($id: ID!, $points: [UpdatePolygonPointInput!]!) {
-  updatePolygon(polygon: {id: $id, points: $points}) {
+export type CreateOutlineMutationHookResult = ReturnType<typeof useCreateOutlineMutation>;
+export type CreateOutlineMutationResult = Apollo.MutationResult<CreateOutlineMutation>;
+export type CreateOutlineMutationOptions = Apollo.BaseMutationOptions<CreateOutlineMutation, CreateOutlineMutationVariables>;
+export const UpdateOutlineDocument = gql`
+    mutation updateOutline($id: ID!, $points: [UpdateOutlinePointInput!]!) {
+  updateOutline(outline: {id: $id, points: $points}) {
     id
     points {
       id
@@ -1001,64 +1001,64 @@ export const UpdatePolygonDocument = gql`
   }
 }
     `;
-export type UpdatePolygonMutationFn = Apollo.MutationFunction<UpdatePolygonMutation, UpdatePolygonMutationVariables>;
+export type UpdateOutlineMutationFn = Apollo.MutationFunction<UpdateOutlineMutation, UpdateOutlineMutationVariables>;
 
 /**
- * __useUpdatePolygonMutation__
+ * __useUpdateOutlineMutation__
  *
- * To run a mutation, you first call `useUpdatePolygonMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdatePolygonMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateOutlineMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOutlineMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updatePolygonMutation, { data, loading, error }] = useUpdatePolygonMutation({
+ * const [updateOutlineMutation, { data, loading, error }] = useUpdateOutlineMutation({
  *   variables: {
  *      id: // value for 'id'
  *      points: // value for 'points'
  *   },
  * });
  */
-export function useUpdatePolygonMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePolygonMutation, UpdatePolygonMutationVariables>) {
+export function useUpdateOutlineMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOutlineMutation, UpdateOutlineMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdatePolygonMutation, UpdatePolygonMutationVariables>(UpdatePolygonDocument, options);
+        return Apollo.useMutation<UpdateOutlineMutation, UpdateOutlineMutationVariables>(UpdateOutlineDocument, options);
       }
-export type UpdatePolygonMutationHookResult = ReturnType<typeof useUpdatePolygonMutation>;
-export type UpdatePolygonMutationResult = Apollo.MutationResult<UpdatePolygonMutation>;
-export type UpdatePolygonMutationOptions = Apollo.BaseMutationOptions<UpdatePolygonMutation, UpdatePolygonMutationVariables>;
-export const DeletePolygonDocument = gql`
-    mutation deletePolygon($id: ID!) {
-  deletePolygon(id: $id)
+export type UpdateOutlineMutationHookResult = ReturnType<typeof useUpdateOutlineMutation>;
+export type UpdateOutlineMutationResult = Apollo.MutationResult<UpdateOutlineMutation>;
+export type UpdateOutlineMutationOptions = Apollo.BaseMutationOptions<UpdateOutlineMutation, UpdateOutlineMutationVariables>;
+export const DeleteOutlineDocument = gql`
+    mutation deleteOutline($id: ID!) {
+  deleteOutline(id: $id)
 }
     `;
-export type DeletePolygonMutationFn = Apollo.MutationFunction<DeletePolygonMutation, DeletePolygonMutationVariables>;
+export type DeleteOutlineMutationFn = Apollo.MutationFunction<DeleteOutlineMutation, DeleteOutlineMutationVariables>;
 
 /**
- * __useDeletePolygonMutation__
+ * __useDeleteOutlineMutation__
  *
- * To run a mutation, you first call `useDeletePolygonMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeletePolygonMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useDeleteOutlineMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteOutlineMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [deletePolygonMutation, { data, loading, error }] = useDeletePolygonMutation({
+ * const [deleteOutlineMutation, { data, loading, error }] = useDeleteOutlineMutation({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useDeletePolygonMutation(baseOptions?: Apollo.MutationHookOptions<DeletePolygonMutation, DeletePolygonMutationVariables>) {
+export function useDeleteOutlineMutation(baseOptions?: Apollo.MutationHookOptions<DeleteOutlineMutation, DeleteOutlineMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeletePolygonMutation, DeletePolygonMutationVariables>(DeletePolygonDocument, options);
+        return Apollo.useMutation<DeleteOutlineMutation, DeleteOutlineMutationVariables>(DeleteOutlineDocument, options);
       }
-export type DeletePolygonMutationHookResult = ReturnType<typeof useDeletePolygonMutation>;
-export type DeletePolygonMutationResult = Apollo.MutationResult<DeletePolygonMutation>;
-export type DeletePolygonMutationOptions = Apollo.BaseMutationOptions<DeletePolygonMutation, DeletePolygonMutationVariables>;
+export type DeleteOutlineMutationHookResult = ReturnType<typeof useDeleteOutlineMutation>;
+export type DeleteOutlineMutationResult = Apollo.MutationResult<DeleteOutlineMutation>;
+export type DeleteOutlineMutationOptions = Apollo.BaseMutationOptions<DeleteOutlineMutation, DeleteOutlineMutationVariables>;
 export const GetOrganizationsDocument = gql`
     query GetOrganizations {
   organizations {

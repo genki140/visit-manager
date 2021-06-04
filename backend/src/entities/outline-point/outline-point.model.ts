@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Polygon } from '../polygon/polygon.model';
+import { Outline } from '../outline/outline.model';
 
 @ObjectType()
-@Entity('polygon_point')
-export class PolygonPoint {
+@Entity('outline_points')
+export class OutlinePoint {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number = 0;
@@ -26,7 +26,7 @@ export class PolygonPoint {
   longitude: number = 0;
 
   /** ポリゴン */
-  @Field(() => Polygon)
-  @ManyToOne(() => Polygon, (polygon) => polygon.points, { nullable: false, onDelete: 'CASCADE' })
-  polygon?: Polygon;
+  @Field(() => Outline)
+  @ManyToOne(() => Outline, (outline) => outline.points, { nullable: false, onDelete: 'CASCADE' })
+  outline?: Outline;
 }

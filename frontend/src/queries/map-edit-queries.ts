@@ -1,19 +1,19 @@
 import { ApolloCache, gql } from '@apollo/client';
 
 import {
-  DeletePolygonMutationVariables,
+  DeleteOutlineMutationVariables,
   DeleteResidenceMutationVariables,
   GetUserAreaDocument,
   GetUserAreaQuery,
   GetUserAreaQueryVariables,
-  UpdatePolygonMutationVariables,
+  UpdateOutlineMutationVariables,
   UpdateResidenceMutationVariables,
-  useCreatePolygonMutation,
+  useCreateOutlineMutation,
   useCreateResidenceMutation,
-  useDeletePolygonMutation,
+  useDeleteOutlineMutation,
   useDeleteResidenceMutation,
   useGetUserAreaQuery,
-  useUpdatePolygonMutation,
+  useUpdateOutlineMutation,
   useUpdateResidenceMutation,
 } from '@/types/graphql';
 import Enumerable from 'linq';
@@ -87,11 +87,11 @@ export class MapQueries {
           const cacheData = userAreaQueryCache.read(cache);
 
           // クエリに対するキャッシュデータ書き換え
-          const polygon = Enumerable.from(cacheData.userAreas[0]?.area?.polygons ?? [])
+          const outline = Enumerable.from(cacheData.userAreas[0]?.area?.outlines ?? [])
             .selectMany((x) => x.points)
             .first((x) => x.id === variables.id);
-          polygon.latitude = data.updateResidence.latitude;
-          polygon.longitude = data.updateResidence.longitude;
+          outline.latitude = data.updateResidence.latitude;
+          outline.longitude = data.updateResidence.longitude;
 
           userAreaQueryCache.write(cache, cacheData);
         },
@@ -119,16 +119,16 @@ export class MapQueries {
   };
 
   /** アウトラインを生成し、キャッシュを更新 */
-  static useCreatePolygon = () => {
+  static useCreateOutline = () => {
     const userAreaQueryCache = MapQueries.useUserAreaQueryCache();
-    return useCreatePolygonMutation({
+    return useCreateOutlineMutation({
       update: (cache, result) => {
         const data = TypeUtil.toNonNullable(result.data);
         const cacheData = userAreaQueryCache.read(cache);
 
         // クエリに対するキャッシュデータ書き換え
-        const polygons = TypeUtil.toNonNullable(cacheData?.userAreas?.[0]?.area?.polygons);
-        polygons.push(data.createPolygon);
+        const outlines = TypeUtil.toNonNullable(cacheData?.userAreas?.[0]?.area?.outlines);
+        outlines.push(data.createOutline);
 
         userAreaQueryCache.write(cache, cacheData);
       },
@@ -136,7 +136,7 @@ export class MapQueries {
   };
 
   /** アウトラインを更新し、キャッシュを更新 */
-  static useUpdatePolygon = () => {
+  static useUpdateOutline = () => {
     const userAreaQueryCache = MapQueries.useUserAreaQueryCache();
 
     // queries
@@ -148,10 +148,10 @@ export class MapQueries {
     const userArea = getUserAreaResult.data?.userAreas?.[0];
 
     // mutations
-    const [updatePolygonMutation] = useUpdatePolygonMutation();
+    const [updateOutlineMutation] = useUpdateOutlineMutation();
 
-    const resultFunction = async (variables: UpdatePolygonMutationVariables) => {
-      const prevPoints = userArea?.area?.polygons?.find((x) => x.id === variables.id)?.points ?? [];
+    const resultFunction = async (variables: UpdateOutlineMutationVariables) => {
+      const prevPoints = userArea?.area?.outlines?.find((x) => x.id === variables.id)?.points ?? [];
       // 変化がなければスキップ
       {
         const orderdPoints = Enumerable.from(prevPoints)
@@ -171,17 +171,17 @@ export class MapQueries {
       // console.log('prevPoints');
       // console.log(prevPoints);
 
-      return updatePolygonMutation({
+      return updateOutlineMutation({
         variables: variables,
         // 期待値の構築
         optimisticResponse: {
           __typename: 'Mutation',
-          updatePolygon: {
-            __typename: 'Polygon',
+          updateOutline: {
+            __typename: 'Outline',
             id: variables.id,
             points: (Array.isArray(variables.points) ? variables.points : [variables.points]).map((x) => ({
-              __typename: 'PolygonPoint',
-              id: prevPoints.find((y) => y.order === x.order)?.id ?? 'PolygonPoint:' + new Date().getDate(),
+              __typename: 'OutlinePoint',
+              id: prevPoints.find((y) => y.order === x.order)?.id ?? 'OutlinePoint:' + new Date().getDate(),
               order: TypeUtil.toNonNullable(x.order),
               latitude: TypeUtil.toNonNullable(x.latitude),
               longitude: TypeUtil.toNonNullable(x.longitude),
@@ -193,10 +193,10 @@ export class MapQueries {
           const cacheData = userAreaQueryCache.read(cache);
 
           // クエリに対するキャッシュデータ書き換え
-          const polygon = TypeUtil.toNonNullable(
-            cacheData.userAreas[0].area.polygons.find((x) => x.id === variables.id),
+          const outline = TypeUtil.toNonNullable(
+            cacheData.userAreas[0].area.outlines.find((x) => x.id === variables.id),
           );
-          polygon.points = data.updatePolygon.points;
+          outline.points = data.updateOutline.points;
 
           // InMemoryCache の設定で自動マージしています
           userAreaQueryCache.write(cache, cacheData);
@@ -207,12 +207,12 @@ export class MapQueries {
   };
 
   /** アウトラインを削除し、キャッシュを更新 */
-  static useDeletePolygon = () => {
+  static useDeleteOutline = () => {
     const userAreaQueryCache = MapQueries.useUserAreaQueryCache();
-    const [deletePolygonMutation] = useDeletePolygonMutation();
+    const [deleteOutlineMutation] = useDeleteOutlineMutation();
 
-    const resultFunction = async (variables: DeletePolygonMutationVariables) => {
-      return deletePolygonMutation({
+    const resultFunction = async (variables: DeleteOutlineMutationVariables) => {
+      return deleteOutlineMutation({
         variables: variables,
         update: (cache) => {
           // const data = TypeUtil.toNonNullable(result.data);
@@ -220,12 +220,12 @@ export class MapQueries {
 
           // クエリに対するキャッシュデータ書き換え
           const area = cacheData.userAreas[0].area;
-          area.polygons = area.polygons.filter((x) => x.id !== variables.id);
+          area.outlines = area.outlines.filter((x) => x.id !== variables.id);
 
           userAreaQueryCache.write(cache, cacheData);
 
           // // キャッシュから削除
-          // cache.evict({ id: cache.identify({ id: variables.id, __typename: 'Polygon' }) });
+          // cache.evict({ id: cache.identify({ id: variables.id, __typename: 'Outline' }) });
           // cache.gc(); // 関連ポイントを削除
         },
       });
@@ -253,7 +253,7 @@ gql`
             floor
           }
         }
-        polygons {
+        outlines {
           id
           points {
             id
@@ -306,8 +306,8 @@ gql`
 `;
 
 gql`
-  mutation createPolygon($areaId: ID!, $points: [CreatePolygonPointInput!]!) {
-    createPolygon(polygon: { areaId: $areaId, points: $points }) {
+  mutation createOutline($areaId: ID!, $points: [CreateOutlinePointInput!]!) {
+    createOutline(outline: { areaId: $areaId, points: $points }) {
       id
       points {
         id
@@ -320,8 +320,8 @@ gql`
 `;
 
 gql`
-  mutation updatePolygon($id: ID!, $points: [UpdatePolygonPointInput!]!) {
-    updatePolygon(polygon: { id: $id, points: $points }) {
+  mutation updateOutline($id: ID!, $points: [UpdateOutlinePointInput!]!) {
+    updateOutline(outline: { id: $id, points: $points }) {
       id
       points {
         id
@@ -334,7 +334,7 @@ gql`
 `;
 
 gql`
-  mutation deletePolygon($id: ID!) {
-    deletePolygon(id: $id)
+  mutation deleteOutline($id: ID!) {
+    deleteOutline(id: $id)
   }
 `;

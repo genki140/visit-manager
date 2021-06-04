@@ -1,5 +1,5 @@
 import { MapEditType, useStoreState } from '@/ducks/store';
-import { Polygon, Residence, useGetUserAreaQuery, UserArea } from '@/types/graphql';
+import { Outline, Residence, useGetUserAreaQuery, UserArea } from '@/types/graphql';
 import { useRouterParams } from '@/utils/use-router-params';
 import Enumerable from 'linq';
 import { MutableRefObject, useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import { MapResidence } from './map-residence';
 
 export const getMapBoundsFromArea = (userArea: UserArea | undefined) => {
   const allLatLngEnum = Enumerable.from(
-    Enumerable.from(userArea?.area.polygons ?? [])
+    Enumerable.from(userArea?.area.outlines ?? [])
       .selectMany((x) => x.points)
       .select((x) => ({ lat: x.latitude, lng: x.longitude }))
       .concat(Enumerable.from(userArea?.area.residences ?? []).select((x) => ({ lat: x.latitude, lng: x.longitude })))
@@ -100,12 +100,12 @@ const MapData = (props: { map: MutableRefObject<MapOutput | undefined> }) => {
         );
       })}
 
-      {userArea.area.polygons.map((polygon) => {
+      {userArea.area.outlines.map((outline) => {
         return (
           <MapOutline
-            key={'polygon:' + polygon.id}
-            polygon={polygon as Polygon}
-            editable={mapEditType === MapEditType.Polygon}
+            key={'outline:' + outline.id}
+            outline={outline as Outline}
+            editable={mapEditType === MapEditType.Outline}
           />
         );
       })}

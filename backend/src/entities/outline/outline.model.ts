@@ -1,25 +1,24 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { MaxLength } from 'class-validator';
-import { PolygonPoint } from '../polygon-point/polygon-point.model';
+import { OutlinePoint as OutlinePoint } from '../outline-point/outline-point.model';
 import { Area } from '../area/area.model';
 
 @ObjectType()
-@Entity('polygon')
-export class Polygon {
+@Entity('outlines')
+export class Outline {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number = 0;
 
   /** ポイント */
-  @Field(() => [PolygonPoint])
-  @OneToMany(() => PolygonPoint, (polygonPoint) => polygonPoint.polygon, { cascade: true })
-  points?: PolygonPoint[];
+  @Field(() => [OutlinePoint])
+  @OneToMany(() => OutlinePoint, (outlinePoint) => outlinePoint.outline, { cascade: true })
+  points?: OutlinePoint[];
 
   /** 区域 */
   @Field(() => Area)
-  @ManyToOne(() => Area, (area) => area.polygons, { nullable: false })
+  @ManyToOne(() => Area, (area) => area.outlines, { nullable: false })
   @JoinColumn({ name: 'areaId' })
   area?: Area;
 
@@ -28,7 +27,7 @@ export class Polygon {
 }
 
 @InputType()
-export class CreatePolygonPointInput {
+export class CreateOutlinePointInput {
   /** 緯度 */
   @Field()
   latitude: number = 0;
@@ -39,17 +38,17 @@ export class CreatePolygonPointInput {
 }
 
 @InputType()
-export class CreatePolygonInput {
+export class CreateOutlineInput {
   /** ポイント */
-  @Field(() => [CreatePolygonPointInput])
-  points: CreatePolygonPointInput[] = [];
+  @Field(() => [CreateOutlinePointInput])
+  points: CreateOutlinePointInput[] = [];
 
   @Field(() => ID)
   areaId?: number;
 }
 
 @InputType()
-export class UpdatePolygonPointInput {
+export class UpdateOutlinePointInput {
   /** 点の順 */
   @Field()
   order: number = 0;
@@ -64,11 +63,11 @@ export class UpdatePolygonPointInput {
 }
 
 @InputType()
-export class UpdatePolygonInput {
+export class UpdateOutlineInput {
   @Field(() => ID)
   id: number = 0;
 
   /** ポイント */
-  @Field(() => [UpdatePolygonPointInput])
-  points: UpdatePolygonPointInput[] = [];
+  @Field(() => [UpdateOutlinePointInput])
+  points: UpdateOutlinePointInput[] = [];
 }

@@ -1,29 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, FindManyOptions, Repository } from 'typeorm';
-import { PolygonPoint } from '../polygon-point/polygon-point.model';
-import { CreatePolygonInput, Polygon, UpdatePolygonInput } from './polygon.model';
+import { OutlinePoint } from '../outline-point/outline-point.model';
+import { CreateOutlineInput, Outline, UpdateOutlineInput } from './outline.model';
 
 @Injectable()
-export class PolygonService {
+export class OutlineService {
   constructor(
-    @InjectRepository(Polygon)
-    private readonly polygonRepository: Repository<Polygon>,
-    // @InjectRepository(PolygonPoint)
-    // private readonly polygonPointRepository: Repository<PolygonPoint>,
+    @InjectRepository(Outline)
+    private readonly outlineRepository: Repository<Outline>,
     private connection: Connection,
   ) {}
 
-  async find(ids?: number[], options?: FindManyOptions<Polygon>) {
+  async find(ids?: number[], options?: FindManyOptions<Outline>) {
     if (ids == null) {
-      return this.polygonRepository.find(options);
+      return this.outlineRepository.find(options);
     } else {
-      return this.polygonRepository.findByIds(ids, options);
+      return this.outlineRepository.findByIds(ids, options);
     }
   }
 
-  async create(payload: CreatePolygonInput) {
-    const result = await this.polygonRepository.save({
+  async create(payload: CreateOutlineInput) {
+    const result = await this.outlineRepository.save({
       areaId: payload.areaId,
       points: payload.points?.map((x, i) => ({
         latitude: x.latitude,
@@ -32,19 +30,19 @@ export class PolygonService {
       })),
     });
     // console.log(result);
-    const one = await this.polygonRepository.findOne(result.id, {
+    const one = await this.outlineRepository.findOne(result.id, {
       relations: ['points'],
     });
     // console.log(one);
     return one;
   }
 
-  async update(payload: UpdatePolygonInput) {
+  async update(payload: UpdateOutlineInput) {
     return await this.connection.transaction(async (manager) => {
-      const polygonRepository = manager.getRepository(Polygon);
-      const polygonPointRepository = manager.getRepository(PolygonPoint);
+      const outlineRepository = manager.getRepository(Outline);
+      const outlinePointRepository = manager.getRepository(OutlinePoint);
 
-      let item = await polygonRepository.findOneOrFail(payload.id, {
+      let item = await outlineRepository.findOneOrFail(payload.id, {
         relations: ['points'],
       });
       if (item.points == null) {
@@ -56,13 +54,13 @@ export class PolygonService {
       for (const deletes of item.points
         .filter((x) => (payload.points ?? []).some((y) => y.order === x.order) === false)
         .map((x, i) => ({ x, i }))) {
-        polygonPointRepository.delete(deletes.x.id);
+        outlinePointRepository.delete(deletes.x.id);
         deleted = true;
       }
 
       // 削除している場合は再取得
       if (deleted) {
-        item = await polygonRepository.findOneOrFail(payload.id, {
+        item = await outlineRepository.findOneOrFail(payload.id, {
           relations: ['points'],
         });
         if (item.points == null) {
@@ -86,7 +84,7 @@ export class PolygonService {
           });
         }
       }
-      const result = await polygonRepository.save(item);
+      const result = await outlineRepository.save(item);
 
       // console.log(item);
       return item;
@@ -94,6 +92,6 @@ export class PolygonService {
   }
 
   async delete(id: number) {
-    return ((await this.polygonRepository.delete(id)).affected ?? 0) > 0;
+    return ((await this.outlineRepository.delete(id)).affected ?? 0) > 0;
   }
 }

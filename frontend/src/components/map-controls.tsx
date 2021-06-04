@@ -57,8 +57,8 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
   const dispatch = useAppDispatch();
   const mapEditType = useStoreState((x) => x.map.editType);
   const selectedResidenceId = useStoreState((x) => x.map.selectedResidenceId);
-  const selectedPolygonId = useStoreState((x) => x.map.selectedPolygonId);
-  const selectedPolygonPointId = useStoreState((x) => x.map.selectedPolygonPointId);
+  const selectedOutlineId = useStoreState((x) => x.map.selectedOutlineId);
+  const selectedOutlinePointId = useStoreState((x) => x.map.selectedOutlinePointId);
 
   // router
   const routerParams = useRouterParams();
@@ -71,24 +71,24 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
   const userArea = getUserAreaResult.data?.userAreas?.[0];
 
   // mutations
-  const [createPolygon] = MapQueries.useCreatePolygon();
+  const [createOutline] = MapQueries.useCreateOutline();
   const deleteResidence = MapQueries.useDeleteResidence();
-  const deletePolygon = MapQueries.useDeletePolygon();
-  const updatePolygon = MapQueries.useUpdatePolygon();
+  const deleteOutline = MapQueries.useDeleteOutline();
+  const updateOutline = MapQueries.useUpdateOutline();
 
   const [open, setOpen] = React.useState(false);
 
   const editButtons = [
     { type: MapEditType.Residence, icon: <HouseIcon />, tooltip: '住宅の配置' },
     { type: MapEditType.Room, icon: <ApartmentIcon />, tooltip: '部屋の設定' },
-    { type: MapEditType.Polygon, icon: <Crop54Icon />, tooltip: 'アウトライン' },
+    { type: MapEditType.Outline, icon: <Crop54Icon />, tooltip: 'アウトライン' },
   ];
 
   if (userArea == null) {
     return <>ローディング</>;
   }
 
-  const selectedPolygon = userArea.area.polygons.find((x) => x.id === selectedPolygonId?.toString());
+  const selectedOutline = userArea.area.outlines.find((x) => x.id === selectedOutlineId?.toString());
 
   return (
     <>
@@ -188,7 +188,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
       <div className={classes.toolButtons}>
         <Tooltip title="新規アウトラインを追加" placement="top">
           <span>
-            <Zoom in={mapEditType === MapEditType.Polygon}>
+            <Zoom in={mapEditType === MapEditType.Outline}>
               {
                 // ポリゴンの追加
                 <Fab
@@ -204,7 +204,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
                     const x1 = mapInfo.bounds.southWest.longitude;
                     const x2 = mapInfo.bounds.northEast.longitude;
                     const scale = 0.7;
-                    const result = await createPolygon({
+                    const result = await createOutline({
                       variables: {
                         areaId: userArea.area.id,
                         points: [
@@ -216,8 +216,8 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
                       },
                     });
                     if (result.data != null) {
-                      dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
-                      dispatch(actions.setSelectedPolygonId({ polygonId: Number(result.data.createPolygon.id) }));
+                      dispatch(actions.setSelectedOutlinePointId({ pointId: undefined }));
+                      dispatch(actions.setSelectedOutlineId({ outlineId: Number(result.data.createOutline.id) }));
                     }
                   }}
                 >
@@ -231,17 +231,17 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
         {/* ポリゴンの削除 */}
         <Tooltip title="アウトライン全体を削除" placement="top">
           <span>
-            <Zoom in={mapEditType === MapEditType.Polygon}>
+            <Zoom in={mapEditType === MapEditType.Outline}>
               <Fab
                 className={classes.toolButton}
-                disabled={selectedPolygonId == null}
+                disabled={selectedOutlineId == null}
                 color={'secondary'}
                 onClick={async () => {
-                  if (selectedPolygonId != null) {
-                    const result = await deletePolygon({ id: selectedPolygonId.toString() });
-                    if (result.data?.deletePolygon === true) {
-                      dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
-                      dispatch(actions.setSelectedPolygonId({ polygonId: undefined }));
+                  if (selectedOutlineId != null) {
+                    const result = await deleteOutline({ id: selectedOutlineId.toString() });
+                    if (result.data?.deleteOutline === true) {
+                      dispatch(actions.setSelectedOutlinePointId({ pointId: undefined }));
+                      dispatch(actions.setSelectedOutlineId({ outlineId: undefined }));
                     }
                   }
                 }}
@@ -256,27 +256,27 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
         {/* ポイントの削除 */}
         <Tooltip title="選択ポイントを削除">
           <span>
-            <Zoom in={mapEditType === MapEditType.Polygon}>
+            <Zoom in={mapEditType === MapEditType.Outline}>
               <Fab
                 className={classes.toolButton}
-                disabled={selectedPolygonPointId == null || (selectedPolygon?.points.length ?? 0) <= 3} // 3点以下は削除不可
+                disabled={selectedOutlinePointId == null || (selectedOutline?.points.length ?? 0) <= 3} // 3点以下は削除不可
                 color={'secondary'}
                 onClick={async () => {
-                  if (selectedPolygonPointId == null || selectedPolygon == null) {
+                  if (selectedOutlinePointId == null || selectedOutline == null) {
                     return;
                   }
 
-                  const newPoints = selectedPolygon?.points
-                    .filter((x) => x.id !== selectedPolygonPointId.toString())
+                  const newPoints = selectedOutline?.points
+                    .filter((x) => x.id !== selectedOutlinePointId.toString())
                     .map((x, i) => ({
                       order: i,
                       latitude: x.latitude,
                       longitude: x.longitude,
                     }));
 
-                  const resultPromise = updatePolygon({ id: selectedPolygon.id, points: newPoints });
+                  const resultPromise = updateOutline({ id: selectedOutline.id, points: newPoints });
 
-                  dispatch(actions.setSelectedPolygonPointId({ pointId: undefined }));
+                  dispatch(actions.setSelectedOutlinePointId({ pointId: undefined }));
 
                   // const result =
                   await resultPromise;

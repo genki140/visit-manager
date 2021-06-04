@@ -15,8 +15,8 @@ import { AuthController } from './auth/auth.controller';
 import { AreaModule } from './entities/area/area.module';
 import { UserAreaModule } from './entities/user-area/user-area.module';
 
-import { PolygonModule } from './entities/polygon/polygon.module';
-import { PolygonPointModule } from './entities/polygon-point/polygon-point.module';
+import { OutlineModule } from './entities/outline/outline.module';
+import { OutlinePointModule } from './entities/outline-point/outline-point.module';
 
 import { ResidenceModule } from './entities/residence/residence.module';
 import { ResidentModule } from './entities/resident/resident.module';
@@ -95,8 +95,8 @@ import { getConnectionOptions } from 'typeorm';
     RoledUserModule,
     AreaModule,
     UserAreaModule,
-    PolygonModule,
-    PolygonPointModule,
+    OutlineModule,
+    OutlinePointModule,
     ResidenceModule,
     ResidentModule,
   ],

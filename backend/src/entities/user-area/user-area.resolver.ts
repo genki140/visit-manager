@@ -1,7 +1,7 @@
 import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 import { Inject, UseGuards } from '@nestjs/common';
 import { Args, ID, Query, Resolver } from '@nestjs/graphql';
-import { ApolloError, AuthenticationError } from 'apollo-server-express';
+import { ApolloError } from 'apollo-server-express';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
 import { UserArea } from './user-area.model';
@@ -30,8 +30,8 @@ export class UserAreaResolver {
           'userAreas.area.organization',
           'userAreas.area.residences',
           'userAreas.area.residences.residents',
-          'userAreas.area.polygons',
-          'userAreas.area.polygons.points',
+          'userAreas.area.outlines',
+          'userAreas.area.outlines.points',
           'roledUsers',
           'roledUsers.organization',
         ],
