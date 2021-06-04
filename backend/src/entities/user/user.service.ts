@@ -43,7 +43,7 @@ export class UserService {
   async create(payload: CreateUserInput) {
     // 同名チェック
     if ((await this.userRepository.count({ where: { username: payload.username.trim() } })) > 0) {
-      throw new ApolloError('username is already used.', ErrorCodes.EXISTING_USERNAME);
+      throw new ApolloError('username is already used.', ErrorCodes.UNUSABLE_NAME);
     }
     return await this.userRepository.save({
       name: payload.name.trim(),

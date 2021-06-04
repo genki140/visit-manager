@@ -1,7 +1,6 @@
 import { ErrorCodes } from '@/types/error-types';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserInputError } from 'apollo-server-errors';
 import { ApolloError } from 'apollo-server-express';
 import { Connection, FindManyOptions, Repository } from 'typeorm';
 import { CreateOrganizationInput, Organization } from './organization.model';
@@ -23,9 +22,20 @@ export class OrganizationService {
   }
 
   async create(payload: CreateOrganizationInput, userId: number) {
+    // 同名、system、index は使用できない。
+    if (
+      (await this.organizationRepository.count({
+        where: { name: payload.name.trim() },
+      })) > 0 ||
+      payload.name.trim().toUpperCase() === 'INDEX' ||
+      payload.name.trim().toUpperCase() === 'SYSTEM'
+    ) {
+      throw new ApolloError('', ErrorCodes.UNUSABLE_NAME);
+    }
+
     // 同名チェック
     if ((await this.organizationRepository.count({ where: { name: payload.name.trim() } })) > 0) {
-      throw new ApolloError('Organization name is already used.', ErrorCodes.EXISTING_ORGANIZATION_NAME);
+      throw new ApolloError('', ErrorCodes.UNUSABLE_NAME);
     }
 
     // return await this.connection.transaction(async (manager) => {

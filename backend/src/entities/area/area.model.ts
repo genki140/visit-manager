@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Organization } from '../organization/organization.model';
 import { UserArea } from '../user-area/user-area.model';
 import { Polygon } from '../polygon/polygon.model';
 import { Residence } from '../residence/residence.model';
+import { MaxLength } from 'class-validator';
 
 @ObjectType()
 @Entity('areas')
@@ -28,7 +29,11 @@ export class Area {
   /** 組織 */
   @Field(() => Organization)
   @ManyToOne(() => Organization, (organization) => organization.roledUsers, { nullable: false })
+  @JoinColumn({ name: 'organizationId' })
   organization?: Organization;
+
+  @Column({ type: 'int', nullable: false })
+  organizationId?: number;
 
   /** ユーザー区域 */
   @Field(() => [UserArea])
@@ -44,4 +49,20 @@ export class Area {
   @Field(() => [Polygon])
   @OneToMany(() => Polygon, (polygon) => polygon.area)
   polygons?: Polygon[];
+}
+
+@InputType()
+export class CreateAreaInput {
+  @Field(() => Int)
+  organizationId = 0;
+
+  /** 区域名 */
+  @Field()
+  @MaxLength(100)
+  name: string = '';
+
+  /** 解説 */
+  @Field()
+  @MaxLength(100)
+  description: string = '';
 }

@@ -109,13 +109,9 @@ export const Layout = (props: {
   const router = useRouter();
   const f = useFormatMessage();
 
-  // const projectTitle = f((x) => x.visit_manager);
-  // const title = props.title ?? projectTitle;
-
   return (
     <>
       <Head>
-        {/* <title>{(routerParams.organizationName !== '' ? '訪問管理 | ' : '') + props.title}</title> */}
         <title>{(props.title == null ? '' : props.title + ' | ') + f((x) => x.visit_manager)}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -176,7 +172,7 @@ export const Layout = (props: {
               props.children
             ) : props.layoutType === 'center' ? (
               <Box minHeight="100%" display="flex" alignItems="center" justifyContent="center">
-                <Box>{props.children}</Box>
+                {props.children}
               </Box>
             ) : (
               <div className={classes.content}>{props.children}</div>
@@ -271,6 +267,7 @@ export const Layout = (props: {
 
               <ListSubheader>{f((x) => x.development)}</ListSubheader>
               <ListItem
+                component="a"
                 button
                 onClick={() => {
                   window.location.href = '/system/graphql';
@@ -296,8 +293,8 @@ export const Layout = (props: {
                 <ListItemText>{f((x) => x.database)}</ListItemText>
               </ListItem>
 
-              <Link href="https://github.com/genki140/visit-manager">
-                <ListItem button>
+              <Link href="https://github.com/genki140/visit-manager" passHref>
+                <ListItem button component="a">
                   <ListItemIcon>
                     <GitHubIcon />
                   </ListItemIcon>
@@ -306,7 +303,7 @@ export const Layout = (props: {
               </Link>
 
               <Link href="/system/test">
-                <ListItem button>
+                <ListItem button component="a">
                   <ListItemIcon>
                     <ToysIcon />
                   </ListItemIcon>

@@ -1,8 +1,9 @@
-import { AbilityTypes, CurrentUser, GqlAuthGuard, RequiredAbilities } from '@/auth/auth.guard';
+import { CurrentUser, GqlAuthGuard, RequiredAbilities } from '@/auth/auth.guard';
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, ID, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { AbilityTypes } from '../ability/ability.model';
 import { User } from '../user/user.model';
-import { Area } from './area.model';
+import { Area, CreateAreaInput } from './area.model';
 import { AreaService } from './area.service';
 
 @Resolver(() => Area)
@@ -37,5 +38,13 @@ export class AreaResolver {
     //   throw new Error('Some IDs were not found.');
     // }
     return result;
+  }
+
+  @Mutation(() => Area)
+  @UseGuards(GqlAuthGuard)
+  async createArea(@Args('area') area: CreateAreaInput, @CurrentUser() currentUser: User) {
+    RequiredAbilities([AbilityTypes.CreateArea], currentUser, area.organizationId);
+
+    return await this.areaService.create(area);
   }
 }

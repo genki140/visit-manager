@@ -107,6 +107,7 @@ type Mutation {
   deleteRole(id: ID!): Role
   createOrganization(organization: CreateOrganizationInput!): Organization!
   addTest: Float!
+  createArea(area: CreateAreaInput!): Area!
   createPolygon(polygon: CreatePolygonInput!): Polygon!
   updatePolygon(polygon: UpdatePolygonInput!): Polygon!
   deletePolygon(id: ID!): Boolean!
@@ -125,9 +126,15 @@ input CreateOrganizationInput {
   name: String = ""
 }
 
+input CreateAreaInput {
+  organizationId: Int = 0
+  name: String = ""
+  description: String = ""
+}
+
 input CreatePolygonInput {
-  points: [CreatePolygonPointInput!]!
-  areaId: ID = 0
+  points: [CreatePolygonPointInput!] = []
+  areaId: ID!
 }
 
 input CreatePolygonPointInput {

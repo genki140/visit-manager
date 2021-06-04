@@ -19,3 +19,17 @@ export class Ability {
   @ManyToMany(() => Role, (role) => role.abilities)
   roles?: Role[];
 }
+
+// 権限のクラスを定義
+export class AbilityType {
+  constructor(public readonly id: number) {}
+}
+
+// 権限とIDのリストを定義
+export const AbilityTypes = {
+  // Administrator: new AbilityType(1),
+
+  // 組織に区域を追加
+  CreateArea: new AbilityType(2),
+} as const;
+export type AbilityTypes = typeof AbilityTypes[keyof typeof AbilityTypes];

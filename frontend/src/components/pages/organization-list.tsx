@@ -38,90 +38,44 @@ export const OrganizationList = () => {
 
   return (
     <Layout layoutType="center">
-      <Box mt={3} mb={9}>
-        <Typography gutterBottom variant="h2" align="center">
-          {f((x) => x.affiliation_organiozation)}
-        </Typography>
-        <List>
-          <MovableList onMove={onMove}>
-            {(data?.organizations ?? []).map((x) => ({
-              key: x.id,
-              node: (draggableProps: any) => (
-                <ListItem>
-                  <Link href={x.name}>
-                    <Card style={{ width: '100%' }}>
-                      <CardActionArea>
-                        <CardHeader
-                          title={x.name}
-                          action={
-                            <div {...draggableProps} style={{ margin: 5 }}>
-                              <DragHandleIcon className="drag-handle" />
-                            </div>
-                          }
-                        />
-                        <CardContent>
-                          <Typography variant="body2" color="textSecondary" component="p">
-                            区域数：100。ユーザー数：100。その他情報色々
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  </Link>
-                </ListItem>
-              ),
-            }))}
-          </MovableList>
-        </List>
-      </Box>
-
-      {/* {data?.organizations.map((x, index) =>
-            SortableElement(({ index }) => (
-              <ListItem key={x.id}>
-                <Link href={x.name}>
-                  <Card>
-                    <CardContent>
-                      <Typography gutterBottom variant="h3" component="h3">
-                        {x.name}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary" component="p">
-                        区域数などの情報を表示
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Link>
-                <ListItemSecondaryAction>
-                  {SortableHandle(() => (
-                    <ListItemIcon>
-                      <DragHandleIcon />
-                    </ListItemIcon>
-                  ))}
-                </ListItemSecondaryAction>
-              </ListItem>
-            )),
-          )} */}
-
-      {/* <LoadingContainer loading={loading} error={error}>
-          <div className={classes.list}>
-            {data?.organizations.map((x) => (
-              <Link href={x.name} key={x.id}>
-                <Card>
-                  <CardActionArea>
-                    <CardContent>
-                      <Typography gutterBottom variant="h3" component="h3">
-                        {x.name}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary" component="p">
-                        区域数などの情報を表示できるかも
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </LoadingContainer> */}
-
-      <OrganizationCreateButton />
+      <LoadingContainer loading={loading} error={error}>
+        <Box mt={3} mb={9} width="100%" maxWidth="700px">
+          <Typography gutterBottom variant="h2" align="center">
+            {f((x) => x.affiliation_organiozation)}
+          </Typography>
+          <List>
+            <MovableList onMove={onMove}>
+              {(data?.organizations ?? []).map((x) => ({
+                key: x.id,
+                node: (draggableProps: any) => (
+                  <ListItem>
+                    <Link href={x.name}>
+                      <Card style={{ width: '100%' }}>
+                        <CardActionArea>
+                          <CardHeader
+                            title={x.name}
+                            action={
+                              <div {...draggableProps} style={{ margin: 5 }}>
+                                <DragHandleIcon className="drag-handle" />
+                              </div>
+                            }
+                          />
+                          <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                              あ
+                            </Typography>
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Link>
+                  </ListItem>
+                ),
+              }))}
+            </MovableList>
+          </List>
+        </Box>
+        <OrganizationCreateButton />
+      </LoadingContainer>
     </Layout>
   );
 };

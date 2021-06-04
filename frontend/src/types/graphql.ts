@@ -33,13 +33,19 @@ export type Area = {
   polygons: Array<Polygon>;
 };
 
+export type CreateAreaInput = {
+  organizationId?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+};
+
 export type CreateOrganizationInput = {
   name?: Maybe<Scalars['String']>;
 };
 
 export type CreatePolygonInput = {
-  points: Array<CreatePolygonPointInput>;
-  areaId?: Maybe<Scalars['ID']>;
+  points?: Maybe<Array<CreatePolygonPointInput>>;
+  areaId: Scalars['ID'];
 };
 
 export type CreatePolygonPointInput = {
@@ -68,6 +74,7 @@ export type Mutation = {
   deleteRole?: Maybe<Role>;
   createOrganization: Organization;
   addTest: Scalars['Float'];
+  createArea: Area;
   createPolygon: Polygon;
   updatePolygon: Polygon;
   deletePolygon: Scalars['Boolean'];
@@ -94,6 +101,11 @@ export type MutationDeleteRoleArgs = {
 
 export type MutationCreateOrganizationArgs = {
   organization: CreateOrganizationInput;
+};
+
+
+export type MutationCreateAreaArgs = {
+  area: CreateAreaInput;
 };
 
 
@@ -267,6 +279,21 @@ export type UserArea = {
   area: Area;
 };
 
+export type CreateAreaMutationVariables = Exact<{
+  organizationId: Scalars['Int'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+}>;
+
+
+export type CreateAreaMutation = (
+  { __typename?: 'Mutation' }
+  & { createArea: (
+    { __typename?: 'Area' }
+    & Pick<Area, 'id' | 'name'>
+  ) }
+);
+
 export type CreateOrganizationMutationVariables = Exact<{
   name: Scalars['String'];
 }>;
@@ -277,6 +304,19 @@ export type CreateOrganizationMutation = (
   & { createOrganization: (
     { __typename?: 'Organization' }
     & Pick<Organization, 'id' | 'name'>
+  ) }
+);
+
+export type CreateUserMutationVariables = Exact<{
+  user: CreateUserInput;
+}>;
+
+
+export type CreateUserMutation = (
+  { __typename?: 'Mutation' }
+  & { createUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
   ) }
 );
 
@@ -299,19 +339,6 @@ export type GetAreasQuery = (
     { __typename?: 'Area' }
     & Pick<Area, 'id' | 'name'>
   )> }
-);
-
-export type CreateUserMutationVariables = Exact<{
-  user: CreateUserInput;
-}>;
-
-
-export type CreateUserMutation = (
-  { __typename?: 'Mutation' }
-  & { createUser: (
-    { __typename?: 'User' }
-    & Pick<User, 'id'>
-  ) }
 );
 
 export type TestAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
@@ -510,6 +537,44 @@ export type GetCurrentUserQuery = (
 );
 
 
+export const CreateAreaDocument = gql`
+    mutation createArea($organizationId: Int!, $name: String!, $description: String!) {
+  createArea(
+    area: {organizationId: $organizationId, name: $name, description: $description}
+  ) {
+    id
+    name
+  }
+}
+    `;
+export type CreateAreaMutationFn = Apollo.MutationFunction<CreateAreaMutation, CreateAreaMutationVariables>;
+
+/**
+ * __useCreateAreaMutation__
+ *
+ * To run a mutation, you first call `useCreateAreaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAreaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAreaMutation, { data, loading, error }] = useCreateAreaMutation({
+ *   variables: {
+ *      organizationId: // value for 'organizationId'
+ *      name: // value for 'name'
+ *      description: // value for 'description'
+ *   },
+ * });
+ */
+export function useCreateAreaMutation(baseOptions?: Apollo.MutationHookOptions<CreateAreaMutation, CreateAreaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAreaMutation, CreateAreaMutationVariables>(CreateAreaDocument, options);
+      }
+export type CreateAreaMutationHookResult = ReturnType<typeof useCreateAreaMutation>;
+export type CreateAreaMutationResult = Apollo.MutationResult<CreateAreaMutation>;
+export type CreateAreaMutationOptions = Apollo.BaseMutationOptions<CreateAreaMutation, CreateAreaMutationVariables>;
 export const CreateOrganizationDocument = gql`
     mutation createOrganization($name: String!) {
   createOrganization(organization: {name: $name}) {
@@ -544,6 +609,39 @@ export function useCreateOrganizationMutation(baseOptions?: Apollo.MutationHookO
 export type CreateOrganizationMutationHookResult = ReturnType<typeof useCreateOrganizationMutation>;
 export type CreateOrganizationMutationResult = Apollo.MutationResult<CreateOrganizationMutation>;
 export type CreateOrganizationMutationOptions = Apollo.BaseMutationOptions<CreateOrganizationMutation, CreateOrganizationMutationVariables>;
+export const CreateUserDocument = gql`
+    mutation createUser($user: CreateUserInput!) {
+  createUser(user: $user) {
+    id
+  }
+}
+    `;
+export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
+
+/**
+ * __useCreateUserMutation__
+ *
+ * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
+ *   variables: {
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
+      }
+export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
+export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const GetGoogleMapApiKeyDocument = gql`
     query getGoogleMapApiKey {
   googleMapApiKey
@@ -612,39 +710,6 @@ export function useGetAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetAreasQueryHookResult = ReturnType<typeof useGetAreasQuery>;
 export type GetAreasLazyQueryHookResult = ReturnType<typeof useGetAreasLazyQuery>;
 export type GetAreasQueryResult = Apollo.QueryResult<GetAreasQuery, GetAreasQueryVariables>;
-export const CreateUserDocument = gql`
-    mutation createUser($user: CreateUserInput!) {
-  createUser(user: $user) {
-    id
-  }
-}
-    `;
-export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
-
-/**
- * __useCreateUserMutation__
- *
- * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
- *   variables: {
- *      user: // value for 'user'
- *   },
- * });
- */
-export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
-      }
-export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
-export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
-export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const TestAddedDocument = gql`
     subscription testAdded {
   testAdded

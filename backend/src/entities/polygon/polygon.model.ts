@@ -42,24 +42,24 @@ export class CreatePolygonPointInput {
 export class CreatePolygonInput {
   /** ポイント */
   @Field(() => [CreatePolygonPointInput])
-  points?: CreatePolygonPointInput[];
+  points: CreatePolygonPointInput[] = [];
 
   @Field(() => ID)
-  areaId: number = 0;
+  areaId?: number;
 }
 
 @InputType()
 export class UpdatePolygonPointInput {
   /** 点の順 */
-  @Field({ nullable: false })
+  @Field()
   order: number = 0;
 
   /** 緯度 */
-  @Field({ nullable: false })
+  @Field()
   latitude: number = 0;
 
   /** 経度 */
-  @Field({ nullable: false })
+  @Field()
   longitude: number = 0;
 }
 
@@ -69,6 +69,6 @@ export class UpdatePolygonInput {
   id: number = 0;
 
   /** ポイント */
-  @Field(() => [UpdatePolygonPointInput], { nullable: false })
+  @Field(() => [UpdatePolygonPointInput])
   points: UpdatePolygonPointInput[] = [];
 }

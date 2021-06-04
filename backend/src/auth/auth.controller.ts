@@ -3,14 +3,14 @@ import { Controller, Post, Request, Res, UnauthorizedException, UseGuards } from
 import { User } from '@/entities/user/user.model';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { CurrentUser, NoGuard } from './auth.guard';
+import { CurrentUser } from './auth.guard';
 
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  // @NoGuard()
   @UseGuards(AuthGuard('local')) // passport-local戦略を付与する
-  @NoGuard()
   @Post('api/login')
   async login(@Request() req: { user: User }, @Res({ passthrough: true }) response: Response) {
     // LocalStrategy.validate()で認証して返した値がreq.userに入ってる
@@ -36,7 +36,7 @@ export class AuthController {
     return req.user;
   }
 
-  @NoGuard()
+  // @NoGuard()
   @Post('api/logout')
   async logout(@Res({ passthrough: true }) response: Response) {
     // クッキーから削除

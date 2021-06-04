@@ -17,13 +17,14 @@ import { useForm, Controller } from 'react-hook-form';
 import AddIcon from '@material-ui/icons/Add';
 
 import gql from 'graphql-tag';
-import { useCreateOrganizationMutation } from '@/types/graphql';
+import { useCreateAreaMutation } from '@/types/graphql';
 import { trimedValidate } from '@/utils/field-validate';
 import { useConfirmDialog } from './confirm-dialog';
+import { useRouterParams } from '@/utils/use-router-params';
 
 gql`
-  mutation createOrganization($name: String!) {
-    createOrganization(organization: { name: $name }) {
+  mutation createArea($organizationId: Int!, $name: String!, $description: String!) {
+    createArea(area: { organizationId: $organizationId, name: $name, description: $description }) {
       id
       name
     }
@@ -46,25 +47,29 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 /** 新規組織作成ダイアログを表示ボタン */
-export const OrganizationCreateButton = () => {
+export const AreaCreateButton = () => {
   const [open, setOpen] = useState(false);
   const f = useFormatMessage();
-  const [createOrganizationMutation] = useCreateOrganizationMutation();
+  const [createAreaMutation] = useCreateAreaMutation();
   const classes = useStyles();
   const [error, setError] = useState('');
   const confirmDialog = useConfirmDialog();
+  const routerParams = useRouterParams();
 
   const defaultValues = {
     name: '',
+    description: '',
   };
 
   const { control, handleSubmit, formState, reset } = useForm({ defaultValues });
 
   const onSubmit = async (data: typeof defaultValues) => {
     try {
-      const result = await createOrganizationMutation({
+      const result = await createAreaMutation({
         variables: {
-          name: data.name.trim(),
+          organizationId: routerParams.getOrganizationId(),
+          name: data.name,
+          description: data.description,
         },
       });
       result.errors;
@@ -89,10 +94,10 @@ export const OrganizationCreateButton = () => {
       </Fab>
 
       <Dialog open={open} fullWidth={true} maxWidth="sm" disableBackdropClick disableEscapeKeyDown>
-        <DialogTitle>新規組織の追加</DialogTitle>
+        <DialogTitle>新規区域の追加</DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <DialogContent>
-            <DialogContentText>自分が管理者として所属する新しい組織を作成します。</DialogContentText>
+            <DialogContentText>組織内の新しい区域を作成します。</DialogContentText>
 
             <Controller
               name="name"
@@ -103,10 +108,29 @@ export const OrganizationCreateButton = () => {
               })}
               render={(x) => (
                 <TextField
-                  label="組織名"
+                  label="区域名"
                   required
                   fullWidth
                   autoFocus
+                  margin="dense"
+                  helperText={x.fieldState.error?.message}
+                  error={!!x.fieldState.error}
+                  FormHelperTextProps={{ classes: { root: classes.helperText } }}
+                  {...x.field}
+                />
+              )}
+            />
+
+            <Controller
+              name="description"
+              control={control}
+              rules={trimedValidate({
+                maxLength: 100,
+              })}
+              render={(x) => (
+                <TextField
+                  label="解説"
+                  fullWidth
                   margin="dense"
                   helperText={x.fieldState.error?.message}
                   error={!!x.fieldState.error}
@@ -129,7 +153,7 @@ export const OrganizationCreateButton = () => {
               onClick={() => {
                 if (formState.isDirty) {
                   confirmDialog.open({
-                    description: '新規組織は追加されていません。キャンセルしますか？',
+                    description: '新規区域は追加されていません。キャンセルしますか？',
                     action: () => {
                       setOpen(false);
                     },

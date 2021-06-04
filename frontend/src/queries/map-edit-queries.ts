@@ -267,7 +267,6 @@ gql`
   }
 `;
 
-// ユーザーエリアの全情報を取得
 gql`
   mutation createResidence($areaId: ID!, $latitude: Float!, $longitude: Float!) {
     createResidence(residence: { areaId: $areaId, name: "", latitude: $latitude, longitude: $longitude }) {
