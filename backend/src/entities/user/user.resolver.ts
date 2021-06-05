@@ -14,12 +14,12 @@ import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 export class UserResolver {
   constructor(@Inject(UserService) private userService: UserService) {}
 
-  // /** 現在ログインしているユーザーの情報を取得します。 */
-  // @UseGuards(GqlAuthGuard)
-  // @Query(() => User)
-  // async currentUser(@CurrentUser() currentUser: User) {
-  //   return currentUser;
-  // }
+  /** 現在ログインしているユーザーの情報を取得します。プログラムからは使う予定なし。デバッグ用 */
+  @UseGuards(GqlAuthGuard)
+  @Query(() => User)
+  async currentUser(@CurrentUser() currentUser: User) {
+    return currentUser;
+  }
 
   // /** ユーザー一覧を権限情報と共に取得します */
   // @UseGuards(GqlAuthGuard)

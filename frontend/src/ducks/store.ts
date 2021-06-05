@@ -125,6 +125,9 @@ export const storeSlice = createSlice({
       //   state.map.selectedResidenceId = undefined;
       // }
     },
+    setAreaListEditing: (state, action: PayloadAction<{ editing: boolean }>) => {
+      state.areaList.editing = action.payload.editing;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(asyncRefreshLoginUser.fulfilled, (state, action) => {

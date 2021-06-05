@@ -10,7 +10,7 @@ import ApartmentIcon from '@material-ui/icons/Apartment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
 import { useRouterParams } from '@/utils/use-router-params';
-import { useGetUserAreaQuery, UserArea } from '@/types/graphql';
+import { Area, useGetAreaQuery, UserArea } from '@/types/graphql';
 import { MapOutput } from './map';
 
 const useStyle = makeStyles((theme) => ({
@@ -64,11 +64,11 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
   const routerParams = useRouterParams();
 
   // queries
-  const getUserAreaResult = useGetUserAreaQuery({
+  const getUserAreaResult = useGetAreaQuery({
     variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.getAreaId() },
     skip: !routerParams.hasOrganizationAndArea,
   });
-  const userArea = getUserAreaResult.data?.userAreas?.[0];
+  const area = getUserAreaResult.data?.areas[0];
 
   // mutations
   const [createOutline] = AreaQueries.useCreateOutline();
@@ -84,11 +84,11 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
     { type: MapEditType.Outline, icon: <Crop54Icon />, tooltip: 'アウトライン' },
   ];
 
-  if (userArea == null) {
+  if (area == null) {
     return null;
   }
 
-  const selectedOutline = userArea.area.outlines.find((x) => x.id === selectedOutlineId?.toString());
+  const selectedOutline = area.outlines.find((x) => x.id === selectedOutlineId?.toString());
 
   return (
     <>
@@ -98,7 +98,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
             <Fab
               className={classes.toolButton}
               onClick={async () => {
-                const bounds = getMapBoundsFromArea(userArea as UserArea);
+                const bounds = getMapBoundsFromArea(area as Area);
                 const map = props.map.current?.getInfo().map;
                 if (bounds != null && map != null) {
                   map.fitBounds(bounds, 0);
@@ -206,7 +206,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
                     const scale = 0.7;
                     const result = await createOutline({
                       variables: {
-                        areaId: userArea.area.id,
+                        areaId: area.id,
                         points: [
                           { longitude: x1 * scale + x2 * (1 - scale), latitude: y1 * scale + y2 * (1 - scale) },
                           { longitude: x2 * scale + x1 * (1 - scale), latitude: y1 * scale + y2 * (1 - scale) },

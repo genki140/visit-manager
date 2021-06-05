@@ -89,10 +89,11 @@ type User {
 scalar Date
 
 type Query {
+  currentUser: User!
   organizations: [Organization!]!
   googleMapApiKey: String!
   getTest: Float!
-  userAreas(ids: [Int!] = null, organizationId: Int!): [UserArea!]!
+  areas(ids: [Int!] = null, userIds: [Int!] = null, organizationId: Int!): [Area!]!
 }
 
 type Mutation {

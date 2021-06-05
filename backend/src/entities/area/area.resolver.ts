@@ -11,48 +11,69 @@ import { AreaService } from './area.service';
 export class AreaResolver {
   constructor(@Inject(AreaService) private areaService: AreaService) {}
 
-  // @UseGuards(GqlAuthGuard)
-  // @Query(() => [Area])
-  // async areas(
-  //   @Args('organizationId', { type: () => Int }) organizationId: number,
-  //   @Args('userIds', { type: () => [Int], nullable: true, defaultValue: null }) userIds: number[] | null,
-  //   @Args('ids', { type: () => [Int], nullable: true, defaultValue: null }) ids: number[] | null,
-  //   @CurrentUser() currentUser: User,
-  // ) {
-  //   // 組織に所属していなければ例外を返す
-  //   if (currentUser.userOrganizations?.some((x) => x.organization?.id === organizationId) !== true) {
-  //     throw new AuthenticationError('');
-  //     // throw new ApolloError('organization id not found.', 'NOT_FOUND');
-  //   }
+  @UseGuards(GqlAuthGuard)
+  @Query(() => [Area])
+  async areas(
+    @Args('organizationId', { type: () => Int }) organizationId: number,
+    @Args('userIds', { type: () => [Int], nullable: true, defaultValue: null }) userIds: number[] | null,
+    @Args('ids', { type: () => [Int], nullable: true, defaultValue: null }) ids: number[] | null,
+    @CurrentUser() currentUser: User,
+  ) {
+    // 組織に所属していなければ例外を返す
+    if (currentUser.userOrganizations?.some((x) => x.organization?.id === organizationId) !== true) {
+      throw new AuthenticationError('');
+      // throw new ApolloError('organization id not found.', 'NOT_FOUND');
+    }
 
-  //   // const user = (
-  //   //   await this.userService.find(undefined, {
-  //   //     where: { id: currentUser.id },
-  //   //     relations: [
-  //   //       'userAreas',
-  //   //       'userAreas.area',
-  //   //       'userAreas.area.organization',
-  //   //       'userAreas.area.residences',
-  //   //       'userAreas.area.residences.residents',
-  //   //       'userAreas.area.outlines',
-  //   //       'userAreas.area.outlines.points',
-  //   //       'userOrganizations',
-  //   //       'userOrganizations.organization',
-  //   //     ],
-  //   //   })
-  //   // )[0];
+    let result = await this.areaService.find(ids ?? undefined, {
+      where: {
+        organizationId: organizationId,
+      },
+      relations: [
+        'organization',
+        'residences',
+        'residences.residents',
+        'outlines',
+        'outlines.points',
+        'userAreas',
+        'userAreas.user',
+      ],
+    });
 
-  //   const result =
-  //     user.userAreas?.filter(
-  //       (x) => ids?.some((y) => y === x.area?.id) !== false && x?.area?.organization?.id === organizationId,
-  //     ) ?? [];
+    if (userIds != null) {
+      result = result.filter((x) => x.userAreas?.some((y) => userIds.some((z) => y.user?.id === z)));
+    }
 
-  //   if (ids != null && result.length !== ids.length) {
-  //     throw new AuthenticationError('');
-  //     // throw new ApolloError('Some IDs were not found.', 'NOT_FOUND');
-  //   }
-  //   return result;
-  // }
+    return result;
+
+    // const user = (
+    //   await this.userService.find(undefined, {
+    //     where: { id: currentUser.id },
+    //     relations: [
+    //       'userAreas',
+    //       'userAreas.area',
+    //       'userAreas.area.organization',
+    //       'userAreas.area.residences',
+    //       'userAreas.area.residences.residents',
+    //       'userAreas.area.outlines',
+    //       'userAreas.area.outlines.points',
+    //       'userOrganizations',
+    //       'userOrganizations.organization',
+    //     ],
+    //   })
+    // )[0];
+
+    // const result =
+    //   user.userAreas?.filter(
+    //     (x) => ids?.some((y) => y === x.area?.id) !== false && x?.area?.organization?.id === organizationId,
+    //   ) ?? [];
+
+    // if (ids != null && result.length !== ids.length) {
+    //   throw new AuthenticationError('');
+    //   // throw new ApolloError('Some IDs were not found.', 'NOT_FOUND');
+    // }
+    // return result;
+  }
 
   // @UseGuards(GqlAuthGuard)
   // @Query(() => [Area])

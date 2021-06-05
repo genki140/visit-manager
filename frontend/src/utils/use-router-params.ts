@@ -10,12 +10,12 @@ export const useRouterParams = () => {
 
   // console.log(user);
 
-  const getOrganizationId = () =>
-    Number(
-      user?.userOrganizations.find(
-        (x) => x.organization.id.toString() === organizationName || x.organization.name === organizationName,
-      )?.organization.id,
-    );
+  const getOrganizationId = () => {
+    const value = user?.userOrganizations.find(
+      (x) => x.organization.id.toString() === organizationName || x.organization.name === organizationName,
+    )?.organization.id;
+    return value != null ? Number(value) : 0;
+  };
 
   return {
     organizationName,
@@ -23,13 +23,13 @@ export const useRouterParams = () => {
     hasOrganizationAndArea: organizationName !== '' && areaName !== '',
     // 組織名文字列からIDを取得
     getOrganizationId,
-    getAreaId: () =>
-      Number(
-        user?.userAreas.find(
-          (x) =>
-            x.area.organizationId === getOrganizationId() &&
-            (x.area.id.toString() === areaName || x.area.name === areaName),
-        )?.area.id,
-      ),
+    getAreaId: () => {
+      const value = user?.userAreas.find(
+        (x) =>
+          x.area.organizationId === getOrganizationId() &&
+          (x.area.id.toString() === areaName || x.area.name === areaName),
+      )?.area.id;
+      return value != null ? Number(value) : 0;
+    },
   };
 };

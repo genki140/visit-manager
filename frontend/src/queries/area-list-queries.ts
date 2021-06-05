@@ -58,14 +58,11 @@ import { ApolloCache, gql } from '@apollo/client';
 // ----------------------------------------gql----------------------------------------
 
 gql`
-  query getUserAreas($organizationId: Int!) {
-    userAreas(organizationId: $organizationId) {
+  query getAreas($organizationId: Int!, $userIds: [Int!]) {
+    areas(organizationId: $organizationId, userIds: $userIds) {
       id
-      area {
-        id
-        name
-        description
-      }
+      name
+      description
     }
   }
 `;

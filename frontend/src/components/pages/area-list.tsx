@@ -1,6 +1,17 @@
-import { Box, Card, CardActionArea, CardContent, CardHeader, List, ListItem, Typography } from '@material-ui/core';
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardHeader,
+  Fab,
+  List,
+  ListItem,
+  makeStyles,
+  Theme,
+  Typography,
+} from '@material-ui/core';
 import Link from 'next/link';
-import { useGetUserAreasQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
 import { Layout } from '@/components/layouts';
 import { Custom404 } from '@/pages/404';
@@ -9,23 +20,33 @@ import React from 'react';
 import { MovableList } from '../movable-list';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import { AreaCreateButton } from '../dialogs/area-create-button';
+import { useGetAreasQuery } from '@/types/graphql';
+import { actions, useAppDispatch, useStoreState } from '@/ducks/store';
+import EditIcon from '@material-ui/icons/Edit';
 
-// // スタイル定義
-// const useStyles = makeStyles(() => ({
-//   list: {
-//     display: 'grid',
-//     gridAutoRows: 'auto',
-//     gap: 10,
-//   },
-// }));
+// スタイル定義
+const useStyles = makeStyles((theme: Theme) => ({
+  // list: {
+  //   display: 'grid',
+  //   gridAutoRows: 'auto',
+  //   gap: 10,
+  // },
+  fab2: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    left: theme.spacing(2),
+  },
+}));
 
 export const AreaList = () => {
-  // const classes = useStyles();
-  // const editing = useStoreState((x) => x.areaList.editing);
+  const classes = useStyles();
   const routerParams = useRouterParams();
+  const user = useStoreState((x) => x.loginUser);
+  const editing = useStoreState((x) => x.areaList.editing);
+  const dispatch = useAppDispatch();
 
-  const { loading, error, data } = useGetUserAreasQuery({
-    variables: { organizationId: routerParams.getOrganizationId() },
+  const { loading, error, data } = useGetAreasQuery({
+    variables: { organizationId: routerParams.getOrganizationId(), userIds: editing ? undefined : [Number(user?.id)] },
     skip: routerParams.organizationName === '',
   });
 
@@ -50,15 +71,15 @@ export const AreaList = () => {
           </Typography>
           <List>
             <MovableList onMove={onMove}>
-              {(data?.userAreas ?? []).map((x) => ({
+              {(data?.areas ?? []).map((x) => ({
                 key: x.id,
                 node: (draggableProps: any) => (
                   <ListItem>
-                    <Link href={'/' + routerParams.organizationName + '/' + x.area.name}>
+                    <Link href={'/' + routerParams.organizationName + '/' + x.name}>
                       <Card style={{ width: '100%' }}>
                         <CardActionArea>
                           <CardHeader
-                            title={x.area.name}
+                            title={x.name}
                             action={
                               <div {...draggableProps} style={{ margin: 5 }}>
                                 <DragHandleIcon className="drag-handle" />
@@ -80,6 +101,15 @@ export const AreaList = () => {
           </List>
         </Box>
         <AreaCreateButton />
+        <Fab
+          className={classes.fab2}
+          onClick={() => {
+            // toggle editing
+            dispatch(actions.setAreaListEditing({ editing: !editing }));
+          }}
+        >
+          <EditIcon />
+        </Fab>
       </LoadingContainer>
     </Layout>
   );

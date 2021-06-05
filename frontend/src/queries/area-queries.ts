@@ -3,16 +3,16 @@ import { ApolloCache, gql } from '@apollo/client';
 import {
   DeleteOutlineMutationVariables,
   DeleteResidenceMutationVariables,
-  GetUserAreaDocument,
-  GetUserAreaQuery,
-  GetUserAreaQueryVariables,
+  GetAreaDocument,
+  GetAreaQuery,
+  GetAreaQueryVariables,
   UpdateOutlineMutationVariables,
   UpdateResidenceMutationVariables,
   useCreateOutlineMutation,
   useCreateResidenceMutation,
   useDeleteOutlineMutation,
   useDeleteResidenceMutation,
-  useGetUserAreaQuery,
+  useGetAreaQuery,
   useUpdateOutlineMutation,
   useUpdateResidenceMutation,
 } from '@/types/graphql';
@@ -23,9 +23,9 @@ import { useRouterParams } from '@/utils/use-router-params';
 
 export class AreaQueries {
   /** キャッシュ更新用ヘルパー */
-  private static useUserAreaQueryCache = () => {
+  private static useAreaQueryCache = () => {
     const routerParams = useRouterParams();
-    const getUserAreaResultVariables = {
+    const getAreaResultVariables = {
       organizationId: routerParams.getOrganizationId(),
       areaId: routerParams.getAreaId(),
     };
@@ -33,18 +33,18 @@ export class AreaQueries {
     return {
       read: <T>(cache: ApolloCache<T>) => {
         let copiedData = TypeUtil.toNonNullable(
-          cache.readQuery<GetUserAreaQuery, GetUserAreaQueryVariables>({
-            query: GetUserAreaDocument,
-            variables: getUserAreaResultVariables,
+          cache.readQuery<GetAreaQuery, GetAreaQueryVariables>({
+            query: GetAreaDocument,
+            variables: getAreaResultVariables,
           }),
         );
         copiedData = JSON.parse(JSON.stringify(copiedData)) as typeof copiedData;
         return copiedData;
       },
       write: <T, U>(cache: ApolloCache<T>, data: U) => {
-        return cache.writeQuery<U, GetUserAreaQueryVariables>({
-          query: GetUserAreaDocument,
-          variables: getUserAreaResultVariables,
+        return cache.writeQuery<U, GetAreaQueryVariables>({
+          query: GetAreaDocument,
+          variables: getAreaResultVariables,
           data: data,
         });
       },
@@ -53,23 +53,23 @@ export class AreaQueries {
 
   /** キャッシュを自動更新するミューテーション */
   static useCreateResidence = () => {
-    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
+    const areaQueryCache = AreaQueries.useAreaQueryCache();
     return useCreateResidenceMutation({
       update: (cache, result) => {
         const data = TypeUtil.toNonNullable(result.data);
-        const cacheData = userAreaQueryCache.read(cache);
+        const cacheData = areaQueryCache.read(cache);
 
         // クエリに対するキャッシュデータ書き換え
-        cacheData.userAreas[0].area.residences.push(data.createResidence);
+        cacheData.areas[0].residences.push(data.createResidence);
 
-        userAreaQueryCache.write(cache, cacheData);
+        areaQueryCache.write(cache, cacheData);
       },
     });
   };
 
   /** 住宅座標を更新 */
   static useUpdateResidence = () => {
-    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
+    const areaQueryCache = AreaQueries.useAreaQueryCache();
     const [updateResidence] = useUpdateResidenceMutation();
     const result = (variables: UpdateResidenceMutationVariables) =>
       updateResidence({
@@ -87,33 +87,33 @@ export class AreaQueries {
         },
         update: (cache, result) => {
           const data = TypeUtil.toNonNullable(result.data);
-          const cacheData = userAreaQueryCache.read(cache);
+          const cacheData = areaQueryCache.read(cache);
 
           // クエリに対するキャッシュデータ書き換え
-          const outline = Enumerable.from(cacheData.userAreas[0]?.area?.outlines ?? [])
+          const outline = Enumerable.from(cacheData.areas[0].outlines)
             .selectMany((x) => x.points)
             .first((x) => x.id === variables.id);
           outline.latitude = data.updateResidence.latitude;
           outline.longitude = data.updateResidence.longitude;
 
-          userAreaQueryCache.write(cache, cacheData);
+          areaQueryCache.write(cache, cacheData);
         },
       });
     return result;
   };
 
   static useDeleteResidence = () => {
-    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
+    const areaQueryCache = AreaQueries.useAreaQueryCache();
     const [deleteResidenceMutation] = useDeleteResidenceMutation();
     const resultFunction = async (variables: DeleteResidenceMutationVariables) => {
       return deleteResidenceMutation({
         variables: variables,
         update: (cache) => {
-          const cacheData = userAreaQueryCache.read(cache);
+          const cacheData = areaQueryCache.read(cache);
           // クエリに対するキャッシュデータ書き換え
-          const area = cacheData.userAreas[0].area;
+          const area = cacheData.areas[0];
           area.residences = area.residences.filter((x) => x.id !== variables.id);
-          userAreaQueryCache.write(cache, cacheData);
+          areaQueryCache.write(cache, cacheData);
         },
       });
     };
@@ -122,38 +122,38 @@ export class AreaQueries {
 
   /** アウトラインを生成し、キャッシュを更新 */
   static useCreateOutline = () => {
-    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
+    const areaQueryCache = AreaQueries.useAreaQueryCache();
     return useCreateOutlineMutation({
       update: (cache, result) => {
         const data = TypeUtil.toNonNullable(result.data);
-        const cacheData = userAreaQueryCache.read(cache);
+        const cacheData = areaQueryCache.read(cache);
 
         // クエリに対するキャッシュデータ書き換え
-        const outlines = TypeUtil.toNonNullable(cacheData?.userAreas?.[0]?.area?.outlines);
+        const outlines = TypeUtil.toNonNullable(cacheData.areas[0].outlines);
         outlines.push(data.createOutline);
 
-        userAreaQueryCache.write(cache, cacheData);
+        areaQueryCache.write(cache, cacheData);
       },
     });
   };
 
   /** アウトラインを更新し、キャッシュを更新 */
   static useUpdateOutline = () => {
-    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
+    const areaQueryCache = AreaQueries.useAreaQueryCache();
 
     // queries
     const routerParams = useRouterParams();
-    const getUserAreaResult = useGetUserAreaQuery({
+    const getAreaResult = useGetAreaQuery({
       variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.getAreaId() },
       skip: !routerParams.hasOrganizationAndArea,
     });
-    const userArea = getUserAreaResult.data?.userAreas?.[0];
+    const area = getAreaResult.data?.areas[0];
 
     // mutations
     const [updateOutlineMutation] = useUpdateOutlineMutation();
 
     const resultFunction = async (variables: UpdateOutlineMutationVariables) => {
-      const prevPoints = userArea?.area?.outlines?.find((x) => x.id === variables.id)?.points ?? [];
+      const prevPoints = area?.outlines?.find((x) => x.id === variables.id)?.points ?? [];
       // 変化がなければスキップ
       {
         const orderdPoints = Enumerable.from(prevPoints)
@@ -192,16 +192,14 @@ export class AreaQueries {
         },
         update: (cache, result) => {
           const data = TypeUtil.toNonNullable(result.data);
-          const cacheData = userAreaQueryCache.read(cache);
+          const cacheData = areaQueryCache.read(cache);
 
           // クエリに対するキャッシュデータ書き換え
-          const outline = TypeUtil.toNonNullable(
-            cacheData.userAreas[0].area.outlines.find((x) => x.id === variables.id),
-          );
+          const outline = TypeUtil.toNonNullable(cacheData.areas[0].outlines.find((x) => x.id === variables.id));
           outline.points = data.updateOutline.points;
 
           // InMemoryCache の設定で自動マージしています
-          userAreaQueryCache.write(cache, cacheData);
+          areaQueryCache.write(cache, cacheData);
         },
       });
     };
@@ -210,7 +208,7 @@ export class AreaQueries {
 
   /** アウトラインを削除し、キャッシュを更新 */
   static useDeleteOutline = () => {
-    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
+    const areaQueryCache = AreaQueries.useAreaQueryCache();
     const [deleteOutlineMutation] = useDeleteOutlineMutation();
 
     const resultFunction = async (variables: DeleteOutlineMutationVariables) => {
@@ -218,13 +216,13 @@ export class AreaQueries {
         variables: variables,
         update: (cache) => {
           // const data = TypeUtil.toNonNullable(result.data);
-          const cacheData = userAreaQueryCache.read(cache);
+          const cacheData = areaQueryCache.read(cache);
 
           // クエリに対するキャッシュデータ書き換え
-          const area = cacheData.userAreas[0].area;
+          const area = cacheData.areas[0];
           area.outlines = area.outlines.filter((x) => x.id !== variables.id);
 
-          userAreaQueryCache.write(cache, cacheData);
+          areaQueryCache.write(cache, cacheData);
 
           // // キャッシュから削除
           // cache.evict({ id: cache.identify({ id: variables.id, __typename: 'Outline' }) });
@@ -240,31 +238,29 @@ export class AreaQueries {
 
 // ユーザーエリアの全情報を取得
 gql`
-  query getUserArea($organizationId: Int!, $areaId: Int!) {
-    userAreas(organizationId: $organizationId, ids: [$areaId]) {
-      area {
+  query getArea($organizationId: Int!, $areaId: Int!) {
+    areas(organizationId: $organizationId, ids: [$areaId]) {
+      id
+      name
+      description
+      residences {
         id
         name
-        description
-        residences {
+        latitude
+        longitude
+        residents {
           id
-          name
+          room
+          floor
+        }
+      }
+      outlines {
+        id
+        points {
+          id
+          order
           latitude
           longitude
-          residents {
-            id
-            room
-            floor
-          }
-        }
-        outlines {
-          id
-          points {
-            id
-            order
-            latitude
-            longitude
-          }
         }
       }
     }

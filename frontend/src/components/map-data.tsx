@@ -1,5 +1,5 @@
 import { MapEditType, useStoreState } from '@/ducks/store';
-import { Outline, Residence, useGetUserAreaQuery, UserArea } from '@/types/graphql';
+import { Area, Outline, Residence, useGetAreaQuery, UserArea } from '@/types/graphql';
 import { useRouterParams } from '@/utils/use-router-params';
 import Enumerable from 'linq';
 import { MutableRefObject, useEffect, useState } from 'react';
@@ -7,12 +7,12 @@ import { MapOutput } from './map';
 import { MapOutline } from './map-outline';
 import { MapResidence } from './map-residence';
 
-export const getMapBoundsFromArea = (userArea: UserArea | undefined) => {
+export const getMapBoundsFromArea = (area: Area | undefined) => {
   const allLatLngEnum = Enumerable.from(
-    Enumerable.from(userArea?.area.outlines ?? [])
+    Enumerable.from(area?.outlines ?? [])
       .selectMany((x) => x.points)
       .select((x) => ({ lat: x.latitude, lng: x.longitude }))
-      .concat(Enumerable.from(userArea?.area.residences ?? []).select((x) => ({ lat: x.latitude, lng: x.longitude })))
+      .concat(Enumerable.from(area?.residences ?? []).select((x) => ({ lat: x.latitude, lng: x.longitude })))
       .toArray(),
   );
   let bounds: google.maps.LatLngBounds | undefined = undefined;
@@ -32,10 +32,10 @@ export const getMapBoundsFromArea = (userArea: UserArea | undefined) => {
 
 const useFitBoundsEffect = (
   mapRef: MutableRefObject<MapOutput | undefined>,
-  userArea: UserArea | undefined,
+  area: Area | undefined,
   loading: boolean,
 ) => {
-  const bounds = getMapBoundsFromArea(userArea);
+  const bounds = getMapBoundsFromArea(area);
   const [fitted, setFitted] = useState(false);
   const center = bounds == null && loading === false ? { lat: 37.94181358543269, lng: 139.10948906051917 } : undefined;
 
@@ -78,23 +78,23 @@ const MapData = (props: { map: MutableRefObject<MapOutput | undefined> }) => {
   const routerParams = useRouterParams();
 
   // queries
-  const getUserAreaResult = useGetUserAreaQuery({
+  const getUserAreaResult = useGetAreaQuery({
     variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.getAreaId() },
     skip: !routerParams.hasOrganizationAndArea,
   });
-  const userArea = getUserAreaResult.data?.userAreas?.[0];
+  const area = getUserAreaResult.data?.areas[0];
 
   // 地図の表示サイズ設定
-  useFitBoundsEffect(props.map, userArea as UserArea | undefined, getUserAreaResult.loading);
+  useFitBoundsEffect(props.map, area as Area | undefined, getUserAreaResult.loading);
 
-  if (userArea == null) {
+  if (area == null) {
     return null;
   }
 
   // render
   return (
     <>
-      {userArea.area.residences.map((residence) => {
+      {area.residences.map((residence) => {
         return (
           <MapResidence
             key={'residence:' + residence.id}
@@ -110,7 +110,7 @@ const MapData = (props: { map: MutableRefObject<MapOutput | undefined> }) => {
         );
       })}
 
-      {userArea.area.outlines.map((outline) => {
+      {area.outlines.map((outline) => {
         return (
           <MapOutline
             key={'outline:' + outline.id}

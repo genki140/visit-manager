@@ -2,10 +2,10 @@ import { mapStyles } from '@/styles/map-styles';
 import { GoogleMap } from '@react-google-maps/api';
 import React, { forwardRef, ReactNode, useImperativeHandle, useState } from 'react';
 import { actions, MapEditType, useAppDispatch, useStoreState } from '@/ducks/store';
-import { useGetUserAreaQuery } from '@/types/graphql';
 import { useRouterParams } from '@/utils/use-router-params';
 import { AreaQueries } from '@/queries/area-queries';
 import Head from 'next/head';
+import { useGetAreaQuery } from '@/types/graphql';
 
 export type MapOutput = {
   getInfo: () => {
@@ -43,11 +43,11 @@ const Map = forwardRef<
   const routerParams = useRouterParams();
 
   // queries
-  const getUserAreaResult = useGetUserAreaQuery({
+  const getUserAreaResult = useGetAreaQuery({
     variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.getAreaId() },
     skip: !routerParams.hasOrganizationAndArea,
   });
-  const userArea = getUserAreaResult.data?.userAreas?.[0];
+  const area = getUserAreaResult.data?.areas[0];
 
   // mutations
   const [createResidence] = AreaQueries.useCreateResidence();
@@ -98,10 +98,10 @@ const Map = forwardRef<
             return;
           }
 
-          if (userArea != null) {
+          if (area != null) {
             const result = await createResidence({
               variables: {
-                areaId: userArea.area.id,
+                areaId: area.id,
                 latitude: e.latLng.lat(),
                 longitude: e.latLng.lng(),
               },

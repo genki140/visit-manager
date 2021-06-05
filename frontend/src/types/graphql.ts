@@ -158,15 +158,17 @@ export type OutlinePoint = {
 
 export type Query = {
   __typename?: 'Query';
+  currentUser: User;
   organizations: Array<Organization>;
   googleMapApiKey: Scalars['String'];
   getTest: Scalars['Float'];
-  userAreas: Array<UserArea>;
+  areas: Array<Area>;
 };
 
 
-export type QueryUserAreasArgs = {
+export type QueryAreasArgs = {
   ids?: Maybe<Array<Scalars['Int']>>;
+  userIds?: Maybe<Array<Scalars['Int']>>;
   organizationId: Scalars['Int'];
 };
 
@@ -298,52 +300,46 @@ export type AddTestMutation = (
   & Pick<Mutation, 'addTest'>
 );
 
-export type GetUserAreasQueryVariables = Exact<{
+export type GetAreasQueryVariables = Exact<{
   organizationId: Scalars['Int'];
+  userIds?: Maybe<Array<Scalars['Int']> | Scalars['Int']>;
 }>;
 
 
-export type GetUserAreasQuery = (
+export type GetAreasQuery = (
   { __typename?: 'Query' }
-  & { userAreas: Array<(
-    { __typename?: 'UserArea' }
-    & Pick<UserArea, 'id'>
-    & { area: (
-      { __typename?: 'Area' }
-      & Pick<Area, 'id' | 'name' | 'description'>
-    ) }
+  & { areas: Array<(
+    { __typename?: 'Area' }
+    & Pick<Area, 'id' | 'name' | 'description'>
   )> }
 );
 
-export type GetUserAreaQueryVariables = Exact<{
+export type GetAreaQueryVariables = Exact<{
   organizationId: Scalars['Int'];
   areaId: Scalars['Int'];
 }>;
 
 
-export type GetUserAreaQuery = (
+export type GetAreaQuery = (
   { __typename?: 'Query' }
-  & { userAreas: Array<(
-    { __typename?: 'UserArea' }
-    & { area: (
-      { __typename?: 'Area' }
-      & Pick<Area, 'id' | 'name' | 'description'>
-      & { residences: Array<(
-        { __typename?: 'Residence' }
-        & Pick<Residence, 'id' | 'name' | 'latitude' | 'longitude'>
-        & { residents: Array<(
-          { __typename?: 'Resident' }
-          & Pick<Resident, 'id' | 'room' | 'floor'>
-        )> }
-      )>, outlines: Array<(
-        { __typename?: 'Outline' }
-        & Pick<Outline, 'id'>
-        & { points: Array<(
-          { __typename?: 'OutlinePoint' }
-          & Pick<OutlinePoint, 'id' | 'order' | 'latitude' | 'longitude'>
-        )> }
+  & { areas: Array<(
+    { __typename?: 'Area' }
+    & Pick<Area, 'id' | 'name' | 'description'>
+    & { residences: Array<(
+      { __typename?: 'Residence' }
+      & Pick<Residence, 'id' | 'name' | 'latitude' | 'longitude'>
+      & { residents: Array<(
+        { __typename?: 'Resident' }
+        & Pick<Resident, 'id' | 'room' | 'floor'>
       )> }
-    ) }
+    )>, outlines: Array<(
+      { __typename?: 'Outline' }
+      & Pick<Outline, 'id'>
+      & { points: Array<(
+        { __typename?: 'OutlinePoint' }
+        & Pick<OutlinePoint, 'id' | 'order' | 'latitude' | 'longitude'>
+      )> }
+    )> }
   )> }
 );
 
@@ -626,72 +622,68 @@ export function useAddTestMutation(baseOptions?: Apollo.MutationHookOptions<AddT
 export type AddTestMutationHookResult = ReturnType<typeof useAddTestMutation>;
 export type AddTestMutationResult = Apollo.MutationResult<AddTestMutation>;
 export type AddTestMutationOptions = Apollo.BaseMutationOptions<AddTestMutation, AddTestMutationVariables>;
-export const GetUserAreasDocument = gql`
-    query getUserAreas($organizationId: Int!) {
-  userAreas(organizationId: $organizationId) {
+export const GetAreasDocument = gql`
+    query getAreas($organizationId: Int!, $userIds: [Int!]) {
+  areas(organizationId: $organizationId, userIds: $userIds) {
     id
-    area {
-      id
-      name
-      description
-    }
+    name
+    description
   }
 }
     `;
 
 /**
- * __useGetUserAreasQuery__
+ * __useGetAreasQuery__
  *
- * To run a query within a React component, call `useGetUserAreasQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserAreasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAreasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAreasQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUserAreasQuery({
+ * const { data, loading, error } = useGetAreasQuery({
  *   variables: {
  *      organizationId: // value for 'organizationId'
+ *      userIds: // value for 'userIds'
  *   },
  * });
  */
-export function useGetUserAreasQuery(baseOptions: Apollo.QueryHookOptions<GetUserAreasQuery, GetUserAreasQueryVariables>) {
+export function useGetAreasQuery(baseOptions: Apollo.QueryHookOptions<GetAreasQuery, GetAreasQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserAreasQuery, GetUserAreasQueryVariables>(GetUserAreasDocument, options);
+        return Apollo.useQuery<GetAreasQuery, GetAreasQueryVariables>(GetAreasDocument, options);
       }
-export function useGetUserAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserAreasQuery, GetUserAreasQueryVariables>) {
+export function useGetAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAreasQuery, GetAreasQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserAreasQuery, GetUserAreasQueryVariables>(GetUserAreasDocument, options);
+          return Apollo.useLazyQuery<GetAreasQuery, GetAreasQueryVariables>(GetAreasDocument, options);
         }
-export type GetUserAreasQueryHookResult = ReturnType<typeof useGetUserAreasQuery>;
-export type GetUserAreasLazyQueryHookResult = ReturnType<typeof useGetUserAreasLazyQuery>;
-export type GetUserAreasQueryResult = Apollo.QueryResult<GetUserAreasQuery, GetUserAreasQueryVariables>;
-export const GetUserAreaDocument = gql`
-    query getUserArea($organizationId: Int!, $areaId: Int!) {
-  userAreas(organizationId: $organizationId, ids: [$areaId]) {
-    area {
+export type GetAreasQueryHookResult = ReturnType<typeof useGetAreasQuery>;
+export type GetAreasLazyQueryHookResult = ReturnType<typeof useGetAreasLazyQuery>;
+export type GetAreasQueryResult = Apollo.QueryResult<GetAreasQuery, GetAreasQueryVariables>;
+export const GetAreaDocument = gql`
+    query getArea($organizationId: Int!, $areaId: Int!) {
+  areas(organizationId: $organizationId, ids: [$areaId]) {
+    id
+    name
+    description
+    residences {
       id
       name
-      description
-      residences {
+      latitude
+      longitude
+      residents {
         id
-        name
+        room
+        floor
+      }
+    }
+    outlines {
+      id
+      points {
+        id
+        order
         latitude
         longitude
-        residents {
-          id
-          room
-          floor
-        }
-      }
-      outlines {
-        id
-        points {
-          id
-          order
-          latitude
-          longitude
-        }
       }
     }
   }
@@ -699,33 +691,33 @@ export const GetUserAreaDocument = gql`
     `;
 
 /**
- * __useGetUserAreaQuery__
+ * __useGetAreaQuery__
  *
- * To run a query within a React component, call `useGetUserAreaQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserAreaQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAreaQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAreaQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUserAreaQuery({
+ * const { data, loading, error } = useGetAreaQuery({
  *   variables: {
  *      organizationId: // value for 'organizationId'
  *      areaId: // value for 'areaId'
  *   },
  * });
  */
-export function useGetUserAreaQuery(baseOptions: Apollo.QueryHookOptions<GetUserAreaQuery, GetUserAreaQueryVariables>) {
+export function useGetAreaQuery(baseOptions: Apollo.QueryHookOptions<GetAreaQuery, GetAreaQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserAreaQuery, GetUserAreaQueryVariables>(GetUserAreaDocument, options);
+        return Apollo.useQuery<GetAreaQuery, GetAreaQueryVariables>(GetAreaDocument, options);
       }
-export function useGetUserAreaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserAreaQuery, GetUserAreaQueryVariables>) {
+export function useGetAreaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAreaQuery, GetAreaQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserAreaQuery, GetUserAreaQueryVariables>(GetUserAreaDocument, options);
+          return Apollo.useLazyQuery<GetAreaQuery, GetAreaQueryVariables>(GetAreaDocument, options);
         }
-export type GetUserAreaQueryHookResult = ReturnType<typeof useGetUserAreaQuery>;
-export type GetUserAreaLazyQueryHookResult = ReturnType<typeof useGetUserAreaLazyQuery>;
-export type GetUserAreaQueryResult = Apollo.QueryResult<GetUserAreaQuery, GetUserAreaQueryVariables>;
+export type GetAreaQueryHookResult = ReturnType<typeof useGetAreaQuery>;
+export type GetAreaLazyQueryHookResult = ReturnType<typeof useGetAreaLazyQuery>;
+export type GetAreaQueryResult = Apollo.QueryResult<GetAreaQuery, GetAreaQueryVariables>;
 export const CreateResidenceDocument = gql`
     mutation createResidence($areaId: ID!, $latitude: Float!, $longitude: Float!) {
   createResidence(
