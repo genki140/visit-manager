@@ -5,7 +5,7 @@ import React, { memo } from 'react';
 import equal from 'fast-deep-equal';
 import { useRef } from 'react';
 import Enumerable from 'linq';
-import { MapQueries } from '@/queries/map-edit-queries';
+import { AreaQueries } from '@/queries/area-queries';
 
 // 頂点取得や削除の参考資料
 // https://developers.google.com/maps/documentation/javascript/examples/delete-vertex-menu
@@ -20,7 +20,7 @@ export const MapOutline = memo(
     const selectedOutlinePointId = useStoreState((x) => x.map.selectedOutlinePointId);
 
     // mutations
-    const updateOutline = MapQueries.useUpdateOutline();
+    const updateOutline = AreaQueries.useUpdateOutline();
 
     const orderdPoints = Enumerable.from(props.outline.points)
       .orderBy((x) => x.order)

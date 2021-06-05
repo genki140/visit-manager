@@ -261,19 +261,6 @@ export type CreateAreaMutation = (
   ) }
 );
 
-export type CreateOrganizationMutationVariables = Exact<{
-  name: Scalars['String'];
-}>;
-
-
-export type CreateOrganizationMutation = (
-  { __typename?: 'Mutation' }
-  & { createOrganization: (
-    { __typename?: 'Organization' }
-    & Pick<Organization, 'id' | 'name'>
-  ) }
-);
-
 export type CreateUserMutationVariables = Exact<{
   user: CreateUserInput;
 }>;
@@ -309,6 +296,23 @@ export type AddTestMutationVariables = Exact<{ [key: string]: never; }>;
 export type AddTestMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'addTest'>
+);
+
+export type GetUserAreasQueryVariables = Exact<{
+  organizationId: Scalars['Int'];
+}>;
+
+
+export type GetUserAreasQuery = (
+  { __typename?: 'Query' }
+  & { userAreas: Array<(
+    { __typename?: 'UserArea' }
+    & Pick<UserArea, 'id'>
+    & { area: (
+      { __typename?: 'Area' }
+      & Pick<Area, 'id' | 'name' | 'description'>
+    ) }
+  )> }
 );
 
 export type GetUserAreaQueryVariables = Exact<{
@@ -448,21 +452,17 @@ export type GetOrganizationsQuery = (
   )> }
 );
 
-export type GetUserAreasQueryVariables = Exact<{
-  organizationId: Scalars['Int'];
+export type CreateOrganizationMutationVariables = Exact<{
+  name: Scalars['String'];
 }>;
 
 
-export type GetUserAreasQuery = (
-  { __typename?: 'Query' }
-  & { userAreas: Array<(
-    { __typename?: 'UserArea' }
-    & Pick<UserArea, 'id'>
-    & { area: (
-      { __typename?: 'Area' }
-      & Pick<Area, 'id' | 'name' | 'description'>
-    ) }
-  )> }
+export type CreateOrganizationMutation = (
+  { __typename?: 'Mutation' }
+  & { createOrganization: (
+    { __typename?: 'Organization' }
+    & Pick<Organization, 'id' | 'name'>
+  ) }
 );
 
 
@@ -504,40 +504,6 @@ export function useCreateAreaMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateAreaMutationHookResult = ReturnType<typeof useCreateAreaMutation>;
 export type CreateAreaMutationResult = Apollo.MutationResult<CreateAreaMutation>;
 export type CreateAreaMutationOptions = Apollo.BaseMutationOptions<CreateAreaMutation, CreateAreaMutationVariables>;
-export const CreateOrganizationDocument = gql`
-    mutation createOrganization($name: String!) {
-  createOrganization(organization: {name: $name}) {
-    id
-    name
-  }
-}
-    `;
-export type CreateOrganizationMutationFn = Apollo.MutationFunction<CreateOrganizationMutation, CreateOrganizationMutationVariables>;
-
-/**
- * __useCreateOrganizationMutation__
- *
- * To run a mutation, you first call `useCreateOrganizationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateOrganizationMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createOrganizationMutation, { data, loading, error }] = useCreateOrganizationMutation({
- *   variables: {
- *      name: // value for 'name'
- *   },
- * });
- */
-export function useCreateOrganizationMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrganizationMutation, CreateOrganizationMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateOrganizationMutation, CreateOrganizationMutationVariables>(CreateOrganizationDocument, options);
-      }
-export type CreateOrganizationMutationHookResult = ReturnType<typeof useCreateOrganizationMutation>;
-export type CreateOrganizationMutationResult = Apollo.MutationResult<CreateOrganizationMutation>;
-export type CreateOrganizationMutationOptions = Apollo.BaseMutationOptions<CreateOrganizationMutation, CreateOrganizationMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($user: CreateUserInput!) {
   createUser(user: $user) {
@@ -660,6 +626,46 @@ export function useAddTestMutation(baseOptions?: Apollo.MutationHookOptions<AddT
 export type AddTestMutationHookResult = ReturnType<typeof useAddTestMutation>;
 export type AddTestMutationResult = Apollo.MutationResult<AddTestMutation>;
 export type AddTestMutationOptions = Apollo.BaseMutationOptions<AddTestMutation, AddTestMutationVariables>;
+export const GetUserAreasDocument = gql`
+    query getUserAreas($organizationId: Int!) {
+  userAreas(organizationId: $organizationId) {
+    id
+    area {
+      id
+      name
+      description
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserAreasQuery__
+ *
+ * To run a query within a React component, call `useGetUserAreasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserAreasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserAreasQuery({
+ *   variables: {
+ *      organizationId: // value for 'organizationId'
+ *   },
+ * });
+ */
+export function useGetUserAreasQuery(baseOptions: Apollo.QueryHookOptions<GetUserAreasQuery, GetUserAreasQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserAreasQuery, GetUserAreasQueryVariables>(GetUserAreasDocument, options);
+      }
+export function useGetUserAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserAreasQuery, GetUserAreasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserAreasQuery, GetUserAreasQueryVariables>(GetUserAreasDocument, options);
+        }
+export type GetUserAreasQueryHookResult = ReturnType<typeof useGetUserAreasQuery>;
+export type GetUserAreasLazyQueryHookResult = ReturnType<typeof useGetUserAreasLazyQuery>;
+export type GetUserAreasQueryResult = Apollo.QueryResult<GetUserAreasQuery, GetUserAreasQueryVariables>;
 export const GetUserAreaDocument = gql`
     query getUserArea($organizationId: Int!, $areaId: Int!) {
   userAreas(organizationId: $organizationId, ids: [$areaId]) {
@@ -987,43 +993,37 @@ export function useGetOrganizationsLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetOrganizationsQueryHookResult = ReturnType<typeof useGetOrganizationsQuery>;
 export type GetOrganizationsLazyQueryHookResult = ReturnType<typeof useGetOrganizationsLazyQuery>;
 export type GetOrganizationsQueryResult = Apollo.QueryResult<GetOrganizationsQuery, GetOrganizationsQueryVariables>;
-export const GetUserAreasDocument = gql`
-    query getUserAreas($organizationId: Int!) {
-  userAreas(organizationId: $organizationId) {
+export const CreateOrganizationDocument = gql`
+    mutation createOrganization($name: String!) {
+  createOrganization(organization: {name: $name}) {
     id
-    area {
-      id
-      name
-      description
-    }
+    name
   }
 }
     `;
+export type CreateOrganizationMutationFn = Apollo.MutationFunction<CreateOrganizationMutation, CreateOrganizationMutationVariables>;
 
 /**
- * __useGetUserAreasQuery__
+ * __useCreateOrganizationMutation__
  *
- * To run a query within a React component, call `useGetUserAreasQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserAreasQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
+ * To run a mutation, you first call `useCreateOrganizationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrganizationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const { data, loading, error } = useGetUserAreasQuery({
+ * const [createOrganizationMutation, { data, loading, error }] = useCreateOrganizationMutation({
  *   variables: {
- *      organizationId: // value for 'organizationId'
+ *      name: // value for 'name'
  *   },
  * });
  */
-export function useGetUserAreasQuery(baseOptions: Apollo.QueryHookOptions<GetUserAreasQuery, GetUserAreasQueryVariables>) {
+export function useCreateOrganizationMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrganizationMutation, CreateOrganizationMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserAreasQuery, GetUserAreasQueryVariables>(GetUserAreasDocument, options);
+        return Apollo.useMutation<CreateOrganizationMutation, CreateOrganizationMutationVariables>(CreateOrganizationDocument, options);
       }
-export function useGetUserAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserAreasQuery, GetUserAreasQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserAreasQuery, GetUserAreasQueryVariables>(GetUserAreasDocument, options);
-        }
-export type GetUserAreasQueryHookResult = ReturnType<typeof useGetUserAreasQuery>;
-export type GetUserAreasLazyQueryHookResult = ReturnType<typeof useGetUserAreasLazyQuery>;
-export type GetUserAreasQueryResult = Apollo.QueryResult<GetUserAreasQuery, GetUserAreasQueryVariables>;
+export type CreateOrganizationMutationHookResult = ReturnType<typeof useCreateOrganizationMutation>;
+export type CreateOrganizationMutationResult = Apollo.MutationResult<CreateOrganizationMutation>;
+export type CreateOrganizationMutationOptions = Apollo.BaseMutationOptions<CreateOrganizationMutation, CreateOrganizationMutationVariables>;

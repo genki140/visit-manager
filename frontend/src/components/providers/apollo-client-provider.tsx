@@ -63,9 +63,5 @@ export const ApolloClientProvider = (props: { children: any }) => {
     return null;
   }
 
-  return (
-    <>
-      <ApolloProvider client={client}>{props.children}</ApolloProvider>
-    </>
-  );
+  return <ApolloProvider client={client}>{props.children}</ApolloProvider>;
 };

@@ -14,7 +14,6 @@ export class UserAreaResolver {
     @Inject(UserService) private userService: UserService,
   ) {}
 
-  /** ユーザーの */
   @UseGuards(GqlAuthGuard)
   @Query(() => [UserArea])
   async userAreas(

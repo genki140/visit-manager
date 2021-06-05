@@ -80,147 +80,89 @@ export const Login = () => {
 
   return (
     <Layout layoutType="center">
-      <List>
-        <ListItem>
-          <Card variant="outlined">
-            <Box m={2}>
-              <CardContent>
-                <Box mb={2} textAlign="center">
-                  <Typography variant="h2" color="textPrimary">
-                    {f((x) => x.login)}
-                  </Typography>
-                </Box>
-                {
-                  // username
-                  <Box my={1}>
-                    <TextField
-                      label={f((x) => x.user_id)}
-                      value={username}
-                      autoCapitalize="off"
-                      onChange={(e) => {
-                        e.preventDefault();
-                        setUsername(e.target.value);
-                      }}
-                      onKeyDown={async (e) => {
-                        if (e.key === 'Enter') {
-                          await login(username, password);
-                        }
-                      }}
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                      }}
-                    />
-                  </Box>
-                }
-                {
-                  // password
-                  <Box my={1}>
-                    <TextField
-                      label={f((x) => x.password)}
-                      value={password}
-                      type="password"
-                      onChange={(e) => {
-                        e.preventDefault();
-                        setPassword(e.target.value);
-                      }}
-                      onKeyDown={async (e) => {
-                        if (e.key === 'Enter') {
-                          await login(username, password);
-                        }
-                      }}
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                      }}
-                    />
-                  </Box>
-                }
-                <Box my={1}>{error}</Box>
-              </CardContent>
-              <CardActions>
-                <Box mx={1} width="100%">
-                  <Button
-                    variant="contained"
-                    size="large"
-                    color="secondary"
-                    onClick={() => login(username, password)}
-                    fullWidth
-                    style={{
-                      marginBottom: 10,
+      <Box mt={3} mb={9} px="15px" width="100%" maxWidth="700px">
+        <Card variant="outlined">
+          <Box m={2}>
+            <CardContent>
+              <Box mb={2} textAlign="center">
+                <Typography variant="h2" color="textPrimary">
+                  {f((x) => x.login)}
+                </Typography>
+              </Box>
+              {
+                // username
+                <Box my={1}>
+                  <TextField
+                    label={f((x) => x.user_id)}
+                    value={username}
+                    autoCapitalize="off"
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setUsername(e.target.value);
                     }}
-                  >
-                    {f((x) => x.login)}
-                  </Button>
-                  <UserCreateButton
-                    onCreated={async (username, password) => {
-                      setUsername(username);
-                      setPassword(password);
-                      await login(username, password);
+                    onKeyDown={async (e) => {
+                      if (e.key === 'Enter') {
+                        await login(username, password);
+                      }
+                    }}
+                    style={{
+                      width: '100%',
+                      display: 'flex',
                     }}
                   />
                 </Box>
-              </CardActions>
-            </Box>
-          </Card>
-        </ListItem>
-      </List>
-
-      {/* <Box maxWidth={300} mx="auto" mt={10}>
-        <Typography gutterBottom variant="h2">
-          {'ログイン'}
-        </Typography>
-
-        <Box m={1}>
-          <TextField
-            label={f((x) => x.username)}
-            value={username}
-            onChange={(e) => {
-              e.preventDefault();
-              setUsername(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                login();
               }
-            }}
-            style={{
-              width: '100%',
-              display: 'flex',
-            }}
-          />
-        </Box>
-        <Box m={1}>
-          <TextField
-            label={f((x) => x.password)}
-            value={password}
-            type="password"
-            onChange={(e) => {
-              e.preventDefault();
-              setPassword(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                login();
+              {
+                // password
+                <Box my={1}>
+                  <TextField
+                    label={f((x) => x.password)}
+                    value={password}
+                    type="password"
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setPassword(e.target.value);
+                    }}
+                    onKeyDown={async (e) => {
+                      if (e.key === 'Enter') {
+                        await login(username, password);
+                      }
+                    }}
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                    }}
+                  />
+                </Box>
               }
-            }}
-            style={{
-              width: '100%',
-              display: 'flex',
-            }}
-          />
-        </Box>
-
-        <Box m={1}>{error}</Box>
-
-        <Button variant="contained" size="large" color="secondary" onClick={login} fullWidth>
-          {f((x) => x.login)}
-        </Button>
-
-        <Button variant="contained" size="large" onClick={login} fullWidth>
-          {'新規アカウント作成'}
-        </Button>
-      </Box> */}
+              <Box my={1}>{error}</Box>
+            </CardContent>
+            <CardActions>
+              <Box mx={1} width="100%">
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="secondary"
+                  onClick={() => login(username, password)}
+                  fullWidth
+                  style={{
+                    marginBottom: 10,
+                  }}
+                >
+                  {f((x) => x.login)}
+                </Button>
+                <UserCreateButton
+                  onCreated={async (username, password) => {
+                    setUsername(username);
+                    setPassword(password);
+                    await login(username, password);
+                  }}
+                />
+              </Box>
+            </CardActions>
+          </Box>
+        </Card>
+      </Box>
     </Layout>
   );
 };

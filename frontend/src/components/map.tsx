@@ -4,7 +4,7 @@ import React, { forwardRef, ReactNode, useImperativeHandle, useState } from 'rea
 import { actions, MapEditType, useAppDispatch, useStoreState } from '@/ducks/store';
 import { useGetUserAreaQuery } from '@/types/graphql';
 import { useRouterParams } from '@/utils/use-router-params';
-import { MapQueries } from '@/queries/map-edit-queries';
+import { AreaQueries } from '@/queries/area-queries';
 import Head from 'next/head';
 
 export type MapOutput = {
@@ -50,7 +50,7 @@ const Map = forwardRef<
   const userArea = getUserAreaResult.data?.userAreas?.[0];
 
   // mutations
-  const [createResidence] = MapQueries.useCreateResidence();
+  const [createResidence] = AreaQueries.useCreateResidence();
 
   // fowardRef
   const getInfo = () => ({

@@ -21,7 +21,7 @@ import equal from 'fast-deep-equal';
 import { TypeUtil } from '@/utils/type-helper';
 import { useRouterParams } from '@/utils/use-router-params';
 
-export class MapQueries {
+export class AreaQueries {
   /** キャッシュ更新用ヘルパー */
   private static useUserAreaQueryCache = () => {
     const routerParams = useRouterParams();
@@ -42,7 +42,7 @@ export class MapQueries {
         return copiedData;
       },
       write: <T, U>(cache: ApolloCache<T>, data: U) => {
-        return cache.writeQuery({
+        return cache.writeQuery<U, GetUserAreaQueryVariables>({
           query: GetUserAreaDocument,
           variables: getUserAreaResultVariables,
           data: data,
@@ -53,14 +53,14 @@ export class MapQueries {
 
   /** キャッシュを自動更新するミューテーション */
   static useCreateResidence = () => {
-    const userAreaQueryCache = MapQueries.useUserAreaQueryCache();
+    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
     return useCreateResidenceMutation({
       update: (cache, result) => {
         const data = TypeUtil.toNonNullable(result.data);
         const cacheData = userAreaQueryCache.read(cache);
 
         // クエリに対するキャッシュデータ書き換え
-        cacheData.userAreas[0].area.residences.push(data?.createResidence);
+        cacheData.userAreas[0].area.residences.push(data.createResidence);
 
         userAreaQueryCache.write(cache, cacheData);
       },
@@ -69,7 +69,7 @@ export class MapQueries {
 
   /** 住宅座標を更新 */
   static useUpdateResidence = () => {
-    const userAreaQueryCache = MapQueries.useUserAreaQueryCache();
+    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
     const [updateResidence] = useUpdateResidenceMutation();
     const result = (variables: UpdateResidenceMutationVariables) =>
       updateResidence({
@@ -103,13 +103,12 @@ export class MapQueries {
   };
 
   static useDeleteResidence = () => {
-    const userAreaQueryCache = MapQueries.useUserAreaQueryCache();
+    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
     const [deleteResidenceMutation] = useDeleteResidenceMutation();
     const resultFunction = async (variables: DeleteResidenceMutationVariables) => {
       return deleteResidenceMutation({
         variables: variables,
         update: (cache) => {
-          // const data = TypeUtil.toNonNullable(result.data);
           const cacheData = userAreaQueryCache.read(cache);
           // クエリに対するキャッシュデータ書き換え
           const area = cacheData.userAreas[0].area;
@@ -123,7 +122,7 @@ export class MapQueries {
 
   /** アウトラインを生成し、キャッシュを更新 */
   static useCreateOutline = () => {
-    const userAreaQueryCache = MapQueries.useUserAreaQueryCache();
+    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
     return useCreateOutlineMutation({
       update: (cache, result) => {
         const data = TypeUtil.toNonNullable(result.data);
@@ -140,7 +139,7 @@ export class MapQueries {
 
   /** アウトラインを更新し、キャッシュを更新 */
   static useUpdateOutline = () => {
-    const userAreaQueryCache = MapQueries.useUserAreaQueryCache();
+    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
 
     // queries
     const routerParams = useRouterParams();
@@ -211,7 +210,7 @@ export class MapQueries {
 
   /** アウトラインを削除し、キャッシュを更新 */
   static useDeleteOutline = () => {
-    const userAreaQueryCache = MapQueries.useUserAreaQueryCache();
+    const userAreaQueryCache = AreaQueries.useUserAreaQueryCache();
     const [deleteOutlineMutation] = useDeleteOutlineMutation();
 
     const resultFunction = async (variables: DeleteOutlineMutationVariables) => {
@@ -236,6 +235,8 @@ export class MapQueries {
     return resultFunction;
   };
 }
+
+// ----------------------------------------gql----------------------------------------
 
 // ユーザーエリアの全情報を取得
 gql`

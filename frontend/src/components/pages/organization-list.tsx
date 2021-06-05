@@ -1,15 +1,5 @@
 import { Layout } from '@/components/layouts';
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardHeader,
-  List,
-  ListItem,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Box, Card, CardActionArea, CardContent, CardHeader, List, ListItem, Typography } from '@material-ui/core';
 import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
 import Link from 'next/link';
@@ -19,16 +9,16 @@ import DragHandleIcon from '@material-ui/icons/DragHandle';
 import React from 'react';
 import { MovableList } from '../movable-list';
 
-const useStyles = makeStyles(() => ({
-  list: {
-    display: 'grid',
-    gridAutoRows: 'auto',
-    gap: 10,
-  },
-}));
+// const useStyles = makeStyles(() => ({
+//   list: {
+//     display: 'grid',
+//     gridAutoRows: 'auto',
+//     gap: 10,
+//   },
+// }));
 
 export const OrganizationList = () => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const { loading, error, data } = useGetOrganizationsQuery();
   const f = useFormatMessage();
 
@@ -48,8 +38,8 @@ export const OrganizationList = () => {
               {(data?.organizations ?? []).map((x) => ({
                 key: x.id,
                 node: (draggableProps: any) => (
-                  <ListItem>
-                    <Link href={x.name}>
+                  <Link href={x.name}>
+                    <ListItem>
                       <Card style={{ width: '100%' }}>
                         <CardActionArea>
                           <CardHeader
@@ -62,13 +52,13 @@ export const OrganizationList = () => {
                           />
                           <CardContent>
                             <Typography variant="body2" color="textSecondary" component="p">
-                              あ
+                              戸建て数：10000　一般アパート部屋数：10000　単身アパート部屋数：5000
                             </Typography>
                           </CardContent>
                         </CardActionArea>
                       </Card>
-                    </Link>
-                  </ListItem>
+                    </ListItem>
+                  </Link>
                 ),
               }))}
             </MovableList>

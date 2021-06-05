@@ -1,14 +1,4 @@
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardHeader,
-  List,
-  ListItem,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Box, Card, CardActionArea, CardContent, CardHeader, List, ListItem, Typography } from '@material-ui/core';
 import Link from 'next/link';
 import { useGetUserAreasQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
@@ -19,20 +9,19 @@ import React from 'react';
 import { MovableList } from '../movable-list';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import { AreaCreateButton } from '../dialogs/area-create-button';
-import { useStoreState } from '@/ducks/store';
 
-// スタイル定義
-const useStyles = makeStyles(() => ({
-  list: {
-    display: 'grid',
-    gridAutoRows: 'auto',
-    gap: 10,
-  },
-}));
+// // スタイル定義
+// const useStyles = makeStyles(() => ({
+//   list: {
+//     display: 'grid',
+//     gridAutoRows: 'auto',
+//     gap: 10,
+//   },
+// }));
 
 export const AreaList = () => {
-  const classes = useStyles();
-  const editing = useStoreState((x) => x.areaList.editing);
+  // const classes = useStyles();
+  // const editing = useStoreState((x) => x.areaList.editing);
   const routerParams = useRouterParams();
 
   const { loading, error, data } = useGetUserAreasQuery({

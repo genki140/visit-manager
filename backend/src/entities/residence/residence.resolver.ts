@@ -1,10 +1,6 @@
-import { Inject, UseGuards } from '@nestjs/common';
-import { Args, ID, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Inject } from '@nestjs/common';
+import { Args, ID, Mutation, Resolver } from '@nestjs/graphql';
 
-import { CreateUserInput, User } from '@/entities/user/user.model';
-import { UserService } from '@/entities/user/user.service';
-import { GraphQLResolveInfo } from 'graphql';
-import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 import { CreateResidenceInput, Residence, UpdateResidenceInput } from './residence.model';
 import { ResidenceService } from './residence.service';
 

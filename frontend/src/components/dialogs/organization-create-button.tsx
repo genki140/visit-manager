@@ -16,19 +16,11 @@ import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import AddIcon from '@material-ui/icons/Add';
 
-import gql from 'graphql-tag';
-import { useCreateOrganizationMutation } from '@/types/graphql';
 import { trimedValidate } from '@/utils/field-validate';
 import { useConfirmDialog } from './confirm-dialog';
-
-gql`
-  mutation createOrganization($name: String!) {
-    createOrganization(organization: { name: $name }) {
-      id
-      name
-    }
-  }
-`;
+import { OrganizationListQueries } from '@/queries/organization-list-queries';
+import { asyncRefreshLoginUser, useAppDispatch } from '@/ducks/store';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const useStyles = makeStyles((theme: Theme) => ({
   // '& .MuiTextField-root': { marginBottom: theme.spacing(10) },
@@ -49,10 +41,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const OrganizationCreateButton = () => {
   const [open, setOpen] = useState(false);
   const f = useFormatMessage();
-  const [createOrganizationMutation] = useCreateOrganizationMutation();
+  const [createOrganizationMutation] = OrganizationListQueries.useCreateOrganization();
   const classes = useStyles();
   const [error, setError] = useState('');
   const confirmDialog = useConfirmDialog();
+  const dispatch = useAppDispatch();
 
   const defaultValues = {
     name: '',
@@ -64,11 +57,12 @@ export const OrganizationCreateButton = () => {
     try {
       const result = await createOrganizationMutation({
         variables: {
-          name: data.name.trim(),
+          name: data.name,
         },
       });
-      result.errors;
+
       setOpen(false);
+      unwrapResult(await dispatch(asyncRefreshLoginUser())); // 情報再取得
     } catch (e) {
       const code = e.graphQLErrors?.[0]?.extensions?.code;
       setError(code);

@@ -46,7 +46,7 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 // import FavoriteIcon from '@material-ui/icons/Favorite';
 import DoneIcon from '@material-ui/icons/Done';
 import TimelineIcon from '@material-ui/icons/Timeline';
-import { MapQueries } from '@/queries/map-edit-queries';
+import { AreaQueries } from '@/queries/area-queries';
 import { getMapBoundsFromArea } from './map-data';
 
 export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined> }) => {
@@ -71,10 +71,10 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
   const userArea = getUserAreaResult.data?.userAreas?.[0];
 
   // mutations
-  const [createOutline] = MapQueries.useCreateOutline();
-  const deleteResidence = MapQueries.useDeleteResidence();
-  const deleteOutline = MapQueries.useDeleteOutline();
-  const updateOutline = MapQueries.useUpdateOutline();
+  const [createOutline] = AreaQueries.useCreateOutline();
+  const deleteResidence = AreaQueries.useDeleteResidence();
+  const deleteOutline = AreaQueries.useDeleteOutline();
+  const updateOutline = AreaQueries.useUpdateOutline();
 
   const [open, setOpen] = React.useState(false);
 
