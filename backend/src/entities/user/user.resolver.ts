@@ -14,62 +14,62 @@ import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 export class UserResolver {
   constructor(@Inject(UserService) private userService: UserService) {}
 
-  /** 現在ログインしているユーザーの情報を取得します。 */
-  @UseGuards(GqlAuthGuard)
-  @Query(() => User)
-  async currentUser(@CurrentUser() currentUser: User) {
-    return currentUser;
-  }
+  // /** 現在ログインしているユーザーの情報を取得します。 */
+  // @UseGuards(GqlAuthGuard)
+  // @Query(() => User)
+  // async currentUser(@CurrentUser() currentUser: User) {
+  //   return currentUser;
+  // }
 
-  /** ユーザー一覧を権限情報と共に取得します */
-  @UseGuards(GqlAuthGuard)
-  @Query(() => [User])
-  // @RequiredAbilities(AbilityTypes.Administrator)
-  async users(
-    @Args('organizationId', { type: () => ID }) organizationId: string,
-    @Args('ids', { type: () => [ID], nullable: true, defaultValue: null }) ids: number[] | null,
-    @Info() info: GraphQLResolveInfo,
-    @CurrentUser() currentUser: User,
-  ) {
-    // RequiredAbilities([AbilityTypes.Administrator], currentUser, organizationId);
+  // /** ユーザー一覧を権限情報と共に取得します */
+  // @UseGuards(GqlAuthGuard)
+  // @Query(() => [User])
+  // // @RequiredAbilities(AbilityTypes.Administrator)
+  // async users(
+  //   @Args('organizationId', { type: () => ID }) organizationId: string,
+  //   @Args('ids', { type: () => [ID], nullable: true, defaultValue: null }) ids: number[] | null,
+  //   @Info() info: GraphQLResolveInfo,
+  //   @CurrentUser() currentUser: User,
+  // ) {
+  //   // RequiredAbilities([AbilityTypes.Administrator], currentUser, organizationId);
 
-    // クエリにリレーションオブジェクトが指定されている場合にのみリレーションを設定（もうちょっと簡略化できそう）
-    const relations: string[] = [];
-    // const parsedInfo = parseResolveInfo(info) as any;
+  //   // クエリにリレーションオブジェクトが指定されている場合にのみリレーションを設定（もうちょっと簡略化できそう）
+  //   const relations: string[] = [];
+  //   // const parsedInfo = parseResolveInfo(info) as any;
 
-    console.log('currentUser');
-    console.log(currentUser);
+  //   console.log('currentUser');
+  //   console.log(currentUser);
 
-    // console.log(parsedInfo);
-    // console.log(ids);
+  //   // console.log(parsedInfo);
+  //   // console.log(ids);
 
-    // if (parsedInfo.fieldsByTypeName.User.role != null) {
-    //   relations.push('role');
-    // }
-    // if (parsedInfo.fieldsByTypeName.User.role?.fieldsByTypeName.Role.abilities != null) {
-    //   relations.push('role.abilities');
-    // }
+  //   // if (parsedInfo.fieldsByTypeName.User.role != null) {
+  //   //   relations.push('role');
+  //   // }
+  //   // if (parsedInfo.fieldsByTypeName.User.role?.fieldsByTypeName.Role.abilities != null) {
+  //   //   relations.push('role.abilities');
+  //   // }
 
-    // とりあえず自動で読み込む。本当は↑の条件みたいなのをちゃんと設定し、不要なリレーションは含めないべき
-    relations.push('userOrganizations');
-    relations.push('userOrganizations.roles');
-    relations.push('userOrganizations.roles.abilities');
-    relations.push('userOrganizations.organization');
-    // relations.push('userAreas');
-    // relations.push('userAreas.organization');
+  //   // とりあえず自動で読み込む。本当は↑の条件みたいなのをちゃんと設定し、不要なリレーションは含めないべき
+  //   relations.push('userOrganizations');
+  //   relations.push('userOrganizations.roles');
+  //   relations.push('userOrganizations.roles.abilities');
+  //   relations.push('userOrganizations.organization');
+  //   // relations.push('userAreas');
+  //   // relations.push('userAreas.organization');
 
-    // // 以下は理想
-    // const relationsTest = GetGraphqlQueryRelations([{type:'Role',path:'role'},{type:'Ability',path:'role.Abilities'}]);
+  //   // // 以下は理想
+  //   // const relationsTest = GetGraphqlQueryRelations([{type:'Role',path:'role'},{type:'Ability',path:'role.Abilities'}]);
 
-    // console.log(relations);
+  //   // console.log(relations);
 
-    const result = await this.userService.find(ids ?? undefined, { relations: relations });
-    if (ids != null && result.length !== ids.length) {
-      throw new Error('Some IDs were not found.');
-    }
+  //   const result = await this.userService.find(ids ?? undefined, { relations: relations });
+  //   if (ids != null && result.length !== ids.length) {
+  //     throw new Error('Some IDs were not found.');
+  //   }
 
-    return result;
-  }
+  //   return result;
+  // }
 
   @Mutation(() => User)
   async createUser(@Args('user') user: CreateUserInput) {

@@ -28,6 +28,7 @@ export type Area = {
   name: Scalars['String'];
   description: Scalars['String'];
   organization: Organization;
+  organizationId: Scalars['Float'];
   userAreas: Array<UserArea>;
   residences: Array<Residence>;
   outlines: Array<Outline>;
@@ -70,8 +71,7 @@ export type CreateUserInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createUser: User;
-  deleteUser?: Maybe<Ability>;
-  deleteRole?: Maybe<Role>;
+  deleteUser?: Maybe<User>;
   createOrganization: Organization;
   addTest: Scalars['Float'];
   createArea: Area;
@@ -90,11 +90,6 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDeleteRoleArgs = {
   id: Scalars['ID'];
 };
 
@@ -163,43 +158,15 @@ export type OutlinePoint = {
 
 export type Query = {
   __typename?: 'Query';
-  currentUser: User;
-  users: Array<User>;
-  role?: Maybe<Role>;
-  categories: Array<Role>;
-  ability?: Maybe<Ability>;
-  abilities: Array<Ability>;
   organizations: Array<Organization>;
   googleMapApiKey: Scalars['String'];
   getTest: Scalars['Float'];
-  areas: Array<Area>;
   userAreas: Array<UserArea>;
 };
 
 
-export type QueryUsersArgs = {
-  ids?: Maybe<Array<Scalars['ID']>>;
-  organizationId: Scalars['ID'];
-};
-
-
-export type QueryRoleArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryAbilityArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryAreasArgs = {
-  organizationId: Scalars['ID'];
-};
-
-
 export type QueryUserAreasArgs = {
-  ids?: Maybe<Array<Scalars['ID']>>;
+  ids?: Maybe<Array<Scalars['Int']>>;
   organizationId: Scalars['Int'];
 };
 
@@ -346,7 +313,7 @@ export type AddTestMutation = (
 
 export type GetUserAreaQueryVariables = Exact<{
   organizationId: Scalars['Int'];
-  areaId: Scalars['ID'];
+  areaId: Scalars['Int'];
 }>;
 
 
@@ -496,44 +463,6 @@ export type GetUserAreasQuery = (
       & Pick<Area, 'id' | 'name' | 'description'>
     ) }
   )> }
-);
-
-export type GetAreasQueryVariables = Exact<{
-  organizationId: Scalars['ID'];
-}>;
-
-
-export type GetAreasQuery = (
-  { __typename?: 'Query' }
-  & { areas: Array<(
-    { __typename?: 'Area' }
-    & Pick<Area, 'id' | 'name' | 'description'>
-  )> }
-);
-
-export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetCurrentUserQuery = (
-  { __typename?: 'Query' }
-  & { currentUser: (
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'name'>
-    & { userOrganizations: Array<(
-      { __typename?: 'UserOrganization' }
-      & { organization: (
-        { __typename?: 'Organization' }
-        & Pick<Organization, 'name'>
-      ), roles: Array<(
-        { __typename?: 'Role' }
-        & Pick<Role, 'id' | 'name'>
-        & { abilities: Array<(
-          { __typename?: 'Ability' }
-          & Pick<Ability, 'id' | 'name'>
-        )> }
-      )> }
-    )> }
-  ) }
 );
 
 
@@ -732,7 +661,7 @@ export type AddTestMutationHookResult = ReturnType<typeof useAddTestMutation>;
 export type AddTestMutationResult = Apollo.MutationResult<AddTestMutation>;
 export type AddTestMutationOptions = Apollo.BaseMutationOptions<AddTestMutation, AddTestMutationVariables>;
 export const GetUserAreaDocument = gql`
-    query getUserArea($organizationId: Int!, $areaId: ID!) {
+    query getUserArea($organizationId: Int!, $areaId: Int!) {
   userAreas(organizationId: $organizationId, ids: [$areaId]) {
     area {
       id
@@ -1098,89 +1027,3 @@ export function useGetUserAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetUserAreasQueryHookResult = ReturnType<typeof useGetUserAreasQuery>;
 export type GetUserAreasLazyQueryHookResult = ReturnType<typeof useGetUserAreasLazyQuery>;
 export type GetUserAreasQueryResult = Apollo.QueryResult<GetUserAreasQuery, GetUserAreasQueryVariables>;
-export const GetAreasDocument = gql`
-    query getAreas($organizationId: ID!) {
-  areas(organizationId: $organizationId) {
-    id
-    name
-    description
-  }
-}
-    `;
-
-/**
- * __useGetAreasQuery__
- *
- * To run a query within a React component, call `useGetAreasQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAreasQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAreasQuery({
- *   variables: {
- *      organizationId: // value for 'organizationId'
- *   },
- * });
- */
-export function useGetAreasQuery(baseOptions: Apollo.QueryHookOptions<GetAreasQuery, GetAreasQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAreasQuery, GetAreasQueryVariables>(GetAreasDocument, options);
-      }
-export function useGetAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAreasQuery, GetAreasQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAreasQuery, GetAreasQueryVariables>(GetAreasDocument, options);
-        }
-export type GetAreasQueryHookResult = ReturnType<typeof useGetAreasQuery>;
-export type GetAreasLazyQueryHookResult = ReturnType<typeof useGetAreasLazyQuery>;
-export type GetAreasQueryResult = Apollo.QueryResult<GetAreasQuery, GetAreasQueryVariables>;
-export const GetCurrentUserDocument = gql`
-    query getCurrentUser {
-  currentUser {
-    id
-    username
-    name
-    userOrganizations {
-      organization {
-        name
-      }
-      roles {
-        id
-        name
-        abilities {
-          id
-          name
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetCurrentUserQuery__
- *
- * To run a query within a React component, call `useGetCurrentUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCurrentUserQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetCurrentUserQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
-      }
-export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
-        }
-export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
-export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
-export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;

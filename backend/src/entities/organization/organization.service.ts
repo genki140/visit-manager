@@ -21,6 +21,7 @@ export class OrganizationService {
     }
   }
 
+  /** 作成したユーザーを管理者とする新規組織の作成 */
   async create(payload: CreateOrganizationInput, userId: number) {
     // 同名、system、index は使用できない。
     if (
@@ -33,19 +34,6 @@ export class OrganizationService {
       throw new ApolloError('', ErrorCodes.UNUSABLE_NAME);
     }
 
-    // 同名チェック
-    if ((await this.organizationRepository.count({ where: { name: payload.name.trim() } })) > 0) {
-      throw new ApolloError('', ErrorCodes.UNUSABLE_NAME);
-    }
-
-    // return await this.connection.transaction(async (manager) => {
-    //   const polygonRepository = manager.getRepository(Organization);
-    //   const polygonPointRepository = manager.getRepository(PolygonPoint);
-    // }
-
-    // throw new ApolloError('メッセージ', 'EXISTED_NAME');
-
-    // トリムした結果、同名、system、index は使用できない。
     const result = await this.organizationRepository.save({
       name: payload.name.trim(),
       userOrganizations: [
@@ -59,17 +47,6 @@ export class OrganizationService {
         },
       ],
     });
-    // console.log(result);
     return result;
-
-    // return await this.organizationRepository.findOne(result.id, {
-    //   relations: ['residents'],
-    // });
-
-    // // 同名チェック
-    // if ((await this.residenceRepository.count({ where: { username: payload.userId } })) > 0) {
-    //   throw new Error('userId is already used.');
-    // }
-    // return await this.residenceRepository.save({ ...payload });
   }
 }

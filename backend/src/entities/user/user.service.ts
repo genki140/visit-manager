@@ -3,7 +3,7 @@ import { CryptUtil } from '@/utils/crypt';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApolloError } from 'apollo-server-errors';
-import { DeleteResult, FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 
 import { CreateUserInput, User } from './user.model';
 

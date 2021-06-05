@@ -30,9 +30,14 @@ export const getMapBoundsFromArea = (userArea: UserArea | undefined) => {
   return bounds;
 };
 
-const useFitBoundsEffect = (mapRef: MutableRefObject<MapOutput | undefined>, userArea: UserArea | undefined) => {
+const useFitBoundsEffect = (
+  mapRef: MutableRefObject<MapOutput | undefined>,
+  userArea: UserArea | undefined,
+  loading: boolean,
+) => {
   const bounds = getMapBoundsFromArea(userArea);
   const [fitted, setFitted] = useState(false);
+  const center = bounds == null && loading === false ? { lat: 37.94181358543269, lng: 139.10948906051917 } : undefined;
 
   // データ読み込み後マップをセンターに移動する
   useEffect(() => {
@@ -42,9 +47,14 @@ const useFitBoundsEffect = (mapRef: MutableRefObject<MapOutput | undefined>, use
       // マップが初期化されるタイミングが分からないため繰り返し実行する
       while (unmounted === false) {
         const map = mapRef.current?.getInfo().map;
-        if (map != null && bounds != null) {
+        if (map != null && (bounds != null || center != null)) {
           unmounted = true;
-          map.fitBounds(bounds, 0);
+          if (bounds != null) {
+            map.fitBounds(bounds, 0);
+          }
+          if (center != null) {
+            map.setCenter(center);
+          }
           setFitted(true);
         }
         await new Promise((r) => setTimeout(r, 200)); // 少し待機
@@ -56,7 +66,7 @@ const useFitBoundsEffect = (mapRef: MutableRefObject<MapOutput | undefined>, use
     return () => {
       unmounted = true;
     };
-  }, [bounds]);
+  }, [bounds, center]);
 };
 
 const MapData = (props: { map: MutableRefObject<MapOutput | undefined> }) => {
@@ -69,13 +79,13 @@ const MapData = (props: { map: MutableRefObject<MapOutput | undefined> }) => {
 
   // queries
   const getUserAreaResult = useGetUserAreaQuery({
-    variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.areaName },
+    variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.getAreaId() },
     skip: !routerParams.hasOrganizationAndArea,
   });
   const userArea = getUserAreaResult.data?.userAreas?.[0];
 
   // 地図の表示サイズ設定
-  useFitBoundsEffect(props.map, userArea as UserArea | undefined);
+  useFitBoundsEffect(props.map, userArea as UserArea | undefined, getUserAreaResult.loading);
 
   if (userArea == null) {
     return null;

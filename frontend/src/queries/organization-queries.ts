@@ -22,35 +22,35 @@ gql`
   }
 `;
 
-gql`
-  query getAreas($organizationId: ID!) {
-    areas(organizationId: $organizationId) {
-      id
-      name
-      description
-    }
-  }
-`;
+// gql`
+//   query getAreas($organizationId: ID!) {
+//     areas(organizationId: $organizationId) {
+//       id
+//       name
+//       description
+//     }
+//   }
+// `;
 
-gql`
-  query getCurrentUser {
-    currentUser {
-      id
-      username
-      name
-      userOrganizations {
-        organization {
-          name
-        }
-        roles {
-          id
-          name
-          abilities {
-            id
-            name
-          }
-        }
-      }
-    }
-  }
-`;
+// gql`
+//   query getCurrentUser {
+//     currentUser {
+//       id
+//       username
+//       name
+//       userOrganizations {
+//         organization {
+//           name
+//         }
+//         roles {
+//           id
+//           name
+//           abilities {
+//             id
+//             name
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;

@@ -11,12 +11,12 @@ export class AbilityService {
     private abilityRepository: Repository<Ability>,
   ) {}
 
-  findOne = (id: number) => this.abilityRepository.findOne(id);
-  findAll = () => this.abilityRepository.find();
-  findByIds = (ids: number[]) => this.abilityRepository.findByIds(ids);
+  // findOne = (id: number) => this.abilityRepository.findOne(id);
+  // findAll = () => this.abilityRepository.find();
+  // findByIds = (ids: number[]) => this.abilityRepository.findByIds(ids);
 
-  async delete(id: number) {
-    await this.abilityRepository.delete(id);
-    return await this.findOne(id);
-  }
+  // async delete(id: number) {
+  //   await this.abilityRepository.delete(id);
+  //   return await this.findOne(id);
+  // }
 }

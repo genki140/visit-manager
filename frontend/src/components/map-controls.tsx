@@ -65,7 +65,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
 
   // queries
   const getUserAreaResult = useGetUserAreaQuery({
-    variables: { organizationId: routerParams.organizationName, areaId: routerParams.areaName },
+    variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.getAreaId() },
     skip: !routerParams.hasOrganizationAndArea,
   });
   const userArea = getUserAreaResult.data?.userAreas?.[0];
@@ -85,7 +85,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
   ];
 
   if (userArea == null) {
-    return <>ローディング</>;
+    return null;
   }
 
   const selectedOutline = userArea.area.outlines.find((x) => x.id === selectedOutlineId?.toString());

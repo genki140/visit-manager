@@ -32,6 +32,7 @@ export class Area {
   @JoinColumn({ name: 'organizationId' })
   organization?: Organization;
 
+  @Field(() => Number)
   @Column({ type: 'int', nullable: false })
   organizationId?: number;
 

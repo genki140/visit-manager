@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { MaxLength } from 'class-validator';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../user/user.model';
-import { Organization } from '../organization/organization.model';
-import { Role } from '../role/role.model';
 import { Area } from '../area/area.model';
 
 // ユーザーに区域が割り当たった際に作成される。

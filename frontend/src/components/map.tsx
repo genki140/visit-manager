@@ -7,8 +7,6 @@ import { useRouterParams } from '@/utils/use-router-params';
 import { MapQueries } from '@/queries/map-edit-queries';
 import Head from 'next/head';
 
-const center = { lat: 37.94181358543269, lng: 139.10948906051917 };
-
 export type MapOutput = {
   getInfo: () => {
     zoom: number;
@@ -46,7 +44,7 @@ const Map = forwardRef<
 
   // queries
   const getUserAreaResult = useGetUserAreaQuery({
-    variables: { organizationId: routerParams.organizationName, areaId: routerParams.areaName },
+    variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.getAreaId() },
     skip: !routerParams.hasOrganizationAndArea,
   });
   const userArea = getUserAreaResult.data?.userAreas?.[0];
@@ -94,7 +92,6 @@ const Map = forwardRef<
           clickableIcons: false,
           draggableCursor: mapEditType !== MapEditType.Residence ? undefined : 'copy',
         }}
-        // center={center}
         zoom={18} // ズームをUIで任意の位置で止める方法が分からない！！！
         onClick={async (e) => {
           if (mapEditType !== MapEditType.Residence) {

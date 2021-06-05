@@ -26,6 +26,8 @@ export class AuthService {
           'userOrganizations.organization',
           'userOrganizations.roles',
           'userOrganizations.roles.abilities',
+          'userAreas',
+          'userAreas.area',
         ],
       })
     )?.[0];

@@ -11,15 +11,15 @@ export class RoleService {
     private roleRepository: Repository<Role>,
   ) {}
 
-  findOne = async (id: number) => this.roleRepository.findOne(id);
-  findAll = async () => this.roleRepository.find();
+  // findOne = async (id: number) => this.roleRepository.findOne(id);
+  // findAll = async () => this.roleRepository.find();
 
-  async findByIds(ids: number[]) {
-    return this.roleRepository.findByIds(ids);
-  }
+  // async findByIds(ids: number[]) {
+  //   return this.roleRepository.findByIds(ids);
+  // }
 
-  async delete(id: number) {
-    await this.roleRepository.delete(id);
-    return await this.findOne(id);
-  }
+  // async delete(id: number) {
+  //   await this.roleRepository.delete(id);
+  //   return await this.findOne(id);
+  // }
 }

@@ -27,7 +27,7 @@ export class MapQueries {
     const routerParams = useRouterParams();
     const getUserAreaResultVariables = {
       organizationId: routerParams.getOrganizationId(),
-      areaId: routerParams.areaName,
+      areaId: routerParams.getAreaId(),
     };
 
     return {
@@ -145,7 +145,7 @@ export class MapQueries {
     // queries
     const routerParams = useRouterParams();
     const getUserAreaResult = useGetUserAreaQuery({
-      variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.areaName },
+      variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.getAreaId() },
       skip: !routerParams.hasOrganizationAndArea,
     });
     const userArea = getUserAreaResult.data?.userAreas?.[0];
@@ -239,7 +239,7 @@ export class MapQueries {
 
 // ユーザーエリアの全情報を取得
 gql`
-  query getUserArea($organizationId: Int!, $areaId: ID!) {
+  query getUserArea($organizationId: Int!, $areaId: Int!) {
     userAreas(organizationId: $organizationId, ids: [$areaId]) {
       area {
         id

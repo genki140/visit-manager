@@ -63,6 +63,7 @@ type Area {
   name: String!
   description: String!
   organization: Organization!
+  organizationId: Float!
   userAreas: [UserArea!]!
   residences: [Residence!]!
   outlines: [Outline!]!
@@ -88,23 +89,15 @@ type User {
 scalar Date
 
 type Query {
-  currentUser: User!
-  users(ids: [ID!] = null, organizationId: ID!): [User!]!
-  role(id: ID!): Role
-  categories: [Role!]!
-  ability(id: ID!): Ability
-  abilities: [Ability!]!
   organizations: [Organization!]!
   googleMapApiKey: String!
   getTest: Float!
-  areas(organizationId: ID!): [Area!]!
-  userAreas(ids: [ID!] = null, organizationId: Int!): [UserArea!]!
+  userAreas(ids: [Int!] = null, organizationId: Int!): [UserArea!]!
 }
 
 type Mutation {
   createUser(user: CreateUserInput!): User!
-  deleteUser(id: ID!): Ability
-  deleteRole(id: ID!): Role
+  deleteUser(id: ID!): User
   createOrganization(organization: CreateOrganizationInput!): Organization!
   addTest: Float!
   createArea(area: CreateAreaInput!): Area!

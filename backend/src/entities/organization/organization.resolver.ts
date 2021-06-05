@@ -31,6 +31,7 @@ export class OrganizationResolver {
     return result;
   }
 
+  /** 作成したユーザーを管理者とする新規組織の作成 */
   @Mutation(() => Organization)
   @UseGuards(GqlAuthGuard)
   async createOrganization(

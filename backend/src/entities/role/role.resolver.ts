@@ -8,18 +8,18 @@ import { RoleService } from '@/entities/role/role.service';
 export class RoleResolver {
   constructor(@Inject(RoleService) private roleService: RoleService) {}
 
-  @Query(() => Role, { nullable: true })
-  async role(@Args('id', { type: () => ID }) id: number) {
-    return await this.roleService.findOne(id);
-  }
+  // @Query(() => Role, { nullable: true })
+  // async role(@Args('id', { type: () => ID }) id: number) {
+  //   return await this.roleService.findOne(id);
+  // }
 
-  @Query(() => [Role])
-  async categories() {
-    return await this.roleService.findAll();
-  }
+  // @Query(() => [Role])
+  // async categories() {
+  //   return await this.roleService.findAll();
+  // }
 
-  @Mutation(() => Role, { nullable: true })
-  async deleteRole(@Args('id', { type: () => ID }) id: number) {
-    return await this.roleService.delete(id);
-  }
+  // @Mutation(() => Role, { nullable: true })
+  // async deleteRole(@Args('id', { type: () => ID }) id: number) {
+  //   return await this.roleService.delete(id);
+  // }
 }
