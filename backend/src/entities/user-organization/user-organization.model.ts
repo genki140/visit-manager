@@ -6,20 +6,20 @@ import { Organization } from '../organization/organization.model';
 import { Role } from '../role/role.model';
 
 @ObjectType()
-@Entity('roled_users')
-export class RoledUser {
+@Entity('user_organizations')
+export class UserOrganization {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number = 0;
 
   /** 組織 */
   @Field(() => Organization)
-  @ManyToOne(() => Organization, (organization) => organization.roledUsers, { nullable: false })
+  @ManyToOne(() => Organization, (organization) => organization.userOrganizations, { nullable: false })
   organization?: Organization;
 
   /** ユーザー */
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.roledUsers, { nullable: false })
+  @ManyToOne(() => User, (user) => user.userOrganizations, { nullable: false })
   user?: User;
 
   @Column({ type: 'int', nullable: false })
@@ -27,11 +27,11 @@ export class RoledUser {
 
   /** 役割 */
   @Field(() => [Role])
-  @ManyToMany(() => Role, (role) => role.roledUser)
+  @ManyToMany(() => Role, (role) => role.userOrganization)
   @JoinTable({
-    name: 'roled_user_roles',
+    name: 'user_organization_roles',
     joinColumn: {
-      name: 'roled_user_id',
+      name: 'user_organization_id',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {

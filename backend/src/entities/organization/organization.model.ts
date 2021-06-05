@@ -2,7 +2,7 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { MaxLength } from 'class-validator';
-import { RoledUser } from '../roled-user/roled-user.model';
+import { UserOrganization } from '../user-organization/user-organization.model';
 
 @ObjectType()
 @Entity('organizations')
@@ -18,9 +18,9 @@ export class Organization {
   name: string = '';
 
   /** ユーザーとのリレーション */
-  @Field(() => [RoledUser])
-  @OneToMany(() => RoledUser, (roledUser) => roledUser.organization, { cascade: true })
-  roledUsers?: RoledUser[];
+  @Field(() => [UserOrganization])
+  @OneToMany(() => UserOrganization, (userOrganization) => userOrganization.organization, { cascade: true })
+  userOrganizations?: UserOrganization[];
 }
 
 @InputType()

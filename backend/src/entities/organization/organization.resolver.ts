@@ -21,7 +21,7 @@ export class OrganizationResolver {
   ) {
     // 関連組織をすべて返す
 
-    const ids = currentUser.roledUsers?.map((x) => x.organization?.id as number) ?? [];
+    const ids = currentUser.userOrganizations?.map((x) => x.organization?.id as number) ?? [];
 
     // const relations: string[] = [];
     const result = await this.organizationService.find(ids);

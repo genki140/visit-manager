@@ -30,7 +30,7 @@ export const CurrentUser = createParamDecorator((data: unknown, context: Executi
 
 // graphqlへのアクセス時にトークンからユーザーIDを識別する
 export function RequiredAbilities(abilityTypes: AbilityTypes[], user: User, organizationId: number) {
-  const organization = user.roledUsers?.find((x) => x.organization?.id === organizationId);
+  const organization = user.userOrganizations?.find((x) => x.organization?.id === organizationId);
   // const organization = user.roledUsers?.find(
   //   (x) => x.organization?.id.toString() === organizationId || x.organization?.name === organizationId,
   // );

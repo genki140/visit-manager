@@ -7,7 +7,7 @@ import { DateScalar } from '@/scalars/date.scalar';
 // Import modules
 import { UserModule } from '@/entities/user/user.module';
 import { OrganizationModule } from './entities/organization/organization.module';
-import { RoledUserModule } from './entities/roled-user/roled-user.module';
+import { UserOrganizationModule } from './entities/user-organization/user-organization.module';
 import { RoleModule } from '@/entities/role/role.module';
 import { AbilityModule } from '@/entities/ability/ability.module';
 import { AuthModule } from './auth/auth.module';
@@ -92,7 +92,7 @@ import { getConnectionOptions } from 'typeorm';
     AbilityModule,
     AuthModule,
     OrganizationModule,
-    RoledUserModule,
+    UserOrganizationModule,
     AreaModule,
     UserAreaModule,
     OutlineModule,

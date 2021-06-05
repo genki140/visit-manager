@@ -13,15 +13,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const getAreasGql = gql`
-  query getAreas($organizationId: ID!) {
-    areas(organizationId: $organizationId) {
-      id
-      name
-    }
-  }
-`;
-
 const AreaSettings = () => {
   const classes = useStyles();
   const router = useRouter();
@@ -56,14 +47,6 @@ const AreaSettings = () => {
       </LoadingContainer>
     </>
   );
-
-  // return loading
-  //   ? 'loading'
-  //   : error != null
-  //   ? 'error:' + error.message
-  //   : (data?.users ?? []).map((x) => <div key={x.id}>{x.username}</div>);
-
-  // return <div>aa</div>;
 };
 
 export default AreaSettings;

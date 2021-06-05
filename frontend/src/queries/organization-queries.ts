@@ -10,12 +10,24 @@ gql`
 `;
 
 gql`
-  query getUserAreas($organizationId: ID!) {
+  query getUserAreas($organizationId: Int!) {
     userAreas(organizationId: $organizationId) {
       id
       area {
+        id
         name
+        description
       }
+    }
+  }
+`;
+
+gql`
+  query getAreas($organizationId: ID!) {
+    areas(organizationId: $organizationId) {
+      id
+      name
+      description
     }
   }
 `;
@@ -26,7 +38,7 @@ gql`
       id
       username
       name
-      roledUsers {
+      userOrganizations {
         organization {
           name
         }

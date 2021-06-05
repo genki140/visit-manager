@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Ability } from '../ability/ability.model';
-import { RoledUser } from '../roled-user/roled-user.model';
-import { User } from '../user/user.model';
+import { UserOrganization as UserOrganization } from '../user-organization/user-organization.model';
 
 // 役割テーブル。これは組織ごとに変化せず共通とする
 
@@ -20,9 +19,9 @@ export class Role {
   name: string = '';
 
   /** ユーザー */
-  @Field(() => [RoledUser])
-  @ManyToMany(() => RoledUser, (roledUser) => roledUser.roles)
-  roledUser?: RoledUser[];
+  @Field(() => [UserOrganization])
+  @ManyToMany(() => UserOrganization, (userOrganization) => userOrganization.roles)
+  userOrganization?: UserOrganization[];
 
   /** 権限リスト */
   @Field(() => [Ability])

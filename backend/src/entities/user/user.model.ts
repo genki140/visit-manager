@@ -2,7 +2,7 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { MaxLength } from 'class-validator';
-import { RoledUser } from '../roled-user/roled-user.model';
+import { UserOrganization } from '../user-organization/user-organization.model';
 import { UserArea } from '../user-area/user-area.model';
 
 @ObjectType()
@@ -33,9 +33,9 @@ export class User {
   name: string = '';
 
   /** 役割 */
-  @Field(() => [RoledUser])
-  @OneToMany(() => RoledUser, (roledUser) => roledUser.user)
-  roledUsers?: RoledUser[];
+  @Field(() => [UserOrganization])
+  @OneToMany(() => UserOrganization, (userOrganization) => userOrganization.user)
+  userOrganizations?: UserOrganization[];
 
   /** ユーザー区域
    * RoledUserに結びつけようかと思ったが、別の組織のRoledUserとも結びつけられてしまうため、Userと結びつけるのが正解。

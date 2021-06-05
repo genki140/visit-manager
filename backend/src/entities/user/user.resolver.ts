@@ -51,10 +51,10 @@ export class UserResolver {
     // }
 
     // とりあえず自動で読み込む。本当は↑の条件みたいなのをちゃんと設定し、不要なリレーションは含めないべき
-    relations.push('roledUsers');
-    relations.push('roledUsers.roles');
-    relations.push('roledUsers.roles.abilities');
-    relations.push('roledUsers.organization');
+    relations.push('userOrganizations');
+    relations.push('userOrganizations.roles');
+    relations.push('userOrganizations.roles.abilities');
+    relations.push('userOrganizations.organization');
     // relations.push('userAreas');
     // relations.push('userAreas.organization');
 

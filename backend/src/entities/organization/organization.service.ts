@@ -48,7 +48,7 @@ export class OrganizationService {
     // トリムした結果、同名、system、index は使用できない。
     const result = await this.organizationRepository.save({
       name: payload.name.trim(),
-      roledUsers: [
+      userOrganizations: [
         {
           userId: userId,
           roles: [

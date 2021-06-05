@@ -1,6 +1,6 @@
 import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, ID, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Int, Query, Resolver } from '@nestjs/graphql';
 import { ApolloError } from 'apollo-server-express';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
@@ -17,7 +17,7 @@ export class UserAreaResolver {
   @UseGuards(GqlAuthGuard)
   @Query(() => [UserArea])
   async userAreas(
-    @Args('organizationId', { type: () => ID }) organizationId: string,
+    @Args('organizationId', { type: () => Int }) organizationId: number,
     @Args('ids', { type: () => [ID], nullable: true, defaultValue: null }) ids: string[] | null,
     @CurrentUser() currentUser: User,
   ) {
@@ -32,19 +32,14 @@ export class UserAreaResolver {
           'userAreas.area.residences.residents',
           'userAreas.area.outlines',
           'userAreas.area.outlines.points',
-          'roledUsers',
-          'roledUsers.organization',
+          'userOrganizations',
+          'userOrganizations.organization',
         ],
       })
     )[0];
 
     // 名前かIDどちらかがヒットする組織に所属していなければ例外を返す
-    if (
-      user == null ||
-      user.roledUsers?.some(
-        (x) => x.organization?.id?.toString() === organizationId || x.organization?.name === organizationId,
-      ) !== true
-    ) {
+    if (user == null || user.userOrganizations?.some((x) => x.organization?.id === organizationId) !== true) {
       throw new ApolloError('organization id not found.', 'NOT_FOUND');
     }
 
@@ -54,7 +49,7 @@ export class UserAreaResolver {
           x, // 名前かIDどちらかがヒット
         ) =>
           ids?.some((y) => y === x.area?.id.toString() || y === x.area?.name) !== false &&
-          (x?.area?.organization?.id?.toString() === organizationId || x?.area?.organization?.name === organizationId),
+          x?.area?.organization?.id === organizationId,
       ) ?? [];
 
     if (ids != null && result.length !== ids.length) {

@@ -3,6 +3,11 @@ import { AsyncThunk, configureStore, createAsyncThunk, createSlice, PayloadActio
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 
+// export const AreaListEditType = {
+//   None: 'None',
+// } as const;
+// export type AreaListEditType = typeof AreaListEditType[keyof typeof AreaListEditType];
+
 export const MapEditType = {
   None: 'None',
   Residence: 'Residence',
@@ -17,12 +22,10 @@ export type StoreState = {
   loginUser?: User;
   loginLoaded: boolean;
   loginSrcRoute?: { pathname: string; query: any };
+  areaList: {
+    editing: boolean;
+  };
   map: {
-    // position: {
-    //   lat: number;
-    //   lng: number;
-    // };
-    // zoom: number;
     selectedResidenceId?: number;
     selectedOutlineId?: number;
     selectedOutlinePointId?: number;
@@ -39,12 +42,10 @@ const createStoreInitial = () => {
   const value: StoreState = {
     loading: false,
     loginLoaded: false,
+    areaList: {
+      editing: false,
+    },
     map: {
-      // position: {
-      //   lat: 0,
-      //   lng: 0,
-      // },
-      // zoom: 0,
       editType: MapEditType.None,
     },
     // residences: [],

@@ -25,7 +25,10 @@ export class MapQueries {
   /** キャッシュ更新用ヘルパー */
   private static useUserAreaQueryCache = () => {
     const routerParams = useRouterParams();
-    const getUserAreaResultVariables = { organizationId: routerParams.organizationName, areaId: routerParams.areaName };
+    const getUserAreaResultVariables = {
+      organizationId: routerParams.getOrganizationId(),
+      areaId: routerParams.areaName,
+    };
 
     return {
       read: <T>(cache: ApolloCache<T>) => {
@@ -142,7 +145,7 @@ export class MapQueries {
     // queries
     const routerParams = useRouterParams();
     const getUserAreaResult = useGetUserAreaQuery({
-      variables: { organizationId: routerParams.organizationName, areaId: routerParams.areaName },
+      variables: { organizationId: routerParams.getOrganizationId(), areaId: routerParams.areaName },
       skip: !routerParams.hasOrganizationAndArea,
     });
     const userArea = getUserAreaResult.data?.userAreas?.[0];
@@ -236,7 +239,7 @@ export class MapQueries {
 
 // ユーザーエリアの全情報を取得
 gql`
-  query getUserArea($organizationId: ID!, $areaId: ID!) {
+  query getUserArea($organizationId: Int!, $areaId: ID!) {
     userAreas(organizationId: $organizationId, ids: [$areaId]) {
       area {
         id

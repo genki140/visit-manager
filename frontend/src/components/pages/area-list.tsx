@@ -19,6 +19,7 @@ import React from 'react';
 import { MovableList } from '../movable-list';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import { AreaCreateButton } from '../dialogs/area-create-button';
+import { useStoreState } from '@/ducks/store';
 
 // スタイル定義
 const useStyles = makeStyles(() => ({
@@ -31,10 +32,11 @@ const useStyles = makeStyles(() => ({
 
 export const AreaList = () => {
   const classes = useStyles();
+  const editing = useStoreState((x) => x.areaList.editing);
   const routerParams = useRouterParams();
 
   const { loading, error, data } = useGetUserAreasQuery({
-    variables: { organizationId: routerParams.organizationName },
+    variables: { organizationId: routerParams.getOrganizationId() },
     skip: routerParams.organizationName === '',
   });
 

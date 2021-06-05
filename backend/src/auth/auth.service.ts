@@ -21,7 +21,12 @@ export class AuthService {
     const user = (
       await this.usersService.find(undefined, {
         where: { username },
-        relations: ['roledUsers', 'roledUsers.organization', 'roledUsers.roles', 'roledUsers.roles.abilities'],
+        relations: [
+          'userOrganizations',
+          'userOrganizations.organization',
+          'userOrganizations.roles',
+          'userOrganizations.roles.abilities',
+        ],
       })
     )?.[0];
 
