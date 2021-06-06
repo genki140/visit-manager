@@ -1,13 +1,28 @@
-query GetOrganizations {
-  organizations {
+query GetUserOrganizations {
+  userOrganizations {
     id
-    name
+    order
+    organization {
+      id
+      name
+    }
   }
 }
 
-mutation createOrganization($name: String!) {
-  createOrganization(organization: { name: $name }) {
+mutation createUserOrganization($name: String!) {
+  createUserOrganization(organization: { name: $name }) {
     id
-    name
+    order
+    organization {
+      id
+      name
+    }
+  }
+}
+
+mutation updateUserOrganization($id: Int!, $order: Int!) {
+  updateUserOrganization(userOrganization: { id: $id, order: $order }) {
+    id
+    order
   }
 }

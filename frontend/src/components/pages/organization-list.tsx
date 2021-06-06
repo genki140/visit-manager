@@ -1,6 +1,5 @@
 import { Layout } from '@/components/layouts';
 import { Box, Card, CardActionArea, CardContent, CardHeader, List, ListItem, Typography } from '@material-ui/core';
-import { useGetOrganizationsQuery } from '@/types/graphql';
 import LoadingContainer from '@/components/loading-container';
 import Link from 'next/link';
 import { useFormatMessage } from '@/locales';
@@ -8,6 +7,9 @@ import { OrganizationCreateButton } from '@/components/dialogs/organization-crea
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import React from 'react';
 import { MovableList } from '../movable-list';
+import { useGetUserOrganizationsQuery } from '@/types/graphql';
+import { OrganizationListQueries } from '@/queries/organization-list-queries';
+import Enumerable from 'linq';
 
 // const useStyles = makeStyles(() => ({
 //   list: {
@@ -19,11 +21,30 @@ import { MovableList } from '../movable-list';
 
 export const OrganizationList = () => {
   // const classes = useStyles();
-  const { loading, error, data } = useGetOrganizationsQuery();
+  const { loading, error, data } = useGetUserOrganizationsQuery();
+  const updateUserOrganizationMutation = OrganizationListQueries.useUpdateUserOrganization();
   const f = useFormatMessage();
 
-  const onMove = (oldIndex: number, newIndex: number) => {
-    console.log(oldIndex + ' to ' + newIndex);
+  const orderdUserOrganizations = Enumerable.from(data?.userOrganizations ?? [])
+    .orderBy((x) => x.order)
+    .toArray();
+
+  const onMove = async (oldIndex: number, newIndex: number) => {
+    const oldId = orderdUserOrganizations[oldIndex].id;
+    const newId = orderdUserOrganizations[newIndex].id;
+    if (oldId != null && newId != null) {
+      // 一気に入れ替えることがあるので、やっぱりorderは一括で設定できる必要がある
+
+      // console.log(oldIndex + ' to ' + newIndex);
+      await updateUserOrganizationMutation({
+        id: oldId,
+        order: newIndex,
+      });
+      await updateUserOrganizationMutation({
+        id: newId,
+        order: oldIndex,
+      });
+    }
   };
 
   return (
@@ -35,15 +56,15 @@ export const OrganizationList = () => {
           </Typography>
           <List>
             <MovableList onMove={onMove}>
-              {(data?.organizations ?? []).map((x) => ({
-                key: x.id.toString(),
+              {orderdUserOrganizations.map((x) => ({
+                key: x.organization.id.toString(),
                 node: (draggableProps: any) => (
-                  <Link href={x.name}>
+                  <Link href={x.organization.name}>
                     <ListItem>
                       <Card style={{ width: '100%' }}>
                         <CardActionArea>
                           <CardHeader
-                            title={x.name}
+                            title={x.organization.name}
                             action={
                               <div {...draggableProps} style={{ margin: 5 }}>
                                 <DragHandleIcon className="drag-handle" />

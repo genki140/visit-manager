@@ -5,7 +5,7 @@ import { ApolloCache } from '@apollo/client';
 
 export class AreaListQueries {
   /** キャッシュ更新用ヘルパー */
-  private static useAreaQueryCache = () => {
+  private static useAreasQueryCache = () => {
     const routerParams = useRouterParams();
     return {
       read: <T>(cache: ApolloCache<T>) => {
@@ -33,7 +33,7 @@ export class AreaListQueries {
   };
 
   static useCreateArea = () => {
-    const userAreaQueryCache = AreaListQueries.useAreaQueryCache();
+    const userAreaQueryCache = AreaListQueries.useAreasQueryCache();
     return useCreateAreaMutation({
       update: (cache, result) => {
         const data = TypeUtil.toNonNullable(result.data);

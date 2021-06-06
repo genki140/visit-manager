@@ -38,7 +38,7 @@ export class ResidenceService {
   }
 
   async update(payload: UpdateResidenceInput) {
-    let item = await this.residenceRepository.findOneOrFail(payload.id, {
+    const item = await this.residenceRepository.findOneOrFail(payload.id, {
       relations: ['residents'],
     });
 

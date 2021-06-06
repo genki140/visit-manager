@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const OrganizationCreateButton = () => {
   const [open, setOpen] = useState(false);
   const f = useFormatMessage();
-  const [createOrganizationMutation] = OrganizationListQueries.useCreateOrganization();
+  const [createOrganizationMutation] = OrganizationListQueries.useCreateUserOrganization();
   const classes = useStyles();
   const [error, setError] = useState('');
   const confirmDialog = useConfirmDialog();

@@ -1,20 +1,22 @@
 import {
-  GetOrganizationsDocument,
-  GetOrganizationsQuery,
-  GetOrganizationsQueryVariables,
-  useCreateOrganizationMutation,
+  GetUserOrganizationsDocument,
+  GetUserOrganizationsQuery,
+  GetUserOrganizationsQueryVariables,
+  UpdateUserOrganizationMutationVariables,
+  useCreateUserOrganizationMutation,
+  useUpdateUserOrganizationMutation,
 } from '@/types/graphql';
 import { TypeUtil } from '@/utils/type-helper';
-import { ApolloCache, gql } from '@apollo/client';
+import { ApolloCache } from '@apollo/client';
 
 export class OrganizationListQueries {
   /** キャッシュ更新用ヘルパー */
-  private static useOrganizationQueryCache = () => {
+  private static useUserOrganizationsQueryCache = () => {
     return {
       read: <T>(cache: ApolloCache<T>) => {
         let copiedData = TypeUtil.toNonNullable(
-          cache.readQuery<GetOrganizationsQuery, GetOrganizationsQueryVariables>({
-            query: GetOrganizationsDocument,
+          cache.readQuery<GetUserOrganizationsQuery, GetUserOrganizationsQueryVariables>({
+            query: GetUserOrganizationsDocument,
             variables: {},
           }),
         );
@@ -22,8 +24,8 @@ export class OrganizationListQueries {
         return copiedData;
       },
       write: <T, U>(cache: ApolloCache<T>, data: U) => {
-        return cache.writeQuery<U, GetOrganizationsQueryVariables>({
-          query: GetOrganizationsDocument,
+        return cache.writeQuery<U, GetUserOrganizationsQueryVariables>({
+          query: GetUserOrganizationsDocument,
           variables: {},
           data: data,
         });
@@ -31,18 +33,45 @@ export class OrganizationListQueries {
     };
   };
 
-  static useCreateOrganization = () => {
-    const userAreaQueryCache = OrganizationListQueries.useOrganizationQueryCache();
-    return useCreateOrganizationMutation({
+  static useCreateUserOrganization = () => {
+    const organizationQueryCache = OrganizationListQueries.useUserOrganizationsQueryCache();
+    return useCreateUserOrganizationMutation({
       update: (cache, result) => {
         const data = TypeUtil.toNonNullable(result.data);
-        const cacheData = userAreaQueryCache.read(cache);
+        const cacheData = organizationQueryCache.read(cache);
 
         // クエリに対するキャッシュデータ書き換え
-        cacheData.organizations.push(data.createOrganization);
+        cacheData.userOrganizations.push(data.createUserOrganization);
 
-        userAreaQueryCache.write(cache, cacheData);
+        organizationQueryCache.write(cache, cacheData);
       },
     });
+  };
+
+  static useUpdateUserOrganization = () => {
+    const organizationsQueryCache = OrganizationListQueries.useUserOrganizationsQueryCache();
+    const [updateUserOrganization] = useUpdateUserOrganizationMutation();
+    const result = (variables: UpdateUserOrganizationMutationVariables) =>
+      updateUserOrganization({
+        variables: variables,
+        optimisticResponse: {
+          __typename: 'Mutation',
+          updateUserOrganization: {
+            __typename: 'UserOrganization',
+            id: variables.id,
+            order: variables.order,
+          },
+        },
+        // update: (cache, result) => {
+        //   const data = TypeUtil.toNonNullable(result.data);
+        //   const cacheData = organizationsQueryCache.read(cache);
+
+        //   // cacheData.organizations.find((x) => x.id == data.updateUserOrganization.id)?.order =
+        //   //   data.updateUserOrganization.order;
+
+        //   organizationsQueryCache.write(cache, cacheData);
+        // },
+      });
+    return result;
   };
 }

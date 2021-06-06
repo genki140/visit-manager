@@ -73,7 +73,9 @@ type Role {
 
 type UserOrganization {
   id: Int!
+  order: Int!
   organization: Organization!
+  organizationId: Float!
   user: User!
   userId: Int!
   roles: [Role!]!
@@ -94,17 +96,18 @@ scalar Date
 
 type Query {
   currentUser: User!
-  organizations: [Organization!]!
   googleMapApiKey: String!
   getTest: Float!
+  userOrganizations: [UserOrganization!]!
   areas(ids: [Int!] = null, userIds: [Int!] = null, organizationId: Int!): [Area!]!
 }
 
 type Mutation {
   createUser(user: CreateUserInput!): User!
   deleteUser(id: Int!): User
-  createOrganization(organization: CreateOrganizationInput!): Organization!
   addTest: Float!
+  createUserOrganization(organization: CreateUserOrganizationInput!): UserOrganization!
+  updateUserOrganization(userOrganization: UpdateUserOrganizationInput!): UserOrganization!
   createArea(area: CreateAreaInput!): Area!
   createOutline(outline: CreateOutlineInput!): Outline!
   updateOutline(outline: UpdateOutlineInput!): Outline!
@@ -120,8 +123,13 @@ input CreateUserInput {
   name: String = ""
 }
 
-input CreateOrganizationInput {
+input CreateUserOrganizationInput {
   name: String = ""
+}
+
+input UpdateUserOrganizationInput {
+  id: Int = 0
+  order: Int = 0
 }
 
 input CreateAreaInput {

@@ -28,11 +28,3 @@ export class Organization {
   @OneToMany(() => UserOrganization, (userOrganization) => userOrganization.organization, { cascade: true })
   userOrganizations?: UserOrganization[];
 }
-
-@InputType()
-export class CreateOrganizationInput {
-  /** 組織名 */
-  @Field()
-  @MaxLength(100)
-  name: string = '';
-}
