@@ -1,5 +1,5 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, ID, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Info, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CreateUserInput, User } from '@/entities/user/user.model';
 import { UserService } from '@/entities/user/user.service';
@@ -77,7 +77,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User, { nullable: true })
-  async deleteUser(@Args('id', { type: () => ID }) id: number) {
+  async deleteUser(@Args('id', { type: () => Int }) id: number) {
     return ((await this.userService.delete(id)).affected ?? 0) > 0;
   }
 }

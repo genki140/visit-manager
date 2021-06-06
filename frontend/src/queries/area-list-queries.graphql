@@ -1,0 +1,7 @@
+query getAreas($organizationId: Int!, $userIds: [Int!]) {
+  areas(organizationId: $organizationId, userIds: $userIds) {
+    id
+    name
+    description
+  }
+}

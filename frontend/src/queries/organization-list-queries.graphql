@@ -1,0 +1,13 @@
+query GetOrganizations {
+  organizations {
+    id
+    name
+  }
+}
+
+mutation createOrganization($name: String!) {
+  createOrganization(organization: { name: $name }) {
+    id
+    name
+  }
+}

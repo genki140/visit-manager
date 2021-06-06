@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Args, ID, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Int, Mutation, Resolver } from '@nestjs/graphql';
 
 import { CreateResidenceInput, Residence, UpdateResidenceInput } from './residence.model';
 import { ResidenceService } from './residence.service';
@@ -25,7 +25,7 @@ export class ResidenceResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteResidence(@Args('id', { type: () => ID }) id: number) {
+  async deleteResidence(@Args('id', { type: () => Int }) id: number) {
     return await this.residenceService.delete(id);
   }
 }

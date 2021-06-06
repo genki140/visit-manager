@@ -72,7 +72,7 @@ export const AreaList = () => {
           <List>
             <MovableList onMove={onMove}>
               {(data?.areas ?? []).map((x) => ({
-                key: x.id,
+                key: x.id.toString(),
                 node: (draggableProps: any) => (
                   <ListItem>
                     <Link href={'/' + routerParams.organizationName + '/' + x.name}>

@@ -1,4 +1,4 @@
-import { ApolloCache, gql } from '@apollo/client';
+import { ApolloCache } from '@apollo/client';
 
 import {
   DeleteOutlineMutationVariables,
@@ -183,7 +183,7 @@ export class AreaQueries {
             id: variables.id,
             points: (Array.isArray(variables.points) ? variables.points : [variables.points]).map((x) => ({
               __typename: 'OutlinePoint',
-              id: prevPoints.find((y) => y.order === x.order)?.id ?? 'OutlinePoint:' + new Date().getDate(),
+              id: prevPoints.find((y) => y.order === x.order)?.id ?? -new Date().getDate(), // マイナスのID
               order: TypeUtil.toNonNullable(x.order),
               latitude: TypeUtil.toNonNullable(x.latitude),
               longitude: TypeUtil.toNonNullable(x.longitude),
@@ -233,108 +233,3 @@ export class AreaQueries {
     return resultFunction;
   };
 }
-
-// ----------------------------------------gql----------------------------------------
-
-// ユーザーエリアの全情報を取得
-gql`
-  query getArea($organizationId: Int!, $areaId: Int!) {
-    areas(organizationId: $organizationId, ids: [$areaId]) {
-      id
-      name
-      description
-      residences {
-        id
-        name
-        latitude
-        longitude
-        residents {
-          id
-          room
-          floor
-        }
-      }
-      outlines {
-        id
-        points {
-          id
-          order
-          latitude
-          longitude
-        }
-      }
-    }
-  }
-`;
-
-gql`
-  mutation createResidence($areaId: ID!, $latitude: Float!, $longitude: Float!) {
-    createResidence(residence: { areaId: $areaId, name: "", latitude: $latitude, longitude: $longitude }) {
-      id
-      latitude
-      longitude
-      name
-      residents {
-        id
-        room
-        floor
-      }
-    }
-  }
-`;
-
-gql`
-  mutation updateResidence($id: ID!, $latitude: Float!, $longitude: Float!) {
-    updateResidence(residence: { id: $id, name: "", latitude: $latitude, longitude: $longitude }) {
-      id
-      latitude
-      longitude
-      name
-      residents {
-        id
-        room
-        floor
-      }
-    }
-  }
-`;
-
-gql`
-  mutation deleteResidence($id: ID!) {
-    deleteResidence(id: $id)
-  }
-`;
-
-gql`
-  mutation createOutline($areaId: ID!, $points: [CreateOutlinePointInput!]!) {
-    createOutline(outline: { areaId: $areaId, points: $points }) {
-      id
-      points {
-        id
-        order
-        latitude
-        longitude
-      }
-    }
-  }
-`;
-
-gql`
-  mutation updateOutline($id: ID!, $points: [UpdateOutlinePointInput!]!) {
-    updateOutline(outline: { id: $id, points: $points }) {
-      id
-      points {
-        id
-        order
-        latitude
-        longitude
-      }
-    }
-  }
-`;
-
-gql`
-  mutation deleteOutline($id: ID!) {
-    deleteOutline(id: $id)
-  }
-`;

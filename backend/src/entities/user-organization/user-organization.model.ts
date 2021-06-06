@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../user/user.model';
 import { Organization } from '../organization/organization.model';
@@ -8,7 +8,7 @@ import { Role } from '../role/role.model';
 @ObjectType()
 @Entity('user_organizations')
 export class UserOrganization {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number = 0;
 
@@ -23,6 +23,7 @@ export class UserOrganization {
   user?: User;
 
   @Column({ type: 'int', nullable: false })
+  @Field(() => Int)
   userId?: number;
 
   /** 役割 */

@@ -1,15 +1,15 @@
-import {
-  GetOrganizationsDocument,
-  GetOrganizationsQuery,
-  GetOrganizationsQueryVariables,
-  GetUserAreasDocument,
-  GetUserAreasQuery,
-  GetUserAreasQueryVariables,
-  useCreateAreaMutation,
-  useCreateOrganizationMutation,
-} from '@/types/graphql';
-import { TypeUtil } from '@/utils/type-helper';
-import { ApolloCache, gql } from '@apollo/client';
+// import {
+//   GetOrganizationsDocument,
+//   GetOrganizationsQuery,
+//   GetOrganizationsQueryVariables,
+//   GetUserAreasDocument,
+//   GetUserAreasQuery,
+//   GetUserAreasQueryVariables,
+//   useCreateAreaMutation,
+//   useCreateOrganizationMutation,
+// } from '@/types/graphql';
+// import { TypeUtil } from '@/utils/type-helper';
+// import { ApolloCache, gql } from '@apollo/client';
 
 // export class AreaListQueries {
 //   /** キャッシュ更新用ヘルパー */
@@ -54,46 +54,3 @@ import { ApolloCache, gql } from '@apollo/client';
 //     });
 //   };
 // }
-
-// ----------------------------------------gql----------------------------------------
-
-gql`
-  query getAreas($organizationId: Int!, $userIds: [Int!]) {
-    areas(organizationId: $organizationId, userIds: $userIds) {
-      id
-      name
-      description
-    }
-  }
-`;
-
-// gql`
-//   query GetOrganizations {
-//     organizations {
-//       id
-//       name
-//     }
-//   }
-// `;
-
-// gql`
-//   mutation createOrganization($name: String!) {
-//     createOrganization(organization: { name: $name }) {
-//       id
-//       name
-//     }
-//   }
-// `;
-
-// gql`
-//   query getUserAreas($organizationId: Int!) {
-//     userAreas(organizationId: $organizationId) {
-//       id
-//       area {
-//         id
-//         name
-//         description
-//       }
-//     }
-//   }
-// `;

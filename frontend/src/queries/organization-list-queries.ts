@@ -46,33 +46,3 @@ export class OrganizationListQueries {
     });
   };
 }
-
-// ----------------------------------------gql----------------------------------------
-
-gql`
-  query GetOrganizations {
-    organizations {
-      id
-      name
-    }
-  }
-`;
-
-gql`
-  mutation createOrganization($name: String!) {
-    createOrganization(organization: { name: $name }) {
-      id
-      name
-    }
-  }
-`;
-
-// gql`
-//   query getAreas($organizationId: ID!) {
-//     areas(organizationId: $organizationId) {
-//       id
-//       name
-//       description
-//     }
-//   }
-// `;

@@ -11,7 +11,7 @@ import { MaxLength } from 'class-validator';
 @Entity('areas')
 @Index(['id', 'name'], { unique: true }) // 同じ組織に同名は許可しない
 export class Area {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number = 0;
 

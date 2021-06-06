@@ -36,7 +36,7 @@ export const OrganizationList = () => {
           <List>
             <MovableList onMove={onMove}>
               {(data?.organizations ?? []).map((x) => ({
-                key: x.id,
+                key: x.id.toString(),
                 node: (draggableProps: any) => (
                   <Link href={x.name}>
                     <ListItem>

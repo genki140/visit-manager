@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Args, ID, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Int, Mutation, Resolver } from '@nestjs/graphql';
 
 import { OutlineService } from './outline.service';
 import { CreateOutlineInput, Outline, UpdateOutlineInput } from './outline.model';
@@ -25,7 +25,7 @@ export class OutlineResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteOutline(@Args('id', { type: () => ID }) id: number) {
+  async deleteOutline(@Args('id', { type: () => Int }) id: number) {
     return await this.outlineService.delete(id);
   }
 }

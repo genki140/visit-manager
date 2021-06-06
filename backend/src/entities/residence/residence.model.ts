@@ -9,7 +9,7 @@ import { Resident } from '../resident/resident.model';
 @ObjectType()
 @Entity('residences')
 export class Residence {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number = 0;
 
@@ -46,7 +46,7 @@ export class Residence {
 @InputType()
 export class CreateResidenceInput {
   /** 区域ID */
-  @Field(() => ID)
+  @Field(() => Int)
   areaId: number = 0;
 
   /** 建物名 */
@@ -73,7 +73,7 @@ export class CreateResidenceInput {
 
 @InputType()
 export class UpdateResidenceInput {
-  @Field(() => ID)
+  @Field(() => Int)
   id: number = 0;
 
   /** 建物名 */

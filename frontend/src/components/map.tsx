@@ -110,7 +110,7 @@ const Map = forwardRef<
                 __typename: 'Mutation',
                 createResidence: {
                   __typename: 'Residence',
-                  id: 'residence:' + new Date().getTime(),
+                  id: -new Date().getTime(),
                   latitude: v.latitude,
                   longitude: v.longitude,
                   name: '',

@@ -10,7 +10,7 @@ import ApartmentIcon from '@material-ui/icons/Apartment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
 import { useRouterParams } from '@/utils/use-router-params';
-import { Area, useGetAreaQuery, UserArea } from '@/types/graphql';
+import { Area, useGetAreaQuery } from '@/types/graphql';
 import { MapOutput } from './map';
 
 const useStyle = makeStyles((theme) => ({
@@ -88,7 +88,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
     return null;
   }
 
-  const selectedOutline = area.outlines.find((x) => x.id === selectedOutlineId?.toString());
+  const selectedOutline = area.outlines.find((x) => x.id === selectedOutlineId);
 
   return (
     <>
@@ -172,7 +172,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
             onClick={async () => {
               if (selectedResidenceId != null) {
                 // 住宅削除
-                const result = await deleteResidence({ id: selectedResidenceId.toString() });
+                const result = await deleteResidence({ id: selectedResidenceId });
                 if (result.data?.deleteResidence === true) {
                   dispatch(actions.setSelectedResidenceId({ residenceId: undefined }));
                 }
@@ -238,7 +238,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
                 color={'secondary'}
                 onClick={async () => {
                   if (selectedOutlineId != null) {
-                    const result = await deleteOutline({ id: selectedOutlineId.toString() });
+                    const result = await deleteOutline({ id: selectedOutlineId });
                     if (result.data?.deleteOutline === true) {
                       dispatch(actions.setSelectedOutlinePointId({ pointId: undefined }));
                       dispatch(actions.setSelectedOutlineId({ outlineId: undefined }));
@@ -267,7 +267,7 @@ export const MapControls = (props: { map: MutableRefObject<MapOutput | undefined
                   }
 
                   const newPoints = selectedOutline?.points
-                    .filter((x) => x.id !== selectedOutlinePointId.toString())
+                    .filter((x) => x.id !== selectedOutlinePointId)
                     .map((x, i) => ({
                       order: i,
                       latitude: x.latitude,

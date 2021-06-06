@@ -18,13 +18,13 @@ export type Scalars = {
 
 export type Ability = {
   __typename?: 'Ability';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   name: Scalars['String'];
 };
 
 export type Area = {
   __typename?: 'Area';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   name: Scalars['String'];
   description: Scalars['String'];
   organization: Organization;
@@ -46,7 +46,7 @@ export type CreateOrganizationInput = {
 
 export type CreateOutlineInput = {
   points?: Maybe<Array<CreateOutlinePointInput>>;
-  areaId: Scalars['ID'];
+  areaId: Scalars['Int'];
 };
 
 export type CreateOutlinePointInput = {
@@ -55,7 +55,7 @@ export type CreateOutlinePointInput = {
 };
 
 export type CreateResidenceInput = {
-  areaId?: Maybe<Scalars['ID']>;
+  areaId?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   latitude?: Maybe<Scalars['Float']>;
   longitude?: Maybe<Scalars['Float']>;
@@ -90,7 +90,7 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['Int'];
 };
 
 
@@ -115,7 +115,7 @@ export type MutationUpdateOutlineArgs = {
 
 
 export type MutationDeleteOutlineArgs = {
-  id: Scalars['ID'];
+  id: Scalars['Int'];
 };
 
 
@@ -130,26 +130,27 @@ export type MutationUpdateResidenceArgs = {
 
 
 export type MutationDeleteResidenceArgs = {
-  id: Scalars['ID'];
+  id: Scalars['Int'];
 };
 
 export type Organization = {
   __typename?: 'Organization';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   name: Scalars['String'];
   userOrganizations: Array<UserOrganization>;
 };
 
 export type Outline = {
   __typename?: 'Outline';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   points: Array<OutlinePoint>;
   area: Area;
+  areaId: Scalars['Int'];
 };
 
 export type OutlinePoint = {
   __typename?: 'OutlinePoint';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   order: Scalars['Float'];
   latitude: Scalars['Float'];
   longitude: Scalars['Float'];
@@ -174,7 +175,7 @@ export type QueryAreasArgs = {
 
 export type Residence = {
   __typename?: 'Residence';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   name: Scalars['String'];
   latitude: Scalars['Float'];
   longitude: Scalars['Float'];
@@ -184,7 +185,7 @@ export type Residence = {
 
 export type Resident = {
   __typename?: 'Resident';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   name: Scalars['String'];
   floor: Scalars['Float'];
   room: Scalars['Float'];
@@ -193,7 +194,7 @@ export type Resident = {
 
 export type Role = {
   __typename?: 'Role';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   name: Scalars['String'];
   userOrganization: Array<UserOrganization>;
   abilities: Array<Ability>;
@@ -205,7 +206,7 @@ export type Subscription = {
 };
 
 export type UpdateOutlineInput = {
-  id?: Maybe<Scalars['ID']>;
+  id?: Maybe<Scalars['Int']>;
   points?: Maybe<Array<UpdateOutlinePointInput>>;
 };
 
@@ -216,7 +217,7 @@ export type UpdateOutlinePointInput = {
 };
 
 export type UpdateResidenceInput = {
-  id?: Maybe<Scalars['ID']>;
+  id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   latitude?: Maybe<Scalars['Float']>;
   longitude?: Maybe<Scalars['Float']>;
@@ -224,7 +225,7 @@ export type UpdateResidenceInput = {
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   createdAt: Scalars['Date'];
   username: Scalars['String'];
   password: Scalars['String'];
@@ -235,16 +236,17 @@ export type User = {
 
 export type UserArea = {
   __typename?: 'UserArea';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   user: User;
   area: Area;
 };
 
 export type UserOrganization = {
   __typename?: 'UserOrganization';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   organization: Organization;
   user: User;
+  userId: Scalars['Int'];
   roles: Array<Role>;
 };
 
@@ -344,7 +346,7 @@ export type GetAreaQuery = (
 );
 
 export type CreateResidenceMutationVariables = Exact<{
-  areaId: Scalars['ID'];
+  areaId: Scalars['Int'];
   latitude: Scalars['Float'];
   longitude: Scalars['Float'];
 }>;
@@ -363,7 +365,7 @@ export type CreateResidenceMutation = (
 );
 
 export type UpdateResidenceMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   latitude: Scalars['Float'];
   longitude: Scalars['Float'];
 }>;
@@ -382,7 +384,7 @@ export type UpdateResidenceMutation = (
 );
 
 export type DeleteResidenceMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['Int'];
 }>;
 
 
@@ -392,7 +394,7 @@ export type DeleteResidenceMutation = (
 );
 
 export type CreateOutlineMutationVariables = Exact<{
-  areaId: Scalars['ID'];
+  areaId: Scalars['Int'];
   points: Array<CreateOutlinePointInput> | CreateOutlinePointInput;
 }>;
 
@@ -410,7 +412,7 @@ export type CreateOutlineMutation = (
 );
 
 export type UpdateOutlineMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   points: Array<UpdateOutlinePointInput> | UpdateOutlinePointInput;
 }>;
 
@@ -428,7 +430,7 @@ export type UpdateOutlineMutation = (
 );
 
 export type DeleteOutlineMutationVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['Int'];
 }>;
 
 
@@ -719,7 +721,7 @@ export type GetAreaQueryHookResult = ReturnType<typeof useGetAreaQuery>;
 export type GetAreaLazyQueryHookResult = ReturnType<typeof useGetAreaLazyQuery>;
 export type GetAreaQueryResult = Apollo.QueryResult<GetAreaQuery, GetAreaQueryVariables>;
 export const CreateResidenceDocument = gql`
-    mutation createResidence($areaId: ID!, $latitude: Float!, $longitude: Float!) {
+    mutation createResidence($areaId: Int!, $latitude: Float!, $longitude: Float!) {
   createResidence(
     residence: {areaId: $areaId, name: "", latitude: $latitude, longitude: $longitude}
   ) {
@@ -764,7 +766,7 @@ export type CreateResidenceMutationHookResult = ReturnType<typeof useCreateResid
 export type CreateResidenceMutationResult = Apollo.MutationResult<CreateResidenceMutation>;
 export type CreateResidenceMutationOptions = Apollo.BaseMutationOptions<CreateResidenceMutation, CreateResidenceMutationVariables>;
 export const UpdateResidenceDocument = gql`
-    mutation updateResidence($id: ID!, $latitude: Float!, $longitude: Float!) {
+    mutation updateResidence($id: Int!, $latitude: Float!, $longitude: Float!) {
   updateResidence(
     residence: {id: $id, name: "", latitude: $latitude, longitude: $longitude}
   ) {
@@ -809,7 +811,7 @@ export type UpdateResidenceMutationHookResult = ReturnType<typeof useUpdateResid
 export type UpdateResidenceMutationResult = Apollo.MutationResult<UpdateResidenceMutation>;
 export type UpdateResidenceMutationOptions = Apollo.BaseMutationOptions<UpdateResidenceMutation, UpdateResidenceMutationVariables>;
 export const DeleteResidenceDocument = gql`
-    mutation deleteResidence($id: ID!) {
+    mutation deleteResidence($id: Int!) {
   deleteResidence(id: $id)
 }
     `;
@@ -840,7 +842,7 @@ export type DeleteResidenceMutationHookResult = ReturnType<typeof useDeleteResid
 export type DeleteResidenceMutationResult = Apollo.MutationResult<DeleteResidenceMutation>;
 export type DeleteResidenceMutationOptions = Apollo.BaseMutationOptions<DeleteResidenceMutation, DeleteResidenceMutationVariables>;
 export const CreateOutlineDocument = gql`
-    mutation createOutline($areaId: ID!, $points: [CreateOutlinePointInput!]!) {
+    mutation createOutline($areaId: Int!, $points: [CreateOutlinePointInput!]!) {
   createOutline(outline: {areaId: $areaId, points: $points}) {
     id
     points {
@@ -880,7 +882,7 @@ export type CreateOutlineMutationHookResult = ReturnType<typeof useCreateOutline
 export type CreateOutlineMutationResult = Apollo.MutationResult<CreateOutlineMutation>;
 export type CreateOutlineMutationOptions = Apollo.BaseMutationOptions<CreateOutlineMutation, CreateOutlineMutationVariables>;
 export const UpdateOutlineDocument = gql`
-    mutation updateOutline($id: ID!, $points: [UpdateOutlinePointInput!]!) {
+    mutation updateOutline($id: Int!, $points: [UpdateOutlinePointInput!]!) {
   updateOutline(outline: {id: $id, points: $points}) {
     id
     points {
@@ -920,7 +922,7 @@ export type UpdateOutlineMutationHookResult = ReturnType<typeof useUpdateOutline
 export type UpdateOutlineMutationResult = Apollo.MutationResult<UpdateOutlineMutation>;
 export type UpdateOutlineMutationOptions = Apollo.BaseMutationOptions<UpdateOutlineMutation, UpdateOutlineMutationVariables>;
 export const DeleteOutlineDocument = gql`
-    mutation deleteOutline($id: ID!) {
+    mutation deleteOutline($id: Int!) {
   deleteOutline(id: $id)
 }
     `;

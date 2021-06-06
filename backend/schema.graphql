@@ -3,32 +3,33 @@
 # ------------------------------------------------------
 
 type Organization {
-  id: ID!
+  id: Int!
   name: String!
   userOrganizations: [UserOrganization!]!
 }
 
 type Ability {
-  id: ID!
+  id: Int!
   name: String!
 }
 
 type Role {
-  id: ID!
+  id: Int!
   name: String!
   userOrganization: [UserOrganization!]!
   abilities: [Ability!]!
 }
 
 type UserOrganization {
-  id: ID!
+  id: Int!
   organization: Organization!
   user: User!
+  userId: Int!
   roles: [Role!]!
 }
 
 type OutlinePoint {
-  id: ID!
+  id: Int!
   order: Float!
   latitude: Float!
   longitude: Float!
@@ -36,13 +37,14 @@ type OutlinePoint {
 }
 
 type Outline {
-  id: ID!
+  id: Int!
   points: [OutlinePoint!]!
   area: Area!
+  areaId: Int!
 }
 
 type Resident {
-  id: ID!
+  id: Int!
   name: String!
   floor: Float!
   room: Float!
@@ -50,7 +52,7 @@ type Resident {
 }
 
 type Residence {
-  id: ID!
+  id: Int!
   name: String!
   latitude: Float!
   longitude: Float!
@@ -59,7 +61,7 @@ type Residence {
 }
 
 type Area {
-  id: ID!
+  id: Int!
   name: String!
   description: String!
   organization: Organization!
@@ -70,13 +72,13 @@ type Area {
 }
 
 type UserArea {
-  id: ID!
+  id: Int!
   user: User!
   area: Area!
 }
 
 type User {
-  id: ID!
+  id: Int!
   createdAt: Date!
   username: String!
   password: String!
@@ -98,16 +100,16 @@ type Query {
 
 type Mutation {
   createUser(user: CreateUserInput!): User!
-  deleteUser(id: ID!): User
+  deleteUser(id: Int!): User
   createOrganization(organization: CreateOrganizationInput!): Organization!
   addTest: Float!
   createArea(area: CreateAreaInput!): Area!
   createOutline(outline: CreateOutlineInput!): Outline!
   updateOutline(outline: UpdateOutlineInput!): Outline!
-  deleteOutline(id: ID!): Boolean!
+  deleteOutline(id: Int!): Boolean!
   createResidence(residence: CreateResidenceInput!): Residence!
   updateResidence(residence: UpdateResidenceInput!): Residence!
-  deleteResidence(id: ID!): Boolean!
+  deleteResidence(id: Int!): Boolean!
 }
 
 input CreateUserInput {
@@ -128,7 +130,7 @@ input CreateAreaInput {
 
 input CreateOutlineInput {
   points: [CreateOutlinePointInput!] = []
-  areaId: ID!
+  areaId: Int!
 }
 
 input CreateOutlinePointInput {
@@ -137,7 +139,7 @@ input CreateOutlinePointInput {
 }
 
 input UpdateOutlineInput {
-  id: ID = 0
+  id: Int = 0
   points: [UpdateOutlinePointInput!] = []
 }
 
@@ -148,14 +150,14 @@ input UpdateOutlinePointInput {
 }
 
 input CreateResidenceInput {
-  areaId: ID = 0
+  areaId: Int = 0
   name: String = ""
   latitude: Float = 0
   longitude: Float = 0
 }
 
 input UpdateResidenceInput {
-  id: ID = 0
+  id: Int = 0
   name: String = ""
   latitude: Float = 0
   longitude: Float = 0

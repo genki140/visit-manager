@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { OutlinePoint as OutlinePoint } from '../outline-point/outline-point.model';
 import { Area } from '../area/area.model';
@@ -7,7 +7,7 @@ import { Area } from '../area/area.model';
 @ObjectType()
 @Entity('outlines')
 export class Outline {
-  @Field(() => ID)
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number = 0;
 
@@ -23,6 +23,7 @@ export class Outline {
   area?: Area;
 
   @Column({ type: 'int', nullable: false })
+  @Field(() => Int)
   areaId?: number;
 }
 
@@ -43,7 +44,7 @@ export class CreateOutlineInput {
   @Field(() => [CreateOutlinePointInput])
   points: CreateOutlinePointInput[] = [];
 
-  @Field(() => ID)
+  @Field(() => Int)
   areaId?: number;
 }
 
@@ -64,7 +65,7 @@ export class UpdateOutlinePointInput {
 
 @InputType()
 export class UpdateOutlineInput {
-  @Field(() => ID)
+  @Field(() => Int)
   id: number = 0;
 
   /** ポイント */

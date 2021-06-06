@@ -10,9 +10,8 @@ import { UserAreaService } from './user-area.service';
 @Resolver(() => UserArea)
 export class UserAreaResolver {
   constructor(
-    @Inject(UserAreaService) private userAreaService: UserAreaService,
-  ) // @Inject(UserService) private userService: UserService,
-  {}
+    @Inject(UserAreaService) private userAreaService: UserAreaService, // @Inject(UserService) private userService: UserService,
+  ) {}
 
   // @UseGuards(GqlAuthGuard)
   // @Query(() => [UserArea])

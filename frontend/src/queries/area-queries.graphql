@@ -1,0 +1,87 @@
+query getArea($organizationId: Int!, $areaId: Int!) {
+  areas(organizationId: $organizationId, ids: [$areaId]) {
+    id
+    name
+    description
+    residences {
+      id
+      name
+      latitude
+      longitude
+      residents {
+        id
+        room
+        floor
+      }
+    }
+    outlines {
+      id
+      points {
+        id
+        order
+        latitude
+        longitude
+      }
+    }
+  }
+}
+
+mutation createResidence($areaId: Int!, $latitude: Float!, $longitude: Float!) {
+  createResidence(residence: { areaId: $areaId, name: "", latitude: $latitude, longitude: $longitude }) {
+    id
+    latitude
+    longitude
+    name
+    residents {
+      id
+      room
+      floor
+    }
+  }
+}
+
+mutation updateResidence($id: Int!, $latitude: Float!, $longitude: Float!) {
+  updateResidence(residence: { id: $id, name: "", latitude: $latitude, longitude: $longitude }) {
+    id
+    latitude
+    longitude
+    name
+    residents {
+      id
+      room
+      floor
+    }
+  }
+}
+
+mutation deleteResidence($id: Int!) {
+  deleteResidence(id: $id)
+}
+
+mutation createOutline($areaId: Int!, $points: [CreateOutlinePointInput!]!) {
+  createOutline(outline: { areaId: $areaId, points: $points }) {
+    id
+    points {
+      id
+      order
+      latitude
+      longitude
+    }
+  }
+}
+
+mutation updateOutline($id: Int!, $points: [UpdateOutlinePointInput!]!) {
+  updateOutline(outline: { id: $id, points: $points }) {
+    id
+    points {
+      id
+      order
+      latitude
+      longitude
+    }
+  }
+}
+
+mutation deleteOutline($id: Int!) {
+  deleteOutline(id: $id)
+}
