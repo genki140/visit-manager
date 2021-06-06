@@ -16,20 +16,12 @@ import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import AddIcon from '@material-ui/icons/Add';
 
-import gql from 'graphql-tag';
-import { useCreateAreaMutation } from '@/types/graphql';
 import { trimedValidate } from '@/utils/field-validate';
 import { useConfirmDialog } from './confirm-dialog';
 import { useRouterParams } from '@/utils/use-router-params';
-
-gql`
-  mutation createArea($organizationId: Int!, $name: String!, $description: String!) {
-    createArea(area: { organizationId: $organizationId, name: $name, description: $description }) {
-      id
-      name
-    }
-  }
-`;
+import { unwrapResult } from '@reduxjs/toolkit';
+import { asyncRefreshLoginUser, useAppDispatch } from '@/ducks/store';
+import { AreaListQueries } from '@/queries/area-list-queries';
 
 const useStyles = makeStyles((theme: Theme) => ({
   // '& .MuiTextField-root': { marginBottom: theme.spacing(10) },
@@ -50,11 +42,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const AreaCreateButton = () => {
   const [open, setOpen] = useState(false);
   const f = useFormatMessage();
-  const [createAreaMutation] = useCreateAreaMutation();
+  const [createAreaMutation] = AreaListQueries.useCreateArea();
   const classes = useStyles();
   const [error, setError] = useState('');
   const confirmDialog = useConfirmDialog();
   const routerParams = useRouterParams();
+  const dispatch = useAppDispatch();
 
   const defaultValues = {
     name: '',
@@ -72,8 +65,9 @@ export const AreaCreateButton = () => {
           description: data.description,
         },
       });
-      result.errors;
+
       setOpen(false);
+      unwrapResult(await dispatch(asyncRefreshLoginUser())); // 情報再取得
     } catch (e) {
       const code = e.graphQLErrors?.[0]?.extensions?.code;
       setError(code);

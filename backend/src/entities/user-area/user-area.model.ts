@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../user/user.model';
 import { Area } from '../area/area.model';
 
@@ -24,5 +24,10 @@ export class UserArea {
   /** 区域 */
   @Field(() => Area)
   @ManyToOne(() => Area, (area) => area.userAreas, { nullable: false })
+  @JoinColumn({ name: 'areaId' })
   area?: Area;
+
+  @Field(() => Number)
+  @Column({ type: 'int', nullable: false })
+  areaId?: number;
 }

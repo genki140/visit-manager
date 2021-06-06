@@ -2,30 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Organization {
+type UserArea {
   id: Int!
-  name: String!
-  userOrganizations: [UserOrganization!]!
-}
-
-type Ability {
-  id: Int!
-  name: String!
-}
-
-type Role {
-  id: Int!
-  name: String!
-  userOrganization: [UserOrganization!]!
-  abilities: [Ability!]!
-}
-
-type UserOrganization {
-  id: Int!
-  organization: Organization!
   user: User!
-  userId: Int!
-  roles: [Role!]!
+  area: Area!
+  areaId: Float!
 }
 
 type OutlinePoint {
@@ -71,10 +52,31 @@ type Area {
   outlines: [Outline!]!
 }
 
-type UserArea {
+type Organization {
   id: Int!
+  name: String!
+  areas: [Area!]!
+  userOrganizations: [UserOrganization!]!
+}
+
+type Ability {
+  id: Int!
+  name: String!
+}
+
+type Role {
+  id: Int!
+  name: String!
+  userOrganization: [UserOrganization!]!
+  abilities: [Ability!]!
+}
+
+type UserOrganization {
+  id: Int!
+  organization: Organization!
   user: User!
-  area: Area!
+  userId: Int!
+  roles: [Role!]!
 }
 
 type User {

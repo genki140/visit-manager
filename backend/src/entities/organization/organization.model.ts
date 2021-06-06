@@ -3,6 +3,7 @@ import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { MaxLength } from 'class-validator';
 import { UserOrganization } from '../user-organization/user-organization.model';
+import { Area } from '../area/area.model';
 
 @ObjectType()
 @Entity('organizations')
@@ -16,6 +17,11 @@ export class Organization {
   @Column({ length: 100 })
   @Index({ unique: true })
   name: string = '';
+
+  /** ユーザーとのリレーション */
+  @Field(() => [Area])
+  @OneToMany(() => Area, (area) => area.organization)
+  areas?: Area[];
 
   /** ユーザーとのリレーション */
   @Field(() => [UserOrganization])

@@ -14,7 +14,9 @@ import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 export class UserResolver {
   constructor(@Inject(UserService) private userService: UserService) {}
 
-  /** 現在ログインしているユーザーの情報を取得します。プログラムからは使う予定なし。デバッグ用 */
+  /** 現在ログインしているユーザーの情報を取得します。
+   * ローカルで保持しているトークン情報を構造化して返すだけなので無駄。
+   * プログラムからは使う予定なし。デバッグ用 */
   @UseGuards(GqlAuthGuard)
   @Query(() => User)
   async currentUser(@CurrentUser() currentUser: User) {

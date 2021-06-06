@@ -5,3 +5,11 @@ query getAreas($organizationId: Int!, $userIds: [Int!]) {
     description
   }
 }
+
+mutation createArea($organizationId: Int!, $name: String!, $description: String!) {
+  createArea(area: { organizationId: $organizationId, name: $name, description: $description }) {
+    id
+    name
+    description
+  }
+}

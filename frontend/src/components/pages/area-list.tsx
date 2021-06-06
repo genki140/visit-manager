@@ -67,7 +67,7 @@ export const AreaList = () => {
       <LoadingContainer loading={loading} error={error}>
         <Box mt={3} mb={9} width="100%" maxWidth="700px">
           <Typography gutterBottom variant="h2" align="center">
-            自分の区域一覧
+            {editing ? '組織内の全区域一覧' : '自分の区域一覧'}
           </Typography>
           <List>
             <MovableList onMove={onMove}>
@@ -88,7 +88,7 @@ export const AreaList = () => {
                           />
                           <CardContent>
                             <Typography variant="body2" color="textSecondary" component="p">
-                              区域の情報を表示
+                              {x.description}
                             </Typography>
                           </CardContent>
                         </CardActionArea>
@@ -100,9 +100,12 @@ export const AreaList = () => {
             </MovableList>
           </List>
         </Box>
-        <AreaCreateButton />
+
+        {editing && <AreaCreateButton />}
+
         <Fab
           className={classes.fab2}
+          color={editing ? 'primary' : 'default'}
           onClick={() => {
             // toggle editing
             dispatch(actions.setAreaListEditing({ editing: !editing }));

@@ -1,56 +1,49 @@
-// import {
-//   GetOrganizationsDocument,
-//   GetOrganizationsQuery,
-//   GetOrganizationsQueryVariables,
-//   GetUserAreasDocument,
-//   GetUserAreasQuery,
-//   GetUserAreasQueryVariables,
-//   useCreateAreaMutation,
-//   useCreateOrganizationMutation,
-// } from '@/types/graphql';
-// import { TypeUtil } from '@/utils/type-helper';
-// import { ApolloCache, gql } from '@apollo/client';
+import { GetAreasDocument, GetAreasQuery, GetAreasQueryVariables, useCreateAreaMutation } from '@/types/graphql';
+import { TypeUtil } from '@/utils/type-helper';
+import { useRouterParams } from '@/utils/use-router-params';
+import { ApolloCache } from '@apollo/client';
 
-// export class AreaListQueries {
-//   /** キャッシュ更新用ヘルパー */
-//   private static useUserAreasQueryCache = () => {
-//     return {
-//       read: <T>(cache: ApolloCache<T>) => {
-//         let copiedData = TypeUtil.toNonNullable(
-//           cache.readQuery<GetUserAreasQuery, GetUserAreasQueryVariables>({
-//             query: GetUserAreasDocument,
-//             variables: {
-//               organizationId,
-//             },
-//           }),
-//         );
-//         copiedData = JSON.parse(JSON.stringify(copiedData)) as typeof copiedData;
-//         return copiedData;
-//       },
-//       write: <T, U>(cache: ApolloCache<T>, data: U) => {
-//         return cache.writeQuery<U, GetUserAreasQueryVariables>({
-//           query: GetOrganizationsDocument,
-//           variables: {
-//             organizationId,
-//           },
-//           data: data,
-//         });
-//       },
-//     };
-//   };
+export class AreaListQueries {
+  /** キャッシュ更新用ヘルパー */
+  private static useAreaQueryCache = () => {
+    const routerParams = useRouterParams();
+    return {
+      read: <T>(cache: ApolloCache<T>) => {
+        let copiedData = TypeUtil.toNonNullable(
+          cache.readQuery<GetAreasQuery, GetAreasQueryVariables>({
+            query: GetAreasDocument,
+            variables: {
+              organizationId: routerParams.getOrganizationId(),
+            },
+          }),
+        );
+        copiedData = JSON.parse(JSON.stringify(copiedData)) as typeof copiedData;
+        return copiedData;
+      },
+      write: <T, U>(cache: ApolloCache<T>, data: U) => {
+        return cache.writeQuery<U, GetAreasQueryVariables>({
+          query: GetAreasDocument,
+          variables: {
+            organizationId: routerParams.getOrganizationId(),
+          },
+          data: data,
+        });
+      },
+    };
+  };
 
-//   static useCreateOrganization = () => {
-//     const userAreaQueryCache = AreaListQueries.useUserAreasQueryCache();
-//     return useCreateAreaMutation({
-//       update: (cache, result) => {
-//         const data = TypeUtil.toNonNullable(result.data);
-//         const cacheData = userAreaQueryCache.read(cache);
+  static useCreateArea = () => {
+    const userAreaQueryCache = AreaListQueries.useAreaQueryCache();
+    return useCreateAreaMutation({
+      update: (cache, result) => {
+        const data = TypeUtil.toNonNullable(result.data);
+        const cacheData = userAreaQueryCache.read(cache);
 
-//         // クエリに対するキャッシュデータ書き換え
-//         cacheData.userAreas.push(data.createArea);
+        // クエリに対するキャッシュデータ書き換え
+        cacheData.areas.push(data.createArea);
 
-//         userAreaQueryCache.write(cache, cacheData);
-//       },
-//     });
-//   };
-// }
+        userAreaQueryCache.write(cache, cacheData);
+      },
+    });
+  };
+}

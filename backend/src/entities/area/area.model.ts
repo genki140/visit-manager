@@ -28,7 +28,7 @@ export class Area {
 
   /** 組織 */
   @Field(() => Organization)
-  @ManyToOne(() => Organization, (organization) => organization.userOrganizations, { nullable: false })
+  @ManyToOne(() => Organization, (organization) => organization.areas)
   @JoinColumn({ name: 'organizationId' })
   organization?: Organization;
 

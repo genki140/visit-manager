@@ -137,6 +137,7 @@ export type Organization = {
   __typename?: 'Organization';
   id: Scalars['Int'];
   name: Scalars['String'];
+  areas: Array<Area>;
   userOrganizations: Array<UserOrganization>;
 };
 
@@ -239,6 +240,7 @@ export type UserArea = {
   id: Scalars['Int'];
   user: User;
   area: Area;
+  areaId: Scalars['Float'];
 };
 
 export type UserOrganization = {
@@ -249,21 +251,6 @@ export type UserOrganization = {
   userId: Scalars['Int'];
   roles: Array<Role>;
 };
-
-export type CreateAreaMutationVariables = Exact<{
-  organizationId: Scalars['Int'];
-  name: Scalars['String'];
-  description: Scalars['String'];
-}>;
-
-
-export type CreateAreaMutation = (
-  { __typename?: 'Mutation' }
-  & { createArea: (
-    { __typename?: 'Area' }
-    & Pick<Area, 'id' | 'name'>
-  ) }
-);
 
 export type CreateUserMutationVariables = Exact<{
   user: CreateUserInput;
@@ -314,6 +301,21 @@ export type GetAreasQuery = (
     { __typename?: 'Area' }
     & Pick<Area, 'id' | 'name' | 'description'>
   )> }
+);
+
+export type CreateAreaMutationVariables = Exact<{
+  organizationId: Scalars['Int'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+}>;
+
+
+export type CreateAreaMutation = (
+  { __typename?: 'Mutation' }
+  & { createArea: (
+    { __typename?: 'Area' }
+    & Pick<Area, 'id' | 'name' | 'description'>
+  ) }
 );
 
 export type GetAreaQueryVariables = Exact<{
@@ -464,44 +466,6 @@ export type CreateOrganizationMutation = (
 );
 
 
-export const CreateAreaDocument = gql`
-    mutation createArea($organizationId: Int!, $name: String!, $description: String!) {
-  createArea(
-    area: {organizationId: $organizationId, name: $name, description: $description}
-  ) {
-    id
-    name
-  }
-}
-    `;
-export type CreateAreaMutationFn = Apollo.MutationFunction<CreateAreaMutation, CreateAreaMutationVariables>;
-
-/**
- * __useCreateAreaMutation__
- *
- * To run a mutation, you first call `useCreateAreaMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateAreaMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createAreaMutation, { data, loading, error }] = useCreateAreaMutation({
- *   variables: {
- *      organizationId: // value for 'organizationId'
- *      name: // value for 'name'
- *      description: // value for 'description'
- *   },
- * });
- */
-export function useCreateAreaMutation(baseOptions?: Apollo.MutationHookOptions<CreateAreaMutation, CreateAreaMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateAreaMutation, CreateAreaMutationVariables>(CreateAreaDocument, options);
-      }
-export type CreateAreaMutationHookResult = ReturnType<typeof useCreateAreaMutation>;
-export type CreateAreaMutationResult = Apollo.MutationResult<CreateAreaMutation>;
-export type CreateAreaMutationOptions = Apollo.BaseMutationOptions<CreateAreaMutation, CreateAreaMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($user: CreateUserInput!) {
   createUser(user: $user) {
@@ -662,6 +626,45 @@ export function useGetAreasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetAreasQueryHookResult = ReturnType<typeof useGetAreasQuery>;
 export type GetAreasLazyQueryHookResult = ReturnType<typeof useGetAreasLazyQuery>;
 export type GetAreasQueryResult = Apollo.QueryResult<GetAreasQuery, GetAreasQueryVariables>;
+export const CreateAreaDocument = gql`
+    mutation createArea($organizationId: Int!, $name: String!, $description: String!) {
+  createArea(
+    area: {organizationId: $organizationId, name: $name, description: $description}
+  ) {
+    id
+    name
+    description
+  }
+}
+    `;
+export type CreateAreaMutationFn = Apollo.MutationFunction<CreateAreaMutation, CreateAreaMutationVariables>;
+
+/**
+ * __useCreateAreaMutation__
+ *
+ * To run a mutation, you first call `useCreateAreaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAreaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAreaMutation, { data, loading, error }] = useCreateAreaMutation({
+ *   variables: {
+ *      organizationId: // value for 'organizationId'
+ *      name: // value for 'name'
+ *      description: // value for 'description'
+ *   },
+ * });
+ */
+export function useCreateAreaMutation(baseOptions?: Apollo.MutationHookOptions<CreateAreaMutation, CreateAreaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAreaMutation, CreateAreaMutationVariables>(CreateAreaDocument, options);
+      }
+export type CreateAreaMutationHookResult = ReturnType<typeof useCreateAreaMutation>;
+export type CreateAreaMutationResult = Apollo.MutationResult<CreateAreaMutation>;
+export type CreateAreaMutationOptions = Apollo.BaseMutationOptions<CreateAreaMutation, CreateAreaMutationVariables>;
 export const GetAreaDocument = gql`
     query getArea($organizationId: Int!, $areaId: Int!) {
   areas(organizationId: $organizationId, ids: [$areaId]) {

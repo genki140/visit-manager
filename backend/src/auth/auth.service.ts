@@ -18,6 +18,10 @@ export class AuthService {
   }
 
   async getUser(username: string, password?: string): Promise<User | undefined> {
+    // ユーザーに関する情報を一通り取得する部分はGraphqlではなくAPIで行っている。
+    // graphqlでhookしないで非同期で取ってくる方法があれば、graphqlで取ってきた方ががいいかもしれない。
+    // URLの区域名をIDに変換する部分はクライアントで行うので、関連組織の区域の名称-ID対応はすべて取得しておく必要がある。
+
     const user = (
       await this.usersService.find(undefined, {
         where: { username },
@@ -26,8 +30,8 @@ export class AuthService {
           'userOrganizations.organization',
           'userOrganizations.roles',
           'userOrganizations.roles.abilities',
+          'userOrganizations.organization.areas',
           'userAreas',
-          'userAreas.area',
         ],
       })
     )?.[0];

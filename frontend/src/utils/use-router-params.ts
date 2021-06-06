@@ -8,8 +8,6 @@ export const useRouterParams = () => {
   const organizationName = (router.query.organizationName ?? '').toString();
   const areaName = (router.query.areaName ?? '').toString();
 
-  // console.log(user);
-
   const getOrganizationId = () => {
     const value = user?.userOrganizations.find(
       (x) => x.organization.id.toString() === organizationName || x.organization.name === organizationName,
@@ -24,11 +22,9 @@ export const useRouterParams = () => {
     // 組織名文字列からIDを取得
     getOrganizationId,
     getAreaId: () => {
-      const value = user?.userAreas.find(
-        (x) =>
-          x.area.organizationId === getOrganizationId() &&
-          (x.area.id.toString() === areaName || x.area.name === areaName),
-      )?.area.id;
+      const value = user?.userOrganizations
+        .find((x) => x.organization.id === getOrganizationId())
+        ?.organization.areas.find((x) => x.id.toString() === areaName || x.name === areaName)?.id;
       return value != null ? Number(value) : 0;
     },
   };
