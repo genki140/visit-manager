@@ -23,6 +23,9 @@ import { AreaCreateButton } from '../dialogs/area-create-button';
 import { useGetAreasQuery } from '@/types/graphql';
 import { actions, useAppDispatch, useStoreState } from '@/ducks/store';
 import EditIcon from '@material-ui/icons/Edit';
+import { AreaListQueries } from '@/queries/area-list-queries';
+import { ArrayUtil } from '@/utils/array-util';
+import Enumerable from 'linq';
 
 // スタイル定義
 const useStyles = makeStyles((theme: Theme) => ({
@@ -44,11 +47,16 @@ export const AreaList = () => {
   const user = useStoreState((x) => x.loginUser);
   const editing = useStoreState((x) => x.areaList.editing);
   const dispatch = useAppDispatch();
+  const updateAreaOrdersMutation = AreaListQueries.useUpdateAreaOrders();
 
   const { loading, error, data } = useGetAreasQuery({
     variables: { organizationId: routerParams.getOrganizationId(), userIds: editing ? undefined : [Number(user?.id)] },
     skip: routerParams.organizationName === '',
   });
+
+  const orderdUserOrganizations = Enumerable.from(data?.areas ?? [])
+    .orderBy((x) => x.order)
+    .toArray();
 
   // ユーザーがこの組織に所属していなければ404
   if (error != null) {
@@ -58,8 +66,22 @@ export const AreaList = () => {
     }
   }
 
-  const onMove = (oldIndex: number, newIndex: number) => {
-    console.log(oldIndex + ' to ' + newIndex);
+  const onMove = async (oldIndex: number, newIndex: number) => {
+    // 現状は全体のリストのみ対応
+    if (editing === false) {
+      return;
+    }
+
+    // 現在の並び順を入れ替えた新しいordersを計算
+    const replaced = ArrayUtil.insertReplace(orderdUserOrganizations, oldIndex, newIndex);
+    await updateAreaOrdersMutation({
+      updateAreaOrdersInput: {
+        items: replaced.map((x, i) => ({
+          id: x.id,
+          order: i,
+        })),
+      },
+    });
   };
 
   return (
@@ -71,7 +93,7 @@ export const AreaList = () => {
           </Typography>
           <List>
             <MovableList onMove={onMove}>
-              {(data?.areas ?? []).map((x) => ({
+              {orderdUserOrganizations.map((x) => ({
                 key: x.id.toString(),
                 node: (draggableProps: any) => (
                   <ListItem>

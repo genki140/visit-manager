@@ -43,6 +43,7 @@ type Residence {
 
 type Area {
   id: Int!
+  order: Int!
   name: String!
   description: String!
   organization: Organization!
@@ -109,6 +110,7 @@ type Mutation {
   createUserOrganization(organization: CreateUserOrganizationInput!): UserOrganization!
   updateUserOrganizations(userOrganizations: UpdateUserOrganizationsInput!): [UserOrganization!]!
   createArea(area: CreateAreaInput!): Area!
+  updateAreaOrders(areaOrders: UpdateAreaOrdersInput!): [Area!]!
   createOutline(outline: CreateOutlineInput!): Outline!
   updateOutline(outline: UpdateOutlineInput!): Outline!
   deleteOutline(id: Int!): Boolean!
@@ -140,6 +142,15 @@ input CreateAreaInput {
   organizationId: Int = 0
   name: String = ""
   description: String = ""
+}
+
+input UpdateAreaOrdersInput {
+  items: [UpdateAreaOrdersInputItem!] = []
+}
+
+input UpdateAreaOrdersInputItem {
+  id: Int = 0
+  order: Int = 0
 }
 
 input CreateOutlineInput {

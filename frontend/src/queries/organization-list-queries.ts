@@ -50,16 +50,9 @@ export class OrganizationListQueries {
     });
   };
 
-  static useUpdateUserOrganizations = () => {
-    // const organizationsQueryCache = OrganizationListQueries.useUserOrganizationsQueryCache();
-    // const getUserOrganizationsResult = useGetUserOrganizationsQuery();
+  static useUpdateUserOrganizationOrders = () => {
     const [updateUserOrganization] = useUpdateUserOrganizationsMutation();
-
-    const result = (variables: UpdateUserOrganizationsMutationVariables) => {
-      // ArrayUtil.insertReplace( getUserOrganizationsResult.data?.userOrganizations ?? [] );
-
-      // console.log(variables.updateUserOrganizationsInput.items);
-
+    return (variables: UpdateUserOrganizationsMutationVariables) => {
       return updateUserOrganization({
         variables: variables,
         optimisticResponse: {
@@ -71,17 +64,7 @@ export class OrganizationListQueries {
               order: TypeUtil.toNonNullable(x.order),
             })) ?? [],
         },
-        // update: (cache, result) => {
-        //   const data = TypeUtil.toNonNullable(result.data);
-        //   const cacheData = organizationsQueryCache.read(cache);
-
-        //   // cacheData.organizations.find((x) => x.id == data.updateUserOrganization.id)?.order =
-        //   //   data.updateUserOrganization.order;
-
-        //   organizationsQueryCache.write(cache, cacheData);
-        // },
       });
     };
-    return result;
   };
 }

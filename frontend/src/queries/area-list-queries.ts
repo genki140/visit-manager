@@ -1,4 +1,11 @@
-import { GetAreasDocument, GetAreasQuery, GetAreasQueryVariables, useCreateAreaMutation } from '@/types/graphql';
+import {
+  GetAreasDocument,
+  GetAreasQuery,
+  GetAreasQueryVariables,
+  UpdateAreaOrdersMutationVariables,
+  useCreateAreaMutation,
+  useUpdateAreaOrdersMutation,
+} from '@/types/graphql';
 import { TypeUtil } from '@/utils/type-helper';
 import { useRouterParams } from '@/utils/use-router-params';
 import { ApolloCache } from '@apollo/client';
@@ -45,5 +52,23 @@ export class AreaListQueries {
         userAreaQueryCache.write(cache, cacheData);
       },
     });
+  };
+
+  static useUpdateAreaOrders = () => {
+    const [updateAreaOrders] = useUpdateAreaOrdersMutation();
+    return (variables: UpdateAreaOrdersMutationVariables) => {
+      return updateAreaOrders({
+        variables: variables,
+        optimisticResponse: {
+          __typename: 'Mutation',
+          updateAreaOrders:
+            variables.updateAreaOrdersInput.items?.map((x) => ({
+              __typename: 'Area',
+              id: TypeUtil.toNonNullable(x.id),
+              order: TypeUtil.toNonNullable(x.order),
+            })) ?? [],
+        },
+      });
+    };
   };
 }

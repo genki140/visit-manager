@@ -25,6 +25,7 @@ export type Ability = {
 export type Area = {
   __typename?: 'Area';
   id: Scalars['Int'];
+  order: Scalars['Int'];
   name: Scalars['String'];
   description: Scalars['String'];
   organization: Organization;
@@ -76,6 +77,7 @@ export type Mutation = {
   createUserOrganization: UserOrganization;
   updateUserOrganizations: Array<UserOrganization>;
   createArea: Area;
+  updateAreaOrders: Array<Area>;
   createOutline: Outline;
   updateOutline: Outline;
   deleteOutline: Scalars['Boolean'];
@@ -107,6 +109,11 @@ export type MutationUpdateUserOrganizationsArgs = {
 
 export type MutationCreateAreaArgs = {
   area: CreateAreaInput;
+};
+
+
+export type MutationUpdateAreaOrdersArgs = {
+  areaOrders: UpdateAreaOrdersInput;
 };
 
 
@@ -210,6 +217,15 @@ export type Role = {
 export type Subscription = {
   __typename?: 'Subscription';
   testAdded: Scalars['Float'];
+};
+
+export type UpdateAreaOrdersInput = {
+  items?: Maybe<Array<UpdateAreaOrdersInputItem>>;
+};
+
+export type UpdateAreaOrdersInputItem = {
+  id?: Maybe<Scalars['Int']>;
+  order?: Maybe<Scalars['Int']>;
 };
 
 export type UpdateOutlineInput = {
@@ -316,7 +332,7 @@ export type GetAreasQuery = (
   { __typename?: 'Query' }
   & { areas: Array<(
     { __typename?: 'Area' }
-    & Pick<Area, 'id' | 'name' | 'description'>
+    & Pick<Area, 'id' | 'order' | 'name' | 'description'>
   )> }
 );
 
@@ -331,8 +347,21 @@ export type CreateAreaMutation = (
   { __typename?: 'Mutation' }
   & { createArea: (
     { __typename?: 'Area' }
-    & Pick<Area, 'id' | 'name' | 'description'>
+    & Pick<Area, 'id' | 'order' | 'name' | 'description'>
   ) }
+);
+
+export type UpdateAreaOrdersMutationVariables = Exact<{
+  updateAreaOrdersInput: UpdateAreaOrdersInput;
+}>;
+
+
+export type UpdateAreaOrdersMutation = (
+  { __typename?: 'Mutation' }
+  & { updateAreaOrders: Array<(
+    { __typename?: 'Area' }
+    & Pick<Area, 'id' | 'order'>
+  )> }
 );
 
 export type GetAreaQueryVariables = Exact<{
@@ -630,6 +659,7 @@ export const GetAreasDocument = gql`
     query getAreas($organizationId: Int!, $userIds: [Int!]) {
   areas(organizationId: $organizationId, userIds: $userIds) {
     id
+    order
     name
     description
   }
@@ -670,6 +700,7 @@ export const CreateAreaDocument = gql`
     area: {organizationId: $organizationId, name: $name, description: $description}
   ) {
     id
+    order
     name
     description
   }
@@ -703,6 +734,40 @@ export function useCreateAreaMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateAreaMutationHookResult = ReturnType<typeof useCreateAreaMutation>;
 export type CreateAreaMutationResult = Apollo.MutationResult<CreateAreaMutation>;
 export type CreateAreaMutationOptions = Apollo.BaseMutationOptions<CreateAreaMutation, CreateAreaMutationVariables>;
+export const UpdateAreaOrdersDocument = gql`
+    mutation updateAreaOrders($updateAreaOrdersInput: UpdateAreaOrdersInput!) {
+  updateAreaOrders(areaOrders: $updateAreaOrdersInput) {
+    id
+    order
+  }
+}
+    `;
+export type UpdateAreaOrdersMutationFn = Apollo.MutationFunction<UpdateAreaOrdersMutation, UpdateAreaOrdersMutationVariables>;
+
+/**
+ * __useUpdateAreaOrdersMutation__
+ *
+ * To run a mutation, you first call `useUpdateAreaOrdersMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAreaOrdersMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAreaOrdersMutation, { data, loading, error }] = useUpdateAreaOrdersMutation({
+ *   variables: {
+ *      updateAreaOrdersInput: // value for 'updateAreaOrdersInput'
+ *   },
+ * });
+ */
+export function useUpdateAreaOrdersMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAreaOrdersMutation, UpdateAreaOrdersMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAreaOrdersMutation, UpdateAreaOrdersMutationVariables>(UpdateAreaOrdersDocument, options);
+      }
+export type UpdateAreaOrdersMutationHookResult = ReturnType<typeof useUpdateAreaOrdersMutation>;
+export type UpdateAreaOrdersMutationResult = Apollo.MutationResult<UpdateAreaOrdersMutation>;
+export type UpdateAreaOrdersMutationOptions = Apollo.BaseMutationOptions<UpdateAreaOrdersMutation, UpdateAreaOrdersMutationVariables>;
 export const GetAreaDocument = gql`
     query getArea($organizationId: Int!, $areaId: Int!) {
   areas(organizationId: $organizationId, ids: [$areaId]) {

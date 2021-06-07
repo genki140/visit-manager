@@ -15,6 +15,10 @@ export class Area {
   @PrimaryGeneratedColumn()
   id: number = 0;
 
+  @Field(() => Int)
+  @Column({ type: 'int', nullable: false })
+  order: number = 0;
+
   /** 名前 */
   @Field()
   @Column({ length: 100 })
@@ -66,4 +70,20 @@ export class CreateAreaInput {
   @Field()
   @MaxLength(100)
   description: string = '';
+}
+
+@InputType()
+export class UpdateAreaOrdersInput {
+  @Field(() => [UpdateAreaOrdersInputItem])
+  items: UpdateAreaOrdersInputItem[] = [];
+}
+
+@InputType()
+export class UpdateAreaOrdersInputItem {
+  @Field(() => Int)
+  id: number = 0;
+
+  /** 並び順 */
+  @Field(() => Int)
+  order: number = 0;
 }

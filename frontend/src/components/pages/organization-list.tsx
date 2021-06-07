@@ -23,7 +23,7 @@ import { ArrayUtil } from '@/utils/array-util';
 export const OrganizationList = () => {
   // const classes = useStyles();
   const { loading, error, data } = useGetUserOrganizationsQuery();
-  const updateUserOrganizationsMutation = OrganizationListQueries.useUpdateUserOrganizations();
+  const updateUserOrganizationsMutation = OrganizationListQueries.useUpdateUserOrganizationOrders();
   const f = useFormatMessage();
 
   const orderdUserOrganizations = Enumerable.from(data?.userOrganizations ?? [])

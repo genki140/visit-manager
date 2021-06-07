@@ -4,7 +4,7 @@ import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthenticationError } from 'apollo-server-express';
 import { AbilityTypes } from '../ability/ability.model';
 import { User } from '../user/user.model';
-import { Area, CreateAreaInput } from './area.model';
+import { Area, CreateAreaInput, UpdateAreaOrdersInput } from './area.model';
 import { AreaService } from './area.service';
 
 @Resolver(() => Area)
@@ -45,34 +45,22 @@ export class AreaResolver {
     }
 
     return result;
+  }
 
-    // const user = (
-    //   await this.userService.find(undefined, {
-    //     where: { id: currentUser.id },
-    //     relations: [
-    //       'userAreas',
-    //       'userAreas.area',
-    //       'userAreas.area.organization',
-    //       'userAreas.area.residences',
-    //       'userAreas.area.residences.residents',
-    //       'userAreas.area.outlines',
-    //       'userAreas.area.outlines.points',
-    //       'userOrganizations',
-    //       'userOrganizations.organization',
-    //     ],
-    //   })
-    // )[0];
+  @Mutation(() => Area)
+  @UseGuards(GqlAuthGuard)
+  async createArea(@Args('area') area: CreateAreaInput, @CurrentUser() currentUser: User) {
+    RequiredAbilities([AbilityTypes.CreateArea], currentUser, area.organizationId);
 
-    // const result =
-    //   user.userAreas?.filter(
-    //     (x) => ids?.some((y) => y === x.area?.id) !== false && x?.area?.organization?.id === organizationId,
-    //   ) ?? [];
+    return await this.areaService.create(area);
+  }
 
-    // if (ids != null && result.length !== ids.length) {
-    //   throw new AuthenticationError('');
-    //   // throw new ApolloError('Some IDs were not found.', 'NOT_FOUND');
-    // }
-    // return result;
+  /** 作成したユーザーを管理者とする新規組織の作成 */
+  @Mutation(() => [Area])
+  @UseGuards(GqlAuthGuard)
+  async updateAreaOrders(@Args('areaOrders') areaOrders: UpdateAreaOrdersInput) {
+    const result = await this.areaService.update(areaOrders);
+    return result;
   }
 
   // @UseGuards(GqlAuthGuard)
@@ -104,12 +92,4 @@ export class AreaResolver {
   //   // }
   //   return result;
   // }
-
-  @Mutation(() => Area)
-  @UseGuards(GqlAuthGuard)
-  async createArea(@Args('area') area: CreateAreaInput, @CurrentUser() currentUser: User) {
-    RequiredAbilities([AbilityTypes.CreateArea], currentUser, area.organizationId);
-
-    return await this.areaService.create(area);
-  }
 }
