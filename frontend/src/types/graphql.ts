@@ -74,7 +74,7 @@ export type Mutation = {
   deleteUser?: Maybe<User>;
   addTest: Scalars['Float'];
   createUserOrganization: UserOrganization;
-  updateUserOrganization: UserOrganization;
+  updateUserOrganizations: Array<UserOrganization>;
   createArea: Area;
   createOutline: Outline;
   updateOutline: Outline;
@@ -100,8 +100,8 @@ export type MutationCreateUserOrganizationArgs = {
 };
 
 
-export type MutationUpdateUserOrganizationArgs = {
-  userOrganization: UpdateUserOrganizationInput;
+export type MutationUpdateUserOrganizationsArgs = {
+  userOrganizations: UpdateUserOrganizationsInput;
 };
 
 
@@ -230,7 +230,11 @@ export type UpdateResidenceInput = {
   longitude?: Maybe<Scalars['Float']>;
 };
 
-export type UpdateUserOrganizationInput = {
+export type UpdateUserOrganizationsInput = {
+  items?: Maybe<Array<UpdateUserOrganizationsInputItem>>;
+};
+
+export type UpdateUserOrganizationsInputItem = {
   id?: Maybe<Scalars['Int']>;
   order?: Maybe<Scalars['Int']>;
 };
@@ -486,18 +490,17 @@ export type CreateUserOrganizationMutation = (
   ) }
 );
 
-export type UpdateUserOrganizationMutationVariables = Exact<{
-  id: Scalars['Int'];
-  order: Scalars['Int'];
+export type UpdateUserOrganizationsMutationVariables = Exact<{
+  updateUserOrganizationsInput: UpdateUserOrganizationsInput;
 }>;
 
 
-export type UpdateUserOrganizationMutation = (
+export type UpdateUserOrganizationsMutation = (
   { __typename?: 'Mutation' }
-  & { updateUserOrganization: (
+  & { updateUserOrganizations: Array<(
     { __typename?: 'UserOrganization' }
     & Pick<UserOrganization, 'id' | 'order'>
-  ) }
+  )> }
 );
 
 
@@ -1067,38 +1070,37 @@ export function useCreateUserOrganizationMutation(baseOptions?: Apollo.MutationH
 export type CreateUserOrganizationMutationHookResult = ReturnType<typeof useCreateUserOrganizationMutation>;
 export type CreateUserOrganizationMutationResult = Apollo.MutationResult<CreateUserOrganizationMutation>;
 export type CreateUserOrganizationMutationOptions = Apollo.BaseMutationOptions<CreateUserOrganizationMutation, CreateUserOrganizationMutationVariables>;
-export const UpdateUserOrganizationDocument = gql`
-    mutation updateUserOrganization($id: Int!, $order: Int!) {
-  updateUserOrganization(userOrganization: {id: $id, order: $order}) {
+export const UpdateUserOrganizationsDocument = gql`
+    mutation updateUserOrganizations($updateUserOrganizationsInput: UpdateUserOrganizationsInput!) {
+  updateUserOrganizations(userOrganizations: $updateUserOrganizationsInput) {
     id
     order
   }
 }
     `;
-export type UpdateUserOrganizationMutationFn = Apollo.MutationFunction<UpdateUserOrganizationMutation, UpdateUserOrganizationMutationVariables>;
+export type UpdateUserOrganizationsMutationFn = Apollo.MutationFunction<UpdateUserOrganizationsMutation, UpdateUserOrganizationsMutationVariables>;
 
 /**
- * __useUpdateUserOrganizationMutation__
+ * __useUpdateUserOrganizationsMutation__
  *
- * To run a mutation, you first call `useUpdateUserOrganizationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateUserOrganizationMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateUserOrganizationsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserOrganizationsMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateUserOrganizationMutation, { data, loading, error }] = useUpdateUserOrganizationMutation({
+ * const [updateUserOrganizationsMutation, { data, loading, error }] = useUpdateUserOrganizationsMutation({
  *   variables: {
- *      id: // value for 'id'
- *      order: // value for 'order'
+ *      updateUserOrganizationsInput: // value for 'updateUserOrganizationsInput'
  *   },
  * });
  */
-export function useUpdateUserOrganizationMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserOrganizationMutation, UpdateUserOrganizationMutationVariables>) {
+export function useUpdateUserOrganizationsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserOrganizationsMutation, UpdateUserOrganizationsMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserOrganizationMutation, UpdateUserOrganizationMutationVariables>(UpdateUserOrganizationDocument, options);
+        return Apollo.useMutation<UpdateUserOrganizationsMutation, UpdateUserOrganizationsMutationVariables>(UpdateUserOrganizationsDocument, options);
       }
-export type UpdateUserOrganizationMutationHookResult = ReturnType<typeof useUpdateUserOrganizationMutation>;
-export type UpdateUserOrganizationMutationResult = Apollo.MutationResult<UpdateUserOrganizationMutation>;
-export type UpdateUserOrganizationMutationOptions = Apollo.BaseMutationOptions<UpdateUserOrganizationMutation, UpdateUserOrganizationMutationVariables>;
+export type UpdateUserOrganizationsMutationHookResult = ReturnType<typeof useUpdateUserOrganizationsMutation>;
+export type UpdateUserOrganizationsMutationResult = Apollo.MutationResult<UpdateUserOrganizationsMutation>;
+export type UpdateUserOrganizationsMutationOptions = Apollo.BaseMutationOptions<UpdateUserOrganizationsMutation, UpdateUserOrganizationsMutationVariables>;

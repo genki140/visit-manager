@@ -20,8 +20,8 @@ mutation createUserOrganization($name: String!) {
   }
 }
 
-mutation updateUserOrganization($id: Int!, $order: Int!) {
-  updateUserOrganization(userOrganization: { id: $id, order: $order }) {
+mutation updateUserOrganizations($updateUserOrganizationsInput: UpdateUserOrganizationsInput!) {
+  updateUserOrganizations(userOrganizations: $updateUserOrganizationsInput) {
     id
     order
   }

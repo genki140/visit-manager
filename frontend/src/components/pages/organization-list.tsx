@@ -10,6 +10,7 @@ import { MovableList } from '../movable-list';
 import { useGetUserOrganizationsQuery } from '@/types/graphql';
 import { OrganizationListQueries } from '@/queries/organization-list-queries';
 import Enumerable from 'linq';
+import { ArrayUtil } from '@/utils/array-util';
 
 // const useStyles = makeStyles(() => ({
 //   list: {
@@ -22,7 +23,7 @@ import Enumerable from 'linq';
 export const OrganizationList = () => {
   // const classes = useStyles();
   const { loading, error, data } = useGetUserOrganizationsQuery();
-  const updateUserOrganizationMutation = OrganizationListQueries.useUpdateUserOrganization();
+  const updateUserOrganizationsMutation = OrganizationListQueries.useUpdateUserOrganizations();
   const f = useFormatMessage();
 
   const orderdUserOrganizations = Enumerable.from(data?.userOrganizations ?? [])
@@ -30,21 +31,16 @@ export const OrganizationList = () => {
     .toArray();
 
   const onMove = async (oldIndex: number, newIndex: number) => {
-    const oldId = orderdUserOrganizations[oldIndex].id;
-    const newId = orderdUserOrganizations[newIndex].id;
-    if (oldId != null && newId != null) {
-      // 一気に入れ替えることがあるので、やっぱりorderは一括で設定できる必要がある
-
-      // console.log(oldIndex + ' to ' + newIndex);
-      await updateUserOrganizationMutation({
-        id: oldId,
-        order: newIndex,
-      });
-      await updateUserOrganizationMutation({
-        id: newId,
-        order: oldIndex,
-      });
-    }
+    // 現在の並び順を入れ替えた新しいordersを計算
+    const replaced = ArrayUtil.insertReplace(orderdUserOrganizations, oldIndex, newIndex);
+    await updateUserOrganizationsMutation({
+      updateUserOrganizationsInput: {
+        items: replaced.map((x, i) => ({
+          id: x.id,
+          order: i,
+        })),
+      },
+    });
   };
 
   return (

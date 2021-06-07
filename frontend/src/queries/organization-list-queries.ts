@@ -2,10 +2,12 @@ import {
   GetUserOrganizationsDocument,
   GetUserOrganizationsQuery,
   GetUserOrganizationsQueryVariables,
-  UpdateUserOrganizationMutationVariables,
+  UpdateUserOrganizationsMutationVariables,
   useCreateUserOrganizationMutation,
-  useUpdateUserOrganizationMutation,
+  useGetUserOrganizationsQuery,
+  useUpdateUserOrganizationsMutation,
 } from '@/types/graphql';
+import { ArrayUtil } from '@/utils/array-util';
 import { TypeUtil } from '@/utils/type-helper';
 import { ApolloCache } from '@apollo/client';
 
@@ -48,19 +50,26 @@ export class OrganizationListQueries {
     });
   };
 
-  static useUpdateUserOrganization = () => {
-    const organizationsQueryCache = OrganizationListQueries.useUserOrganizationsQueryCache();
-    const [updateUserOrganization] = useUpdateUserOrganizationMutation();
-    const result = (variables: UpdateUserOrganizationMutationVariables) =>
-      updateUserOrganization({
+  static useUpdateUserOrganizations = () => {
+    // const organizationsQueryCache = OrganizationListQueries.useUserOrganizationsQueryCache();
+    // const getUserOrganizationsResult = useGetUserOrganizationsQuery();
+    const [updateUserOrganization] = useUpdateUserOrganizationsMutation();
+
+    const result = (variables: UpdateUserOrganizationsMutationVariables) => {
+      // ArrayUtil.insertReplace( getUserOrganizationsResult.data?.userOrganizations ?? [] );
+
+      // console.log(variables.updateUserOrganizationsInput.items);
+
+      return updateUserOrganization({
         variables: variables,
         optimisticResponse: {
           __typename: 'Mutation',
-          updateUserOrganization: {
-            __typename: 'UserOrganization',
-            id: variables.id,
-            order: variables.order,
-          },
+          updateUserOrganizations:
+            variables.updateUserOrganizationsInput.items?.map((x) => ({
+              __typename: 'UserOrganization',
+              id: TypeUtil.toNonNullable(x.id),
+              order: TypeUtil.toNonNullable(x.order),
+            })) ?? [],
         },
         // update: (cache, result) => {
         //   const data = TypeUtil.toNonNullable(result.data);
@@ -72,6 +81,7 @@ export class OrganizationListQueries {
         //   organizationsQueryCache.write(cache, cacheData);
         // },
       });
+    };
     return result;
   };
 }

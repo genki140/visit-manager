@@ -2,7 +2,7 @@ import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
 import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { User } from '../user/user.model';
-import { CreateUserOrganizationInput, UpdateUserOrganizationInput, UserOrganization } from './user-organization.model';
+import { CreateUserOrganizationInput, UpdateUserOrganizationsInput, UserOrganization } from './user-organization.model';
 import { UserOrganizationService } from './user-organization.service';
 
 @Resolver(() => UserOrganization)
@@ -47,13 +47,13 @@ export class UserOrganizationResolver {
   }
 
   /** 作成したユーザーを管理者とする新規組織の作成 */
-  @Mutation(() => UserOrganization)
+  @Mutation(() => [UserOrganization])
   @UseGuards(GqlAuthGuard)
-  async updateUserOrganization(
-    @Args('userOrganization') userOrganization: UpdateUserOrganizationInput,
+  async updateUserOrganizations(
+    @Args('userOrganizations') userOrganizations: UpdateUserOrganizationsInput,
     // @CurrentUser() currentUser: User,
   ) {
-    const result = await this.userOrganizationService.update(userOrganization);
+    const result = await this.userOrganizationService.update(userOrganizations);
     return result;
   }
 }

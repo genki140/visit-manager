@@ -62,7 +62,13 @@ export class CreateUserOrganizationInput {
 }
 
 @InputType()
-export class UpdateUserOrganizationInput {
+export class UpdateUserOrganizationsInput {
+  @Field(() => [UpdateUserOrganizationsInputItem])
+  items: UpdateUserOrganizationsInputItem[] = [];
+}
+
+@InputType()
+export class UpdateUserOrganizationsInputItem {
   @Field(() => Int)
   id: number = 0;
 

@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApolloError } from 'apollo-server-express';
 import { Connection, FindManyOptions, Repository } from 'typeorm';
 import { Organization } from '../organization/organization.model';
-import { CreateUserOrganizationInput, UpdateUserOrganizationInput, UserOrganization } from './user-organization.model';
+import { CreateUserOrganizationInput, UpdateUserOrganizationsInput, UserOrganization } from './user-organization.model';
 
 @Injectable()
 export class UserOrganizationService {
@@ -57,10 +57,25 @@ export class UserOrganizationService {
     });
   }
 
-  async update(payload: UpdateUserOrganizationInput) {
-    const item = await this.userOrganizationRepository.findOneOrFail(payload.id);
-    item.order = payload.order;
-    const result = await this.userOrganizationRepository.save(item);
-    return item;
+  async update(payload: UpdateUserOrganizationsInput) {
+    return await this.connection.transaction(async (manager) => {
+      // const organizationRepository = manager.getRepository(Organization);
+      const userOrganizationRepository = manager.getRepository(UserOrganization);
+      const userOrganizations: UserOrganization[] = [];
+      for (const item of payload.items) {
+        userOrganizations.push(
+          await userOrganizationRepository.save({
+            id: item.id,
+            order: item.order,
+          }),
+        );
+      }
+      return userOrganizations;
+    });
+
+    // const item = await this.userOrganizationRepository.findOneOrFail(payload.id);
+    // item.order = payload.order;
+    // const result = await this.userOrganizationRepository.save(item);
+    // return item;
   }
 }

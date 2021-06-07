@@ -107,7 +107,7 @@ type Mutation {
   deleteUser(id: Int!): User
   addTest: Float!
   createUserOrganization(organization: CreateUserOrganizationInput!): UserOrganization!
-  updateUserOrganization(userOrganization: UpdateUserOrganizationInput!): UserOrganization!
+  updateUserOrganizations(userOrganizations: UpdateUserOrganizationsInput!): [UserOrganization!]!
   createArea(area: CreateAreaInput!): Area!
   createOutline(outline: CreateOutlineInput!): Outline!
   updateOutline(outline: UpdateOutlineInput!): Outline!
@@ -127,7 +127,11 @@ input CreateUserOrganizationInput {
   name: String = ""
 }
 
-input UpdateUserOrganizationInput {
+input UpdateUserOrganizationsInput {
+  items: [UpdateUserOrganizationsInputItem!] = []
+}
+
+input UpdateUserOrganizationsInputItem {
   id: Int = 0
   order: Int = 0
 }
