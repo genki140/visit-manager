@@ -4,15 +4,17 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { useStoreState } from '@/ducks/store';
 
 export const ApolloClientProvider = (props: { children: any }) => {
-  const loginUserId = useStoreState((x) => x.loginUser?.id);
+  const loginUser = useStoreState((x) => x.loginUser);
   const loginLoaded = useStoreState((x) => x.loginLoaded);
   const [client, setClient] = useState<any>(undefined);
 
-  // ログインユーザーが変わった場合はApolloClient再生成
+  // ユーザー情報が更新されたらApolloClient再生成
+  // websocketを張ったタイミングでcookieの情報をコネクションに保持してしまうため張りなおす必要がある。
+  // ※ApolloClientを作り直すと、chromeのapolloのデバッグが見失ってしまうためデバッグ時は注意。
 
   useEffect(() => {
     if (loginLoaded) {
-      // console.log('ApolloClient-Start');
+      console.log('ApolloClient-Start');
       const developGraphql = `ws://${location.hostname}:3000/system/graphql`;
       const productGraphql = `wss://${location.hostname}/system/graphql`;
       setClient(
@@ -57,7 +59,7 @@ export const ApolloClientProvider = (props: { children: any }) => {
         }),
       );
     }
-  }, [loginUserId, loginLoaded]);
+  }, [loginUser, loginLoaded]);
 
   if (client == null) {
     return null;

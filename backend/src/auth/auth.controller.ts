@@ -32,6 +32,8 @@ export class AuthController {
     response.cookie('access_token', token, { httpOnly: true });
     response.statusCode = 200;
 
+    console.log('Login:' + req.user.username);
+
     // トークンはクッキーで返すので、値としてはユーザー情報を返す
     return req.user;
   }
@@ -60,6 +62,8 @@ export class AuthController {
     // cookie を設定
     response.cookie('access_token', token, { httpOnly: true });
     response.statusCode = 200;
+
+    console.log('user:' + currentUser.username);
 
     return user;
   }
