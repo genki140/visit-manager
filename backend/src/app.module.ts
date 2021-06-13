@@ -14,14 +14,13 @@ import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { AreaModule } from './entities/area/area.module';
 import { UserAreaModule } from './entities/user-area/user-area.module';
-
 import { OutlineModule } from './entities/outline/outline.module';
 import { OutlinePointModule } from './entities/outline-point/outline-point.module';
-
 import { ResidenceModule } from './entities/residence/residence.module';
 import { ResidentModule } from './entities/resident/resident.module';
 
 import { getConnectionOptions } from 'typeorm';
+import { AreaTypeModule } from './entities/area-type/area-type.module';
 
 @Module({
   imports: [
@@ -99,6 +98,7 @@ import { getConnectionOptions } from 'typeorm';
     OutlinePointModule,
     ResidenceModule,
     ResidentModule,
+    AreaTypeModule,
   ],
   controllers: [AuthController],
   providers: [

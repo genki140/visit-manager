@@ -6,6 +6,7 @@ import { UserArea } from '../user-area/user-area.model';
 import { Outline } from '../outline/outline.model';
 import { Residence } from '../residence/residence.model';
 import { MaxLength } from 'class-validator';
+import { AreaType } from '../area-type/area-type.model';
 
 @ObjectType()
 @Entity('areas')
@@ -39,6 +40,16 @@ export class Area {
   @Field(() => Number)
   @Column({ type: 'int', nullable: false })
   organizationId?: number;
+
+  /** 種別 */
+  @Field(() => AreaType)
+  @ManyToOne(() => AreaType, (areaType) => areaType.areas)
+  @JoinColumn({ name: 'areaTypeId' })
+  areaType?: AreaType;
+
+  @Field(() => Number)
+  @Column({ type: 'int', nullable: false })
+  areaTypeId?: number;
 
   /** ユーザー区域 */
   @Field(() => [UserArea])

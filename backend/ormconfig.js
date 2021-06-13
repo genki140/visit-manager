@@ -11,8 +11,8 @@ module.exports = {
   logging: process.env.DB_LOGGING === 'TRUE' || false, // デバッグにSQLを出力する
 
   // entities: [join(__dirname, '**', '*.model.ts}')],
-  // entities: ['./src/entities/**/*.model.ts'],
-  // migrations: ['common/migration/**/*.ts'],
+  entities: ['dist/src/entities/**/*.model.js'],
+  migrations: ['dist/src/migrations/**/*.js'],
   // subscribers: ['common/subscriber/**/*.ts'],
   // cli: {
   //   entitiesDir: 'common/entity',

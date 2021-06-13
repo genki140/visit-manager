@@ -41,6 +41,16 @@ type Residence {
   area: Area!
 }
 
+type AreaType {
+  id: Int!
+  order: Int!
+  name: String!
+  description: String!
+  organization: Organization!
+  organizationId: Float!
+  areas: [Area!]!
+}
+
 type Area {
   id: Int!
   order: Int!
@@ -48,6 +58,8 @@ type Area {
   description: String!
   organization: Organization!
   organizationId: Float!
+  areaType: AreaType!
+  areaTypeId: Float!
   userAreas: [UserArea!]!
   residences: [Residence!]!
   outlines: [Outline!]!

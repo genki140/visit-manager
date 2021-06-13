@@ -5,31 +5,26 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  TextField,
   DialogActions,
   makeStyles,
   Theme,
   FormLabel,
   Fab,
+  MenuItem,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import AddIcon from '@material-ui/icons/Add';
 
-import { trimedValidate } from '@/utils/field-validate';
 import { useConfirmDialog } from './confirm-dialog';
 import { useRouterParams } from '@/utils/use-router-params';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { asyncRefreshLoginUser, useAppDispatch } from '@/ducks/store';
 import { AreaListQueries } from '@/queries/area-list-queries';
+import { FormText } from './form-text';
 
 const useStyles = makeStyles((theme: Theme) => ({
   // '& .MuiTextField-root': { marginBottom: theme.spacing(10) },
-
-  // エラーは右寄せ
-  helperText: {
-    marginLeft: 'auto',
-  },
 
   fab: {
     position: 'absolute',
@@ -52,11 +47,13 @@ export const AreaCreateButton = () => {
   const defaultValues = {
     name: '',
     description: '',
+    typeId: 1,
   };
 
   const { control, handleSubmit, formState, reset } = useForm({ defaultValues });
 
   const onSubmit = async (data: typeof defaultValues) => {
+    console.log(data);
     try {
       const result = await createAreaMutation({
         variables: {
@@ -93,46 +90,13 @@ export const AreaCreateButton = () => {
           <DialogContent>
             <DialogContentText>組織内の新しい区域を作成します。</DialogContentText>
 
-            <Controller
-              name="name"
-              control={control}
-              rules={trimedValidate({
-                required: true,
-                maxLength: 100,
-              })}
-              render={(x) => (
-                <TextField
-                  label="区域名"
-                  required
-                  fullWidth
-                  autoFocus
-                  margin="dense"
-                  helperText={x.fieldState.error?.message}
-                  error={!!x.fieldState.error}
-                  FormHelperTextProps={{ classes: { root: classes.helperText } }}
-                  {...x.field}
-                />
-              )}
-            />
-
-            <Controller
-              name="description"
-              control={control}
-              rules={trimedValidate({
-                maxLength: 100,
-              })}
-              render={(x) => (
-                <TextField
-                  label="解説"
-                  fullWidth
-                  margin="dense"
-                  helperText={x.fieldState.error?.message}
-                  error={!!x.fieldState.error}
-                  FormHelperTextProps={{ classes: { root: classes.helperText } }}
-                  {...x.field}
-                />
-              )}
-            />
+            <FormText control={control} name="name" label="区域名" required maxLength={100} autoFocus />
+            <FormText control={control} name="description" label="解説" maxLength={100} />
+            <FormText control={control} name="typeId" label="区域種別">
+              <MenuItem value={1}>戸建て</MenuItem>
+              <MenuItem value={2}>アパート</MenuItem>
+              <MenuItem value={3}>オートロック</MenuItem>
+            </FormText>
 
             <DialogContentText>
               <FormLabel error>{error}</FormLabel>

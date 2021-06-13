@@ -3,10 +3,8 @@ export const trimedValidate = (props: {
   maxLength?: number;
   other?: (v: any) => string | undefined;
 }) => {
-  //
-
   const validate = (v: any) => {
-    const value = v.trim();
+    const value = v?.toString().trim() ?? '';
 
     if (props.required === true) {
       if (value === '') {
