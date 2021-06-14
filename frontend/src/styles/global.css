@@ -8,3 +8,8 @@
     height: -webkit-fill-available;
   }
 } */
+
+/* ボタンの最小幅 */
+.MuiButton-root {
+  min-width: 100px !important;
+}

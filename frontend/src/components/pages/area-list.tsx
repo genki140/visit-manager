@@ -21,8 +21,7 @@ import { MovableList } from '../movable-list';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import { AreaCreateButton } from '../dialogs/area-create-button';
 import { useGetAreasQuery } from '@/types/graphql';
-import { actions, useAppDispatch, useStoreState } from '@/ducks/store';
-import EditIcon from '@material-ui/icons/Edit';
+import { useAppDispatch, useStoreState } from '@/ducks/store';
 import { AreaListQueries } from '@/queries/area-list-queries';
 import { ArrayUtil } from '@/utils/array-util';
 import Enumerable from 'linq';
@@ -34,11 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   //   gridAutoRows: 'auto',
   //   gap: 10,
   // },
-  fab2: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    left: theme.spacing(2),
-  },
 }));
 
 export const AreaList = () => {
@@ -123,18 +117,7 @@ export const AreaList = () => {
           </List>
         </Box>
 
-        {editing && <AreaCreateButton />}
-
-        <Fab
-          className={classes.fab2}
-          color={editing ? 'primary' : 'default'}
-          onClick={() => {
-            // toggle editing
-            dispatch(actions.setAreaListEditing({ editing: !editing }));
-          }}
-        >
-          <EditIcon />
-        </Fab>
+        <AreaCreateButton />
       </LoadingContainer>
     </Layout>
   );
