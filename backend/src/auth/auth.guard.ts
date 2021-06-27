@@ -16,14 +16,12 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
 // 現在のユーザーを取得
 export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext) => {
   const ctx = GqlExecutionContext.create(context);
-  const user = ctx.getContext().req?.user;
-  if (user != null) {
-    return user;
+  let user = ctx.getContext().req?.user;
+  if (user == null) {
+    // graphqlでない場合こっちにセットされている(APIの場合など)
+    user = (context as any)?.args?.[0]?.user;
   }
-
-  // graphqlでない場合こっちにセットされている(APIの場合など)
-  const user2 = (context as any)?.args?.[0]?.user;
-  return user2;
+  return user;
 });
 
 // export const NoGuard = () => SetMetadata('noGuard', true);

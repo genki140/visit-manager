@@ -1,16 +1,13 @@
-import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
-import { Inject, UseGuards } from '@nestjs/common';
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
-import { AuthenticationError } from 'apollo-server-express';
-import { User } from '../user/user.model';
-import { UserService } from '../user/user.service';
+import { Resolver } from '@nestjs/graphql';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UserArea } from './user-area.model';
-import { UserAreaService } from './user-area.service';
 
 @Resolver(() => UserArea)
 export class UserAreaResolver {
   constructor(
-    @Inject(UserAreaService) private userAreaService: UserAreaService, // @Inject(UserService) private userService: UserService,
+    @InjectRepository(UserArea)
+    private readonly areaRepository: Repository<UserArea>,
   ) {}
 
   // @UseGuards(GqlAuthGuard)
