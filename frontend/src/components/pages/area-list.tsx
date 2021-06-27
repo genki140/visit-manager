@@ -4,7 +4,6 @@ import {
   CardActionArea,
   CardContent,
   CardHeader,
-  Fab,
   List,
   ListItem,
   makeStyles,
@@ -16,35 +15,22 @@ import LoadingContainer from '@/components/loading-container';
 import { Layout } from '@/components/layouts';
 import { Custom404 } from '@/pages/404';
 import { useRouterParams } from '@/utils/use-router-params';
-import React from 'react';
 import { MovableList } from '../movable-list';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import { AreaCreateButton } from '../dialogs/area-create-button';
 import { useGetAreasQuery } from '@/types/graphql';
-import { useAppDispatch, useStoreState } from '@/ducks/store';
+import { useStoreState } from '@/ducks/store';
 import { AreaListQueries } from '@/queries/area-list-queries';
 import { ArrayUtil } from '@/utils/array-util';
 import Enumerable from 'linq';
 
-// スタイル定義
-const useStyles = makeStyles((theme: Theme) => ({
-  // list: {
-  //   display: 'grid',
-  //   gridAutoRows: 'auto',
-  //   gap: 10,
-  // },
-}));
-
 export const AreaList = () => {
-  const classes = useStyles();
   const routerParams = useRouterParams();
-  const user = useStoreState((x) => x.loginUser);
   const editing = useStoreState((x) => x.areaList.editing);
-  const dispatch = useAppDispatch();
   const updateAreaOrdersMutation = AreaListQueries.useUpdateAreaOrders();
 
   const { loading, error, data } = useGetAreasQuery({
-    variables: { organizationId: routerParams.getOrganizationId(), userIds: editing ? undefined : [Number(user?.id)] },
+    variables: { organizationId: routerParams.getOrganizationId() },
     skip: routerParams.organizationName === '',
   });
 
@@ -116,9 +102,8 @@ export const AreaList = () => {
             </MovableList>
           </List>
         </Box>
-
-        <AreaCreateButton />
       </LoadingContainer>
+      <AreaCreateButton />
     </Layout>
   );
 };

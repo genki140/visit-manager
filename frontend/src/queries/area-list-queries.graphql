@@ -1,5 +1,5 @@
-query getAreas($organizationId: Int!, $userIds: [Int!]) {
-  areas(organizationId: $organizationId, userIds: $userIds) {
+query getAreas($organizationId: Int) {
+  areas(organizationId: $organizationId) {
     id
     order
     name
@@ -7,8 +7,10 @@ query getAreas($organizationId: Int!, $userIds: [Int!]) {
   }
 }
 
-mutation createArea($organizationId: Int!, $name: String!, $description: String!) {
-  createArea(area: { organizationId: $organizationId, name: $name, description: $description }) {
+mutation createArea($organizationId: Int!, $name: String!, $description: String!, $areaTypeId: Int!) {
+  createArea(
+    area: { organizationId: $organizationId, name: $name, description: $description, areaTypeId: $areaTypeId }
+  ) {
     id
     order
     name

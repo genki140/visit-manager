@@ -22,24 +22,6 @@ export class UserService {
     }
   }
 
-  // findOne = async (id: number) => this.userRepository.findOne(id);
-
-  // async findByUsernameWithAbilities(username: string) {
-  //   return this.userRepository.findOne({ where: { username }, relations: ['role', 'role.abilities'] });
-  // }
-
-  // async findAll() {
-  //   return this.userRepository.find({ relations: ['role', 'role.abilities'] });
-  // }
-
-  // async findByIds(ids: number[]) {
-  //   return this.userRepository.findByIds(ids);
-  // }
-
-  // async findByUserId(userId: string) {
-  //   return await this.userRepository.findOne({ where: { username: userId } });
-  // }
-
   async create(payload: CreateUserInput) {
     // 同名チェック
     if ((await this.userRepository.count({ where: { username: payload.username.trim() } })) > 0) {

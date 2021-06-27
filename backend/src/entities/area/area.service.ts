@@ -33,19 +33,15 @@ export class AreaService {
       throw new ApolloError('', ErrorCodes.UNUSABLE_NAME);
     }
 
-    // 最大order取得
-    const maxOrder =
-      ((
-        await this.areaRepository.findOne(undefined, {
-          order: { order: 'DESC' },
-        })
-      )?.order ?? 0) + 1;
+    // 次のorder取得
+    const nextOrder = ((await this.areaRepository.findOne(undefined, { order: { order: 'DESC' } }))?.order ?? 0) + 1;
 
     const result = await this.areaRepository.save({
       organizationId: payload.organizationId,
       name: payload.name.trim(),
-      order: maxOrder,
+      order: nextOrder,
       description: payload.description.trim(),
+      areaTypeId: payload.areaTypeId,
     });
     return result;
   }

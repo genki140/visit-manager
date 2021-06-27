@@ -42,8 +42,12 @@ export class UserOrganizationService {
         throw new ApolloError('', ErrorCodes.UNUSABLE_NAME);
       }
 
+      // 次のorder取得
+      const nextOrder =
+        ((await this.userOrganizationRepository.findOne(undefined, { order: { order: 'DESC' } }))?.order ?? 0) + 1;
+
       return await userOrganizationRepository.save({
-        order: 0,
+        order: nextOrder,
         userId: userId,
         roles: [
           {
@@ -52,6 +56,13 @@ export class UserOrganizationService {
         ],
         organization: await organizationRepository.save({
           name: payload.name,
+          areaTypes: [
+            {
+              order: 0,
+              name: payload.defaultAreaTypeName.trim(),
+              description: '',
+            },
+          ],
         }),
       });
     });

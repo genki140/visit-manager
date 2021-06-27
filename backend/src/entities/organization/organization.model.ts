@@ -4,6 +4,7 @@ import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeor
 import { MaxLength } from 'class-validator';
 import { UserOrganization } from '../user-organization/user-organization.model';
 import { Area } from '../area/area.model';
+import { AreaType } from '../area-type/area-type.model';
 
 @ObjectType()
 @Entity('organizations')
@@ -18,10 +19,15 @@ export class Organization {
   @Index({ unique: true })
   name: string = '';
 
-  /** ユーザーとのリレーション */
+  /** 区域とのリレーション */
   @Field(() => [Area])
   @OneToMany(() => Area, (area) => area.organization)
   areas?: Area[];
+
+  /** 区域種別とのリレーション */
+  @Field(() => [AreaType])
+  @OneToMany(() => AreaType, (areaType) => areaType.organization, { cascade: true })
+  areaTypes?: AreaType[];
 
   /** ユーザーとのリレーション */
   @Field(() => [UserOrganization])

@@ -37,6 +37,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useFormatMessage } from '@/locales';
+import { useGetCurrentUserQuery } from '@/types/graphql';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -102,7 +103,8 @@ export const Layout = (props: {
 }) => {
   const classes = useStyles();
   const appLoading = useStoreState((x) => x.loading);
-  const loginUser = useStoreState((x) => x.loginUser);
+  // const loginUser = useStoreState((x) => x.loginUser);
+  const currentUser = useGetCurrentUserQuery().data?.currentUser;
   const routerParams = useRouterParams();
   const [menuVisibled, setMenuVisibled] = useState(false);
   const dispatch = useAppDispatch();
@@ -183,18 +185,18 @@ export const Layout = (props: {
           // メニュー
           <Drawer anchor="right" open={menuVisibled} onClose={() => setMenuVisibled(false)}>
             <List style={{ minWidth: 200 }}>
-              {loginUser != null ? (
+              {currentUser != null ? (
                 <>
                   <ListItem>
                     <ListItemIcon>
                       <AccountCircleIcon />
                     </ListItemIcon>
-                    <ListItemText>{loginUser.name}</ListItemText>
+                    <ListItemText>{currentUser.name}</ListItemText>
                   </ListItem>
                   <ListItem
                     button
                     onClick={async () => {
-                      unwrapResult(await dispatch(asyncLogout())); // 自動でリダイレクトされる
+                      unwrapResult(await dispatch(asyncLogout())); // ログアウト。自動でリダイレクトされる
                     }}
                   >
                     <ListItemIcon>
@@ -315,7 +317,7 @@ export const Layout = (props: {
         }
 
         <Backdrop className={classes.backdrop} open={appLoading}>
-          <CircularProgress color="inherit" />
+          <CircularProgress color="primary" />
         </Backdrop>
       </div>
     </>

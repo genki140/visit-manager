@@ -30,15 +30,29 @@ export type Area = {
   description: Scalars['String'];
   organization: Organization;
   organizationId: Scalars['Float'];
+  areaType: AreaType;
+  areaTypeId: Scalars['Float'];
   userAreas: Array<UserArea>;
   residences: Array<Residence>;
   outlines: Array<Outline>;
+};
+
+export type AreaType = {
+  __typename?: 'AreaType';
+  id: Scalars['Int'];
+  order: Scalars['Int'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  organization: Organization;
+  organizationId: Scalars['Float'];
+  areas: Array<Area>;
 };
 
 export type CreateAreaInput = {
   organizationId?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  areaTypeId?: Maybe<Scalars['Int']>;
 };
 
 export type CreateOutlineInput = {
@@ -66,6 +80,7 @@ export type CreateUserInput = {
 
 export type CreateUserOrganizationInput = {
   name?: Maybe<Scalars['String']>;
+  defaultAreaTypeName?: Maybe<Scalars['String']>;
 };
 
 
@@ -151,6 +166,7 @@ export type Organization = {
   id: Scalars['Int'];
   name: Scalars['String'];
   areas: Array<Area>;
+  areaTypes: Array<AreaType>;
   userOrganizations: Array<UserOrganization>;
 };
 
@@ -178,12 +194,17 @@ export type Query = {
   getTest: Scalars['Float'];
   userOrganizations: Array<UserOrganization>;
   areas: Array<Area>;
+  areaTypes: Array<AreaType>;
 };
 
 
 export type QueryAreasArgs = {
   ids?: Maybe<Array<Scalars['Int']>>;
-  userIds?: Maybe<Array<Scalars['Int']>>;
+  organizationId?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryAreaTypesArgs = {
   organizationId: Scalars['Int'];
 };
 
@@ -323,8 +344,7 @@ export type AddTestMutation = (
 );
 
 export type GetAreasQueryVariables = Exact<{
-  organizationId: Scalars['Int'];
-  userIds?: Maybe<Array<Scalars['Int']> | Scalars['Int']>;
+  organizationId?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -340,6 +360,7 @@ export type CreateAreaMutationVariables = Exact<{
   organizationId: Scalars['Int'];
   name: Scalars['String'];
   description: Scalars['String'];
+  areaTypeId: Scalars['Int'];
 }>;
 
 
@@ -487,6 +508,33 @@ export type DeleteOutlineMutation = (
   & Pick<Mutation, 'deleteOutline'>
 );
 
+export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCurrentUserQuery = (
+  { __typename?: 'Query' }
+  & { currentUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+    & { userOrganizations: Array<(
+      { __typename?: 'UserOrganization' }
+      & Pick<UserOrganization, 'id'>
+      & { organization: (
+        { __typename?: 'Organization' }
+        & Pick<Organization, 'id' | 'name'>
+        & { areas: Array<(
+          { __typename?: 'Area' }
+          & Pick<Area, 'id' | 'name' | 'description'>
+          & { areaType: (
+            { __typename?: 'AreaType' }
+            & Pick<AreaType, 'id' | 'name'>
+          ) }
+        )> }
+      ) }
+    )> }
+  ) }
+);
+
 export type GetUserOrganizationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -504,6 +552,7 @@ export type GetUserOrganizationsQuery = (
 
 export type CreateUserOrganizationMutationVariables = Exact<{
   name: Scalars['String'];
+  defaultAreaTypeName: Scalars['String'];
 }>;
 
 
@@ -529,6 +578,19 @@ export type UpdateUserOrganizationsMutation = (
   & { updateUserOrganizations: Array<(
     { __typename?: 'UserOrganization' }
     & Pick<UserOrganization, 'id' | 'order'>
+  )> }
+);
+
+export type GetAreaTypesQueryVariables = Exact<{
+  organizationId: Scalars['Int'];
+}>;
+
+
+export type GetAreaTypesQuery = (
+  { __typename?: 'Query' }
+  & { areaTypes: Array<(
+    { __typename?: 'AreaType' }
+    & Pick<AreaType, 'id' | 'order' | 'name' | 'description'>
   )> }
 );
 
@@ -656,8 +718,8 @@ export type AddTestMutationHookResult = ReturnType<typeof useAddTestMutation>;
 export type AddTestMutationResult = Apollo.MutationResult<AddTestMutation>;
 export type AddTestMutationOptions = Apollo.BaseMutationOptions<AddTestMutation, AddTestMutationVariables>;
 export const GetAreasDocument = gql`
-    query getAreas($organizationId: Int!, $userIds: [Int!]) {
-  areas(organizationId: $organizationId, userIds: $userIds) {
+    query getAreas($organizationId: Int) {
+  areas(organizationId: $organizationId) {
     id
     order
     name
@@ -679,11 +741,10 @@ export const GetAreasDocument = gql`
  * const { data, loading, error } = useGetAreasQuery({
  *   variables: {
  *      organizationId: // value for 'organizationId'
- *      userIds: // value for 'userIds'
  *   },
  * });
  */
-export function useGetAreasQuery(baseOptions: Apollo.QueryHookOptions<GetAreasQuery, GetAreasQueryVariables>) {
+export function useGetAreasQuery(baseOptions?: Apollo.QueryHookOptions<GetAreasQuery, GetAreasQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetAreasQuery, GetAreasQueryVariables>(GetAreasDocument, options);
       }
@@ -695,9 +756,9 @@ export type GetAreasQueryHookResult = ReturnType<typeof useGetAreasQuery>;
 export type GetAreasLazyQueryHookResult = ReturnType<typeof useGetAreasLazyQuery>;
 export type GetAreasQueryResult = Apollo.QueryResult<GetAreasQuery, GetAreasQueryVariables>;
 export const CreateAreaDocument = gql`
-    mutation createArea($organizationId: Int!, $name: String!, $description: String!) {
+    mutation createArea($organizationId: Int!, $name: String!, $description: String!, $areaTypeId: Int!) {
   createArea(
-    area: {organizationId: $organizationId, name: $name, description: $description}
+    area: {organizationId: $organizationId, name: $name, description: $description, areaTypeId: $areaTypeId}
   ) {
     id
     order
@@ -724,6 +785,7 @@ export type CreateAreaMutationFn = Apollo.MutationFunction<CreateAreaMutation, C
  *      organizationId: // value for 'organizationId'
  *      name: // value for 'name'
  *      description: // value for 'description'
+ *      areaTypeId: // value for 'areaTypeId'
  *   },
  * });
  */
@@ -1058,8 +1120,59 @@ export function useDeleteOutlineMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteOutlineMutationHookResult = ReturnType<typeof useDeleteOutlineMutation>;
 export type DeleteOutlineMutationResult = Apollo.MutationResult<DeleteOutlineMutation>;
 export type DeleteOutlineMutationOptions = Apollo.BaseMutationOptions<DeleteOutlineMutation, DeleteOutlineMutationVariables>;
+export const GetCurrentUserDocument = gql`
+    query getCurrentUser {
+  currentUser {
+    id
+    name
+    userOrganizations {
+      id
+      organization {
+        id
+        name
+        areas {
+          id
+          name
+          description
+          areaType {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCurrentUserQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
+      }
+export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
+        }
+export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
+export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
+export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
 export const GetUserOrganizationsDocument = gql`
-    query GetUserOrganizations {
+    query getUserOrganizations {
   userOrganizations {
     id
     order
@@ -1098,8 +1211,10 @@ export type GetUserOrganizationsQueryHookResult = ReturnType<typeof useGetUserOr
 export type GetUserOrganizationsLazyQueryHookResult = ReturnType<typeof useGetUserOrganizationsLazyQuery>;
 export type GetUserOrganizationsQueryResult = Apollo.QueryResult<GetUserOrganizationsQuery, GetUserOrganizationsQueryVariables>;
 export const CreateUserOrganizationDocument = gql`
-    mutation createUserOrganization($name: String!) {
-  createUserOrganization(organization: {name: $name}) {
+    mutation createUserOrganization($name: String!, $defaultAreaTypeName: String!) {
+  createUserOrganization(
+    organization: {name: $name, defaultAreaTypeName: $defaultAreaTypeName}
+  ) {
     id
     order
     organization {
@@ -1125,6 +1240,7 @@ export type CreateUserOrganizationMutationFn = Apollo.MutationFunction<CreateUse
  * const [createUserOrganizationMutation, { data, loading, error }] = useCreateUserOrganizationMutation({
  *   variables: {
  *      name: // value for 'name'
+ *      defaultAreaTypeName: // value for 'defaultAreaTypeName'
  *   },
  * });
  */
@@ -1169,3 +1285,41 @@ export function useUpdateUserOrganizationsMutation(baseOptions?: Apollo.Mutation
 export type UpdateUserOrganizationsMutationHookResult = ReturnType<typeof useUpdateUserOrganizationsMutation>;
 export type UpdateUserOrganizationsMutationResult = Apollo.MutationResult<UpdateUserOrganizationsMutation>;
 export type UpdateUserOrganizationsMutationOptions = Apollo.BaseMutationOptions<UpdateUserOrganizationsMutation, UpdateUserOrganizationsMutationVariables>;
+export const GetAreaTypesDocument = gql`
+    query getAreaTypes($organizationId: Int!) {
+  areaTypes(organizationId: $organizationId) {
+    id
+    order
+    name
+    description
+  }
+}
+    `;
+
+/**
+ * __useGetAreaTypesQuery__
+ *
+ * To run a query within a React component, call `useGetAreaTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAreaTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAreaTypesQuery({
+ *   variables: {
+ *      organizationId: // value for 'organizationId'
+ *   },
+ * });
+ */
+export function useGetAreaTypesQuery(baseOptions: Apollo.QueryHookOptions<GetAreaTypesQuery, GetAreaTypesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAreaTypesQuery, GetAreaTypesQueryVariables>(GetAreaTypesDocument, options);
+      }
+export function useGetAreaTypesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAreaTypesQuery, GetAreaTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAreaTypesQuery, GetAreaTypesQueryVariables>(GetAreaTypesDocument, options);
+        }
+export type GetAreaTypesQueryHookResult = ReturnType<typeof useGetAreaTypesQuery>;
+export type GetAreaTypesLazyQueryHookResult = ReturnType<typeof useGetAreaTypesLazyQuery>;
+export type GetAreaTypesQueryResult = Apollo.QueryResult<GetAreaTypesQuery, GetAreaTypesQueryVariables>;

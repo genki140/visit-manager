@@ -42,6 +42,7 @@ export class UserOrganizationResolver {
     @Args('organization') organization: CreateUserOrganizationInput,
     @CurrentUser() currentUser: User,
   ) {
+    console.log('create');
     const result = await this.userOrganizationService.create(organization, currentUser.id);
     return result;
   }

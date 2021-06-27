@@ -10,7 +10,7 @@ import { CryptUtil } from '@/utils/crypt';
  */
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService, private usersService: UserService) {}
+  constructor(private jwtService: JwtService, private userService: UserService) {}
 
   // ユーザーを認証する
   async validateUser(username: string, password: string): Promise<User | undefined> {
@@ -23,16 +23,16 @@ export class AuthService {
     // URLの区域名をIDに変換する部分はクライアントで行うので、関連組織の区域の名称-ID対応はすべて取得しておく必要がある。
 
     const user = (
-      await this.usersService.find(undefined, {
+      await this.userService.find(undefined, {
         where: { username },
-        relations: [
-          'userOrganizations',
-          'userOrganizations.organization',
-          'userOrganizations.roles',
-          'userOrganizations.roles.abilities',
-          'userOrganizations.organization.areas',
-          'userAreas',
-        ],
+        // relations: [
+        //   'userOrganizations',
+        //   'userOrganizations.organization',
+        //   'userOrganizations.roles',
+        //   'userOrganizations.roles.abilities',
+        //   'userOrganizations.organization.areas',
+        //   'userAreas',
+        // ],
       })
     )?.[0];
 

@@ -1,0 +1,23 @@
+# ログインユーザーの組織、権限、区域のリスト等の基本情報とまとめて取得する。
+query getCurrentUser {
+  currentUser {
+    id
+    name
+    userOrganizations {
+      id
+      organization {
+        id
+        name
+        areas {
+          id
+          name
+          description
+          areaType {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}

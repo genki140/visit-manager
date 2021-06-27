@@ -1,4 +1,5 @@
-query GetUserOrganizations {
+# コメント
+query getUserOrganizations {
   userOrganizations {
     id
     order
@@ -9,8 +10,8 @@ query GetUserOrganizations {
   }
 }
 
-mutation createUserOrganization($name: String!) {
-  createUserOrganization(organization: { name: $name }) {
+mutation createUserOrganization($name: String!, $defaultAreaTypeName: String!) {
+  createUserOrganization(organization: { name: $name, defaultAreaTypeName: $defaultAreaTypeName }) {
     id
     order
     organization {
@@ -24,5 +25,14 @@ mutation updateUserOrganizations($updateUserOrganizationsInput: UpdateUserOrgani
   updateUserOrganizations(userOrganizations: $updateUserOrganizationsInput) {
     id
     order
+  }
+}
+
+query getAreaTypes($organizationId: Int!) {
+  areaTypes(organizationId: $organizationId) {
+    id
+    order
+    name
+    description
   }
 }

@@ -59,6 +59,10 @@ export class CreateUserOrganizationInput {
   @Field()
   @MaxLength(100)
   name: string = '';
+
+  @Field()
+  @MaxLength(100)
+  defaultAreaTypeName: string = '';
 }
 
 @InputType()

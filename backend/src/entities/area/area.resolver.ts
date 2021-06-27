@@ -2,34 +2,47 @@ import { CurrentUser, GqlAuthGuard, RequiredAbilities } from '@/auth/auth.guard'
 import { Inject, UseGuards } from '@nestjs/common';
 import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthenticationError } from 'apollo-server-express';
+import { In } from 'typeorm';
 import { AbilityTypes } from '../ability/ability.model';
 import { User } from '../user/user.model';
+import { UserService } from '../user/user.service';
 import { Area, CreateAreaInput, UpdateAreaOrdersInput } from './area.model';
 import { AreaService } from './area.service';
 
 @Resolver(() => Area)
 export class AreaResolver {
-  constructor(@Inject(AreaService) private areaService: AreaService) {}
+  constructor(@Inject(AreaService) private areaService: AreaService, private readonly userService: UserService) {}
 
   @UseGuards(GqlAuthGuard)
   @Query(() => [Area])
   async areas(
-    @Args('organizationId', { type: () => Int }) organizationId: number,
-    @Args('userIds', { type: () => [Int], nullable: true, defaultValue: null }) userIds: number[] | null,
-    @Args('ids', { type: () => [Int], nullable: true, defaultValue: null }) ids: number[] | null,
+    @Args('organizationId', { type: () => Int, nullable: true }) organizationId: number | null,
+    @Args('ids', { type: () => [Int], nullable: true }) ids: number[] | null,
     @CurrentUser() currentUser: User,
   ) {
-    // 組織に所属していなければ例外を返す
-    if (currentUser.userOrganizations?.some((x) => x.organization?.id === organizationId) !== true) {
+    // ログインユーザーが所属している組織の区域一覧を取得する。
+    // 組織が指定されている場合はその組織の区域のみ取得する。
+    // idsが指定されている場合は、そのidの区域のみ取得する。
+
+    // とりあえず対応。（いちいちこんなことしてられない！！）
+    currentUser = (await this.userService.find([currentUser.id], { relations: ['userOrganizations'] }))[0];
+
+    const userOrganizationIds = currentUser.userOrganizations?.map((x) => x.id) ?? [];
+
+    // 組織の指定があるのにその組織に所属していなければ例外を返す。
+    if (organizationId != null && userOrganizationIds.some((x) => x === organizationId) !== true) {
+      // console.log(organizationId);
+      // console.log(userOrganizationIds);
       throw new AuthenticationError('');
-      // throw new ApolloError('organization id not found.', 'NOT_FOUND');
     }
 
-    let result = await this.areaService.find(ids ?? undefined, {
+    // idsの指定があればそれで絞り込む
+    const result = await this.areaService.find(ids ?? undefined, {
       where: {
-        organizationId: organizationId,
+        organizationId: organizationId ?? In(userOrganizationIds), // 組織の指定があれば絞り込む
       },
       relations: [
+        // 最終的にはクエリに応じて必要な部分だけ含める
         'organization',
         'residences',
         'residences.residents',
@@ -40,9 +53,9 @@ export class AreaResolver {
       ],
     });
 
-    if (userIds != null) {
-      result = result.filter((x) => x.userAreas?.some((y) => userIds.some((z) => y.user?.id === z)));
-    }
+    // if (userIds != null) {
+    //   result = result.filter((x) => x.userAreas?.some((y) => userIds.some((z) => y.user?.id === z)));
+    // }
 
     return result;
   }

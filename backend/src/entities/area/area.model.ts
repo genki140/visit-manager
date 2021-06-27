@@ -81,6 +81,9 @@ export class CreateAreaInput {
   @Field()
   @MaxLength(100)
   description: string = '';
+
+  @Field(() => Int)
+  areaTypeId = 0;
 }
 
 @InputType()

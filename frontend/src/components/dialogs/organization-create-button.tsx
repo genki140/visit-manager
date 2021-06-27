@@ -1,10 +1,8 @@
 import { useFormatMessage } from '@/locales';
-import React, { useState } from 'react';
 import AddIcon from '@material-ui/icons/Add';
 
 import { OrganizationListQueries } from '@/queries/organization-list-queries';
-import { asyncRefreshLoginUser, useAppDispatch } from '@/ducks/store';
-import { unwrapResult } from '@reduxjs/toolkit';
+import { useAppDispatch } from '@/ducks/store';
 import { FormText } from './form-text';
 import { useInputDialog } from './input-dialog';
 import { EditControls } from '../edit-controls';
@@ -13,7 +11,6 @@ import { EditControls } from '../edit-controls';
 export const OrganizationCreateButton = () => {
   const f = useFormatMessage();
   const [createOrganizationMutation] = OrganizationListQueries.useCreateUserOrganization();
-  const dispatch = useAppDispatch();
 
   // ダイアログの定義
   const dialog = useInputDialog({
@@ -33,9 +30,12 @@ export const OrganizationCreateButton = () => {
         const result = await createOrganizationMutation({
           variables: {
             name: data.name,
+            defaultAreaTypeName: '戸建て',
           },
         });
-        unwrapResult(await dispatch(asyncRefreshLoginUser())); // 情報再取得
+
+        console.log('現在、情報再取得は無効');
+        // unwrapResult(await dispatch(asyncRefreshLoginUser())); // 情報再取得
       } catch (e) {
         const code = e.graphQLErrors?.[0]?.extensions?.code;
         return code;

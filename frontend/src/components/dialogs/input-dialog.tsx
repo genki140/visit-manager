@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { DefaultValues, FieldValues, useForm, UseFormReturn } from 'react-hook-form';
+import { Loading } from '../loading';
 
 import { useConfirmDialog } from './confirm-dialog';
 
@@ -26,7 +27,6 @@ import { useConfirmDialog } from './confirm-dialog';
 export const useInputDialog = <T extends FieldValues>(props: {
   title: string;
   description?: string;
-  // error?: string;
   defaultValues: DefaultValues<T>;
   onSubmit: (data: T) => Promise<string | boolean | void>;
   content: (form: UseFormReturn<T>) => any;
@@ -40,15 +40,20 @@ export const useInputDialog = <T extends FieldValues>(props: {
   const f = useFormatMessage();
   const form = useForm({ defaultValues: props.defaultValues });
   const [error, setError] = useState('');
-  // const classes = useStyles();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data: typeof props.defaultValues) => {
-    const result = await props.onSubmit(data as T);
-    if (result === true || result === undefined || result === '') {
-      setOpen(false);
-    }
-    if (typeof result === 'string') {
-      setError(result);
+    setLoading(true);
+    try {
+      const result = await props.onSubmit(data as T);
+      if (result === true || result === undefined || result === '') {
+        setOpen(false);
+      }
+      if (typeof result === 'string') {
+        setError(result);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,6 +114,7 @@ export const useInputDialog = <T extends FieldValues>(props: {
           </form>
         </Dialog>
         {confirmDialog.dialog}
+        <Loading show={loading} />
       </>
     ),
   };

@@ -1,12 +1,6 @@
-import { User } from '@/types/graphql';
 import { AsyncThunk, configureStore, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-
-// export const AreaListEditType = {
-//   None: 'None',
-// } as const;
-// export type AreaListEditType = typeof AreaListEditType[keyof typeof AreaListEditType];
 
 export const MapEditType = {
   None: 'None',
@@ -19,7 +13,9 @@ export type MapEditType = typeof MapEditType[keyof typeof MapEditType];
 /** ストアの型 */
 export type StoreState = {
   loading: boolean;
-  loginUser?: User;
+  // loginUser?: User;
+  apolloClientRefreshCount?: number; // apolloClientリフレッシュさせるためのカウンター
+  currentUserRefreshCount?: number; // currentUserをリフレッシュさせるためのカウンター
   loginLoaded: boolean;
   loginSrcRoute?: { pathname: string; query: any };
   areaList: {
@@ -31,9 +27,6 @@ export type StoreState = {
     selectedOutlinePointId?: number;
     editType: MapEditType;
   };
-  // residences: {
-  //   test: number;
-  // }[];
   editingResidenceId?: number;
 };
 
@@ -48,7 +41,6 @@ const createStoreInitial = () => {
     map: {
       editType: MapEditType.None,
     },
-    // residences: [],
   };
   return value;
 };
@@ -59,28 +51,23 @@ export interface asyncLoginProps {
   username: string;
   password: string;
 }
-// export interface asyncLoginResult {
-//   token: string;
-// }
 
-export const asyncLogin = createAsyncThunk<User, asyncLoginProps>(
+export const asyncLogin = createAsyncThunk<void, asyncLoginProps>(
   storeName + '/asyncLogin',
-  async (props: asyncLoginProps): Promise<User> => {
-    const result = await axios.post<User>('/system/api/login', {
+  async (props: asyncLoginProps): Promise<void> => {
+    await axios.post('/system/api/login', {
       username: props.username,
       password: props.password,
     });
-    return result.data;
   },
 );
 
-export const asyncRefreshLoginUser = createAsyncThunk<User>(
-  storeName + '/asyncRefreshLoginUser',
-  async (): Promise<User> => {
-    const result = await axios.post<User>('/system/api/current-user');
-    return result.data;
-  },
-);
+// export const asyncRefreshLoginUser = createAsyncThunk<void>(
+//   storeName + '/asyncRefreshLoginUser',
+//   async (): Promise<void> => {
+//     await axios.post('/system/api/current-user');
+//   },
+// );
 
 export const asyncLogout = createAsyncThunk(storeName + '/asyncLogout', async (): Promise<void> => {
   await axios.post('/system/api/logout');
@@ -91,18 +78,14 @@ export const storeSlice = createSlice({
   name: storeName,
   initialState: createStoreInitial(),
   reducers: {
-    // setMapPosition: (state, action: PayloadAction<{ lat: number; lng: number }>) => {
-    //   state.map.position.lat = action.payload.lat;
-    //   state.map.position.lng = action.payload.lng;
-    // },
-    // setMapZoom: (state, action: PayloadAction<{ zoom: number }>) => {
-    //   state.map.zoom = action.payload.zoom;
-    // },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    setLoginUser: (state, action: PayloadAction<User | undefined>) => {
-      state.loginUser = action.payload;
+    // setLoginUser: (state, action: PayloadAction<User | undefined>) => {
+    //   state.loginUser = action.payload;
+    // },
+    refreshLoginUser: (state) => {
+      state.currentUserRefreshCount = (state.currentUserRefreshCount ?? 0) + 1;
     },
     setLoginSrcPath: (state, action: PayloadAction<{ pathname: string; query: any } | undefined>) => {
       state.loginSrcRoute = action.payload;
@@ -121,27 +104,33 @@ export const storeSlice = createSlice({
       state.map.selectedResidenceId = undefined;
       state.map.selectedOutlineId = undefined;
       state.map.selectedOutlinePointId = undefined;
-      // if (action.payload.editType === MapEditType.Residence) {
-      //   state.map.selectedResidenceId = undefined;
-      // }
     },
     setAreaListEditing: (state, action: PayloadAction<{ editing: boolean }>) => {
       state.areaList.editing = action.payload.editing;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(asyncRefreshLoginUser.fulfilled, (state, action) => {
-      state.loginUser = action.payload;
-      state.loginLoaded = true;
-    });
-    builder.addCase(asyncRefreshLoginUser.rejected, (state) => {
-      state.loginLoaded = true;
-    });
-    builder.addCase(asyncLogout.fulfilled, (state) => {
-      state.loginUser = undefined;
+    builder.addCase(asyncLogin.fulfilled, (state) => {
+      // カレントユーザーを再読み込みさせる
+      state.apolloClientRefreshCount = (state.apolloClientRefreshCount ?? 0) + 1;
+      state.currentUserRefreshCount = (state.currentUserRefreshCount ?? 0) + 1;
     });
 
-    // 非同期実行時Loading状態を自動調整します
+    // builder.addCase(asyncRefreshLoginUser.fulfilled, (state) => {
+    //   // state.loginUser = action.payload;
+    //   state.loginLoaded = true;
+    // });
+    // builder.addCase(asyncRefreshLoginUser.rejected, (state) => {
+    //   state.loginLoaded = true;
+    // });
+    builder.addCase(asyncLogout.fulfilled, (state) => {
+      // カレントユーザーを再読み込みさせる
+      state.currentUserRefreshCount = (state.currentUserRefreshCount ?? 0) + 1;
+      state.apolloClientRefreshCount = (state.apolloClientRefreshCount ?? 0) + 1;
+      // state.loginUser = undefined;
+    });
+
+    // 非同期実行時は全体のLoading状態を自動調整します
     builder.addMatcher<PendingAction>(
       (action) => action.type.endsWith('/pending'),
       (state) => {
@@ -184,16 +173,5 @@ type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
 type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
 type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
 
-// export type StoreState = ReturnType<typeof createStoreInitial>;
-// export type ReduxStore = Store<StoreState>;
-
 // useヘルパー
 export const useStoreState = <T>(getter: (state: StoreState) => T): T => useSelector<StoreState, T>(getter);
-
-// 使い方
-// const loading = useStoreState((x) => x.loading);
-
-// export function useSelector<TState = DefaultRootState, TSelected = unknown>(
-//   selector: (state: TState) => TSelected,
-//   equalityFn?: (left: TSelected, right: TSelected) => boolean
-// ): TSelected;

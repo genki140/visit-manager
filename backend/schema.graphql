@@ -69,6 +69,7 @@ type Organization {
   id: Int!
   name: String!
   areas: [Area!]!
+  areaTypes: [AreaType!]!
   userOrganizations: [UserOrganization!]!
 }
 
@@ -112,7 +113,8 @@ type Query {
   googleMapApiKey: String!
   getTest: Float!
   userOrganizations: [UserOrganization!]!
-  areas(ids: [Int!] = null, userIds: [Int!] = null, organizationId: Int!): [Area!]!
+  areas(ids: [Int!], organizationId: Int): [Area!]!
+  areaTypes(organizationId: Int!): [AreaType!]!
 }
 
 type Mutation {
@@ -139,6 +141,7 @@ input CreateUserInput {
 
 input CreateUserOrganizationInput {
   name: String = ""
+  defaultAreaTypeName: String = ""
 }
 
 input UpdateUserOrganizationsInput {
@@ -154,6 +157,7 @@ input CreateAreaInput {
   organizationId: Int = 0
   name: String = ""
   description: String = ""
+  areaTypeId: Int = 0
 }
 
 input UpdateAreaOrdersInput {

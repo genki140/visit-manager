@@ -3,7 +3,6 @@ import { Controller, Post, Request, Res, UnauthorizedException, UseGuards } from
 import { User } from '@/entities/user/user.model';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { CurrentUser } from './auth.guard';
 
 @Controller()
 export class AuthController {
@@ -46,25 +45,25 @@ export class AuthController {
     response.statusCode = 200;
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Post('api/current-user')
-  async currentUser(@Res({ passthrough: true }) response: Response, @CurrentUser() currentUser: User) {
-    // DBから最新のユーザー情報を取得
-    const user = await this.authService.getUser(currentUser.username);
-    if (user == null) {
-      // そもそもGuardで弾いているはず
-      throw new UnauthorizedException();
-    }
+  // @UseGuards(AuthGuard('jwt'))
+  // @Post('api/current-user')
+  // async currentUser(@Res({ passthrough: true }) response: Response, @CurrentUser() currentUser: User) {
+  //   // DBから最新のユーザー情報を取得
+  //   const user = await this.authService.getUser(currentUser.username);
+  //   if (user == null) {
+  //     // そもそもGuardで弾いているはず
+  //     throw new UnauthorizedException();
+  //   }
 
-    // JwtToken を取得
-    const token = this.authService.getToken(user);
+  //   // JwtToken を取得
+  //   const token = this.authService.getToken(user);
 
-    // cookie を設定
-    response.cookie('access_token', token, { httpOnly: true });
-    response.statusCode = 200;
+  //   // cookie を設定
+  //   response.cookie('access_token', token, { httpOnly: true });
+  //   response.statusCode = 200;
 
-    console.log('user:' + currentUser.username);
+  //   console.log('user:' + currentUser.username);
 
-    return user;
-  }
+  //   return user;
+  // }
 }

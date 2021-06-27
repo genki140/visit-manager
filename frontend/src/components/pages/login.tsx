@@ -2,77 +2,35 @@ import { Layout } from '@/components/layouts';
 import React, { useState } from 'react';
 import { actions, asyncLogin, useAppDispatch, useStoreState } from '@/ducks/store';
 import { unwrapResult } from '@reduxjs/toolkit';
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  List,
-  ListItem,
-  makeStyles,
-  TextField,
-  Theme,
-  Typography,
-  Button,
-} from '@material-ui/core';
+import { Box, Card, CardActions, CardContent, TextField, Typography, Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useFormatMessage } from '@/locales';
 import { UserCreateButton } from '@/components/dialogs/user-create-button';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  // inlineBlock: {
-  //   display: 'block',
-  // },
-  // loginCard: {
-  //   margin: 'auto',
-  // },
-  // container: {
-  //   display: 'flex',
-  //   flexWrap: 'wrap',
-  //   width: 400,
-  //   margin: `${theme.spacing(0)} auto`,
-  // },
-  // loginBtn: {
-  //   marginTop: theme.spacing(2),
-  //   flexGrow: 1,
-  // },
-  // header: {
-  //   textAlign: 'center',
-  //   background: '#212121',
-  //   color: '#fff',
-  // },
-  // card: {
-  //   marginTop: theme.spacing(10),
-  // },
-}));
-
 export const Login = () => {
-  // const classes = useStyles();
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const loginSrcRoute = useStoreState((x) => x.loginSrcRoute);
   const f = useFormatMessage();
-  const classes = useStyles();
 
   const login = async (username: string, password: string) => {
     try {
-      dispatch(actions.setLoginUser(unwrapResult(await dispatch(asyncLogin({ username, password })))));
+      unwrapResult(await dispatch(asyncLogin({ username, password })));
+      // dispatch(actions.setLoginUser(unwrapResult(await dispatch(asyncLogin({ username, password })))));
 
-      if (loginSrcRoute == null) {
-        await router.push('/');
-      } else {
-        // console.log(loginSrcRoute);
-        await router.push({
-          pathname: loginSrcRoute.pathname,
-          query: loginSrcRoute.query,
-        });
-      }
+      // if (loginSrcRoute == null) {
+      //   await router.push('/');
+      // } else {
+      //   // console.log(loginSrcRoute);
+      //   await router.push({
+      //     pathname: loginSrcRoute.pathname,
+      //     query: loginSrcRoute.query,
+      //   });
+      // }
     } catch (e) {
-      // console.log(e);
+      console.log(e);
       // とりあえず適当なエラーメッセージ
       setError('ログインに失敗しました');
     }
