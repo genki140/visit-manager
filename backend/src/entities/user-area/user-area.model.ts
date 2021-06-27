@@ -19,7 +19,12 @@ export class UserArea {
   /** ユーザー */
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.userAreas, { nullable: false })
+  @JoinColumn({ name: 'userId' })
   user?: User;
+
+  @Field(() => Number)
+  @Column({ type: 'int', nullable: false })
+  userId?: number;
 
   /** 区域 */
   @Field(() => Area)

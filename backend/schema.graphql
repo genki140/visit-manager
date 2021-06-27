@@ -5,6 +5,7 @@
 type UserArea {
   id: Int!
   user: User!
+  userId: Float!
   area: Area!
   areaId: Float!
 }

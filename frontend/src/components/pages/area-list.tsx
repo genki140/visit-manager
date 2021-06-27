@@ -1,15 +1,4 @@
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardHeader,
-  List,
-  ListItem,
-  makeStyles,
-  Theme,
-  Typography,
-} from '@material-ui/core';
+import { Box, Card, CardActionArea, CardContent, CardHeader, List, ListItem, Typography } from '@material-ui/core';
 import Link from 'next/link';
 import LoadingContainer from '@/components/loading-container';
 import { Layout } from '@/components/layouts';
@@ -18,7 +7,7 @@ import { useRouterParams } from '@/utils/use-router-params';
 import { MovableList } from '../movable-list';
 import DragHandleIcon from '@material-ui/icons/DragHandle';
 import { AreaCreateButton } from '../dialogs/area-create-button';
-import { useGetAreasQuery } from '@/types/graphql';
+import { useGetAreasQuery, useGetCurrentUserQuery } from '@/types/graphql';
 import { useStoreState } from '@/ducks/store';
 import { AreaListQueries } from '@/queries/area-list-queries';
 import { ArrayUtil } from '@/utils/array-util';
@@ -29,12 +18,15 @@ export const AreaList = () => {
   const editing = useStoreState((x) => x.areaList.editing);
   const updateAreaOrdersMutation = AreaListQueries.useUpdateAreaOrders();
 
+  const currentUser = useGetCurrentUserQuery();
+
   const { loading, error, data } = useGetAreasQuery({
-    variables: { organizationId: routerParams.getOrganizationId() },
-    skip: routerParams.organizationName === '',
+    skip: routerParams.hasOrganization === false,
   });
 
-  const orderdUserOrganizations = Enumerable.from(data?.areas ?? [])
+  const orderdUserAreas = Enumerable.from(data?.areas ?? [])
+    .where((x) => x.organizationId === routerParams.getOrganizationId())
+    .where((x) => editing || x.userAreas.some((y) => y.userId === currentUser.data?.currentUser.id))
     .orderBy((x) => x.order)
     .toArray();
 
@@ -53,7 +45,7 @@ export const AreaList = () => {
     }
 
     // 現在の並び順を入れ替えた新しいordersを計算
-    const replaced = ArrayUtil.insertReplace(orderdUserOrganizations, oldIndex, newIndex);
+    const replaced = ArrayUtil.insertReplace(orderdUserAreas, oldIndex, newIndex);
     await updateAreaOrdersMutation({
       updateAreaOrdersInput: {
         items: replaced.map((x, i) => ({
@@ -73,7 +65,7 @@ export const AreaList = () => {
           </Typography>
           <List>
             <MovableList onMove={onMove}>
-              {orderdUserOrganizations.map((x) => ({
+              {orderdUserAreas.map((x) => ({
                 key: x.id.toString(),
                 node: (draggableProps: any) => (
                   <ListItem>
@@ -83,9 +75,11 @@ export const AreaList = () => {
                           <CardHeader
                             title={x.name}
                             action={
-                              <div {...draggableProps} style={{ margin: 5 }}>
-                                <DragHandleIcon className="drag-handle" />
-                              </div>
+                              editing ? (
+                                <div {...draggableProps} style={{ margin: 5 }}>
+                                  <DragHandleIcon className="drag-handle" />
+                                </div>
+                              ) : null
                             }
                           />
                           <CardContent>

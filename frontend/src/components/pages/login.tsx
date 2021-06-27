@@ -18,17 +18,6 @@ export const Login = () => {
   const login = async (username: string, password: string) => {
     try {
       unwrapResult(await dispatch(asyncLogin({ username, password })));
-      // dispatch(actions.setLoginUser(unwrapResult(await dispatch(asyncLogin({ username, password })))));
-
-      // if (loginSrcRoute == null) {
-      //   await router.push('/');
-      // } else {
-      //   // console.log(loginSrcRoute);
-      //   await router.push({
-      //     pathname: loginSrcRoute.pathname,
-      //     query: loginSrcRoute.query,
-      //   });
-      // }
     } catch (e) {
       console.log(e);
       // とりあえず適当なエラーメッセージ

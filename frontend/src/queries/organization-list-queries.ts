@@ -4,10 +4,8 @@ import {
   GetUserOrganizationsQueryVariables,
   UpdateUserOrganizationsMutationVariables,
   useCreateUserOrganizationMutation,
-  useGetUserOrganizationsQuery,
   useUpdateUserOrganizationsMutation,
 } from '@/types/graphql';
-import { ArrayUtil } from '@/utils/array-util';
 import { TypeUtil } from '@/utils/type-helper';
 import { ApolloCache } from '@apollo/client';
 

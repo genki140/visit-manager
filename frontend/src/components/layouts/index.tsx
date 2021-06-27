@@ -216,7 +216,7 @@ export const Layout = (props: {
                 </>
               ) : (
                 <>
-                  <Link href="/">
+                  <Link href="/system/login">
                     <ListItem button>
                       <ListItemIcon>
                         <AccountCircleIcon />

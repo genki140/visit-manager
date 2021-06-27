@@ -291,6 +291,7 @@ export type UserArea = {
   __typename?: 'UserArea';
   id: Scalars['Int'];
   user: User;
+  userId: Scalars['Float'];
   area: Area;
   areaId: Scalars['Float'];
 };
@@ -343,16 +344,18 @@ export type AddTestMutation = (
   & Pick<Mutation, 'addTest'>
 );
 
-export type GetAreasQueryVariables = Exact<{
-  organizationId?: Maybe<Scalars['Int']>;
-}>;
+export type GetAreasQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAreasQuery = (
   { __typename?: 'Query' }
   & { areas: Array<(
     { __typename?: 'Area' }
-    & Pick<Area, 'id' | 'order' | 'name' | 'description'>
+    & Pick<Area, 'id' | 'order' | 'name' | 'description' | 'organizationId'>
+    & { userAreas: Array<(
+      { __typename?: 'UserArea' }
+      & Pick<UserArea, 'userId'>
+    )> }
   )> }
 );
 
@@ -368,7 +371,11 @@ export type CreateAreaMutation = (
   { __typename?: 'Mutation' }
   & { createArea: (
     { __typename?: 'Area' }
-    & Pick<Area, 'id' | 'order' | 'name' | 'description'>
+    & Pick<Area, 'id' | 'order' | 'name' | 'description' | 'organizationId'>
+    & { userAreas: Array<(
+      { __typename?: 'UserArea' }
+      & Pick<UserArea, 'userId'>
+    )> }
   ) }
 );
 
@@ -519,18 +526,14 @@ export type GetCurrentUserQuery = (
     & { userOrganizations: Array<(
       { __typename?: 'UserOrganization' }
       & Pick<UserOrganization, 'id'>
-      & { organization: (
-        { __typename?: 'Organization' }
-        & Pick<Organization, 'id' | 'name'>
-        & { areas: Array<(
-          { __typename?: 'Area' }
-          & Pick<Area, 'id' | 'name' | 'description'>
-          & { areaType: (
-            { __typename?: 'AreaType' }
-            & Pick<AreaType, 'id' | 'name'>
-          ) }
+      & { roles: Array<(
+        { __typename?: 'Role' }
+        & Pick<Role, 'name'>
+        & { abilities: Array<(
+          { __typename?: 'Ability' }
+          & Pick<Ability, 'id' | 'name'>
         )> }
-      ) }
+      )> }
     )> }
   ) }
 );
@@ -718,12 +721,16 @@ export type AddTestMutationHookResult = ReturnType<typeof useAddTestMutation>;
 export type AddTestMutationResult = Apollo.MutationResult<AddTestMutation>;
 export type AddTestMutationOptions = Apollo.BaseMutationOptions<AddTestMutation, AddTestMutationVariables>;
 export const GetAreasDocument = gql`
-    query getAreas($organizationId: Int) {
-  areas(organizationId: $organizationId) {
+    query getAreas {
+  areas {
     id
     order
     name
     description
+    organizationId
+    userAreas {
+      userId
+    }
   }
 }
     `;
@@ -740,7 +747,6 @@ export const GetAreasDocument = gql`
  * @example
  * const { data, loading, error } = useGetAreasQuery({
  *   variables: {
- *      organizationId: // value for 'organizationId'
  *   },
  * });
  */
@@ -764,6 +770,10 @@ export const CreateAreaDocument = gql`
     order
     name
     description
+    organizationId
+    userAreas {
+      userId
+    }
   }
 }
     `;
@@ -1127,17 +1137,11 @@ export const GetCurrentUserDocument = gql`
     name
     userOrganizations {
       id
-      organization {
-        id
+      roles {
         name
-        areas {
+        abilities {
           id
           name
-          description
-          areaType {
-            id
-            name
-          }
         }
       }
     }

@@ -1,5 +1,5 @@
 import { AuthGuard } from '@nestjs/passport';
-import { Controller, Post, Request, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Controller, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { User } from '@/entities/user/user.model';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
@@ -44,26 +44,4 @@ export class AuthController {
     response.clearCookie('access_token');
     response.statusCode = 200;
   }
-
-  // @UseGuards(AuthGuard('jwt'))
-  // @Post('api/current-user')
-  // async currentUser(@Res({ passthrough: true }) response: Response, @CurrentUser() currentUser: User) {
-  //   // DBから最新のユーザー情報を取得
-  //   const user = await this.authService.getUser(currentUser.username);
-  //   if (user == null) {
-  //     // そもそもGuardで弾いているはず
-  //     throw new UnauthorizedException();
-  //   }
-
-  //   // JwtToken を取得
-  //   const token = this.authService.getToken(user);
-
-  //   // cookie を設定
-  //   response.cookie('access_token', token, { httpOnly: true });
-  //   response.statusCode = 200;
-
-  //   console.log('user:' + currentUser.username);
-
-  //   return user;
-  // }
 }

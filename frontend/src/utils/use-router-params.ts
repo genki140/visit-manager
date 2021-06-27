@@ -1,4 +1,4 @@
-import { useGetCurrentUserQuery } from '@/types/graphql';
+import { useGetAreasQuery, useGetUserOrganizationsQuery } from '@/types/graphql';
 import { useRouter } from 'next/router';
 
 export const useRouterParams = () => {
@@ -6,10 +6,13 @@ export const useRouterParams = () => {
   const organizationName = (router.query.organizationName ?? '').toString();
   const areaName = (router.query.areaName ?? '').toString();
 
-  const currentUser = useGetCurrentUserQuery();
+  // const currentUser = useGetCurrentUserQuery();
+
+  const organizations = useGetUserOrganizationsQuery();
+  const areas = useGetAreasQuery();
 
   const getOrganizationId = () => {
-    const value = currentUser.data?.currentUser.userOrganizations.find(
+    const value = organizations.data?.userOrganizations.find(
       (x) => x.organization.id.toString() === organizationName || x.organization.name === organizationName,
     )?.organization.id;
     return value != null ? Number(value) : 0;
@@ -23,9 +26,9 @@ export const useRouterParams = () => {
     // 組織名文字列からIDを取得
     getOrganizationId,
     getAreaId: () => {
-      const value = currentUser.data?.currentUser.userOrganizations
-        .find((x) => x.organization.id === getOrganizationId())
-        ?.organization.areas.find((x) => x.id.toString() === areaName || x.name === areaName)?.id;
+      const value = areas.data?.areas
+        .filter((x) => x.organizationId === getOrganizationId())
+        .find((x) => x.id.toString() === areaName || x.name === areaName)?.id;
       return value != null ? Number(value) : 0;
     },
   };

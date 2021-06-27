@@ -62,13 +62,6 @@ export const asyncLogin = createAsyncThunk<void, asyncLoginProps>(
   },
 );
 
-// export const asyncRefreshLoginUser = createAsyncThunk<void>(
-//   storeName + '/asyncRefreshLoginUser',
-//   async (): Promise<void> => {
-//     await axios.post('/system/api/current-user');
-//   },
-// );
-
 export const asyncLogout = createAsyncThunk(storeName + '/asyncLogout', async (): Promise<void> => {
   await axios.post('/system/api/logout');
 });
@@ -81,9 +74,6 @@ export const storeSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    // setLoginUser: (state, action: PayloadAction<User | undefined>) => {
-    //   state.loginUser = action.payload;
-    // },
     refreshLoginUser: (state) => {
       state.currentUserRefreshCount = (state.currentUserRefreshCount ?? 0) + 1;
     },
@@ -111,23 +101,15 @@ export const storeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(asyncLogin.fulfilled, (state) => {
-      // カレントユーザーを再読み込みさせる
+      // ログイン完了時、カレントユーザーを再読み込みさせる
       state.apolloClientRefreshCount = (state.apolloClientRefreshCount ?? 0) + 1;
       state.currentUserRefreshCount = (state.currentUserRefreshCount ?? 0) + 1;
     });
-
-    // builder.addCase(asyncRefreshLoginUser.fulfilled, (state) => {
-    //   // state.loginUser = action.payload;
-    //   state.loginLoaded = true;
-    // });
-    // builder.addCase(asyncRefreshLoginUser.rejected, (state) => {
-    //   state.loginLoaded = true;
-    // });
     builder.addCase(asyncLogout.fulfilled, (state) => {
-      // カレントユーザーを再読み込みさせる
+      // ログアウト完了時、カレントユーザーを再読み込みさせる
       state.currentUserRefreshCount = (state.currentUserRefreshCount ?? 0) + 1;
       state.apolloClientRefreshCount = (state.apolloClientRefreshCount ?? 0) + 1;
-      // state.loginUser = undefined;
+      state.loginSrcRoute = undefined;
     });
 
     // 非同期実行時は全体のLoading状態を自動調整します

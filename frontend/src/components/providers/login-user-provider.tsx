@@ -1,5 +1,6 @@
 import { actions, useAppDispatch, useStoreState } from '@/ducks/store';
 import { useGetCurrentUserQuery } from '@/types/graphql';
+// import { useApolloClient } from '@apollo/client';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Loading } from '../loading';
@@ -11,6 +12,8 @@ export const LoginUserProvider = (props: { children: any }) => {
   const [inited, setInited] = useState(false);
   const currentUserRefreshCount = useStoreState((x) => x.currentUserRefreshCount);
   const loginSrcRoute = useStoreState((x) => x.loginSrcRoute);
+
+  // const apolloClient = useApolloClient();
 
   // ログインしないと見えないページかどうかを判定
   const isLimitedPage =
@@ -48,7 +51,7 @@ export const LoginUserProvider = (props: { children: any }) => {
     if (currentUserState != null) {
       setInited(true);
     }
-  }, [currentUserState]); // ロード常態かログイン有無が変更された場合に実行
+  }, [currentUserState]); // ロード状態かログイン有無が変更された場合に実行
 
   // useEffect(() => {
   //   if (router.isReady) {

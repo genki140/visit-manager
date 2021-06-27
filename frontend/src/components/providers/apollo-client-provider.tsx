@@ -13,6 +13,7 @@ export const ApolloClientProvider = (props: { children: any }) => {
   // ユーザー情報が更新されたらApolloClient再生成
   // websocketを張ったタイミングでcookieの情報をコネクションに保持してしまうため張りなおす必要がある。
   // ※ApolloClientを作り直すと、chromeのapolloのデバッグが見失ってしまうためデバッグ時は注意。
+  // → websocketを張りなおす別の方法があればそれで解決できる。
 
   useEffect(() => {
     // if (loginLoaded) {

@@ -1,4 +1,4 @@
-# コメント
+# ユーザーに紐づく全組織情報を取得
 query getUserOrganizations {
   userOrganizations {
     id

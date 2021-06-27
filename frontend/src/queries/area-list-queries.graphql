@@ -1,9 +1,14 @@
-query getAreas($organizationId: Int) {
-  areas(organizationId: $organizationId) {
+# ユーザーに紐づく全組織の区域情報を取得
+query getAreas {
+  areas {
     id
     order
     name
     description
+    organizationId
+    userAreas {
+      userId
+    }
   }
 }
 
@@ -15,6 +20,10 @@ mutation createArea($organizationId: Int!, $name: String!, $description: String!
     order
     name
     description
+    organizationId
+    userAreas {
+      userId
+    }
   }
 }
 

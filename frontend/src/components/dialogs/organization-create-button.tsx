@@ -2,7 +2,6 @@ import { useFormatMessage } from '@/locales';
 import AddIcon from '@material-ui/icons/Add';
 
 import { OrganizationListQueries } from '@/queries/organization-list-queries';
-import { useAppDispatch } from '@/ducks/store';
 import { FormText } from './form-text';
 import { useInputDialog } from './input-dialog';
 import { EditControls } from '../edit-controls';
