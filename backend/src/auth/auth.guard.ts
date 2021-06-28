@@ -1,9 +1,17 @@
 import { AbilityTypes } from '@/entities/ability/ability.model';
 import { User } from '@/entities/user/user.model';
-import { createParamDecorator, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  ArgumentMetadata,
+  createParamDecorator,
+  ExecutionContext,
+  Inject,
+  Injectable,
+  PipeTransform,
+} from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthenticationError } from 'apollo-server-express';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('jwt') {
@@ -13,8 +21,8 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
   }
 }
 
-// 現在のユーザーを取得
-export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext) => {
+// トークンから現在のユーザー(ID)を取得
+export const CurrentUserId = createParamDecorator((data: unknown, context: ExecutionContext) => {
   const ctx = GqlExecutionContext.create(context);
   let user = ctx.getContext().req?.user;
   if (user == null) {
@@ -23,6 +31,34 @@ export const CurrentUser = createParamDecorator((data: unknown, context: Executi
   }
   return user;
 });
+
+// ユーザーIDをパイプしてDBから必要な情報を取得
+@Injectable()
+export class GetUserRolePipe implements PipeTransform<User, Promise<User>> {
+  constructor(private readonly authService: AuthService) {}
+
+  async transform(user: any, metadata: ArgumentMetadata) {
+    const userRole = await this.authService.getUserRole(user.id);
+    // console.log('user:' + JSON.stringify(userRole));
+    return userRole;
+    // throw new BadRequestException('Validation failed');
+  }
+}
+
+// 渡されたユーザー情報が、指定されたパラメータの権限を満たしているかをチェック
+@Injectable()
+export class CheckRolePipe implements PipeTransform<User, Promise<User>> {
+  constructor(options?: { option?: number }) {}
+
+  async transform(user: any, metadata: ArgumentMetadata) {
+    // console.log(user);
+
+    return user;
+  }
+}
+
+export const CurrentUser = (options?: { option?: number }) =>
+  CurrentUserId(GetUserRolePipe, new CheckRolePipe(options));
 
 // export const NoGuard = () => SetMetadata('noGuard', true);
 

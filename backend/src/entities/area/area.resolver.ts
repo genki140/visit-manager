@@ -24,9 +24,6 @@ export class AreaResolver {
     // 組織が指定されている場合はその組織の区域のみ取得する。
     // idsが指定されている場合は、そのidの区域のみ取得する。
 
-    // とりあえず対応。（いちいちこんなことしてられない！！）
-    currentUser = (await this.userService.find([currentUser.id], { relations: ['userOrganizations'] }))[0];
-
     const userOrganizationIds = currentUser.userOrganizations?.map((x) => x.id) ?? [];
 
     // 組織の指定があるのにその組織に所属していなければ例外を返す。

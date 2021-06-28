@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
@@ -7,13 +7,15 @@ import { AuthService } from './auth.service';
 
 // Strategyクラス
 import { LocalStrategy } from './local.strategy';
-import { UserModule } from '@/entities/user/user.module';
 import { JwtStrategy } from './jwt.strategy';
 import * as fs from 'fs';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '@/entities/user/user.model';
 
+@Global()
 @Module({
   imports: [
-    UserModule,
+    TypeOrmModule.forFeature([User]),
     PassportModule,
     // JWTを使うための設定をしている
     JwtModule.registerAsync({

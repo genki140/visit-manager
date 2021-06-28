@@ -31,17 +31,31 @@ import { AreaTypeModule } from './entities/area-type/area-type.module';
         autoSchemaFile: process.env.NODE_ENV === 'production' ? true : 'schema.graphql',
 
         installSubscriptionHandlers: true, //websocket
+
+        // サブスクリプションイベント時の処理を定義
+        subscriptions: {
+          onConnect: async (params, websocket) => {
+            // クッキーからトークンを取得して設定
+            const tokenKey = 'access_token';
+            const cookie = (websocket as any).upgradeReq.headers.cookie as string | undefined;
+            const tokenValue =
+              cookie
+                ?.split(';')
+                ?.map((x) => x.trim())
+                ?.filter((x) => x.startsWith(tokenKey + '='))?.[0]
+                ?.substring(tokenKey.length + 1) ?? '';
+            return {
+              access_token: tokenValue,
+            };
+          },
+        },
+
+        // 呼ばれるたびに実行される処理を定義
         context: ({ req, connection }) => {
-          // console.log(connection);
-          // return req; //.cookies;
-
-          // console.log('req');
-          // console.log(req);
-          // console.log('connection');
-          // console.log(connection);
-
-          // // websocketモードの場合にguardやjwt.strategyで認証できるよう調整
-          return connection ? { req: { cookies: connection.context } } : { req };
+          // websocketモードの場合にguardやjwt.strategyで認証できるよう調整
+          const result = connection ? { req: { cookies: connection.context } } : { req };
+          // console.log(result);
+          return result;
         },
 
         introspection: true, // 本番環境でのplaygroundを許可
@@ -52,32 +66,11 @@ import { AreaTypeModule } from './entities/area-type/area-type.module';
             'request.credentials': 'include',
           },
         },
-        // cors: { Credential: true },
 
         // cors: {
         //   credentials: true,
         //   origin: ['http://localhost:3000'],
         // },
-        subscriptions: {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          onConnect: async (params, websocket) => {
-            // クッキーのトークンを引き渡す
-            const tokenKey = 'access_token';
-            const cookie = (websocket as any).upgradeReq.headers.cookie as string | undefined;
-            const tokenValue =
-              cookie
-                ?.split(';')
-                ?.map((x) => x.trim())
-                ?.filter((x) => x.startsWith(tokenKey + '='))?.[0]
-                ?.substring(tokenKey.length + 1) ?? '';
-            // console.log(tokenValue);
-            return {
-              access_token: tokenValue,
-            };
-            // console.log(tokenValue);
-            // return params;
-          },
-        },
       }),
     }), //GraphQL
     TypeOrmModule.forRootAsync({

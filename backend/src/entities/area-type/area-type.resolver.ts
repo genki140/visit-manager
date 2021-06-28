@@ -13,7 +13,6 @@ export class AreaTypeResolver {
   constructor(
     @InjectRepository(AreaType)
     private readonly areaTypeRepository: Repository<AreaType>,
-    private readonly userService: UserService,
   ) {}
 
   @UseGuards(GqlAuthGuard)
@@ -22,9 +21,6 @@ export class AreaTypeResolver {
     @Args('organizationId', { type: () => Int }) organizationId: number,
     @CurrentUser() currentUser: User,
   ) {
-    // とりあえず対応。（いちいちこんなことしてられない！！）
-    currentUser = (await this.userService.find([currentUser.id], { relations: ['userOrganizations'] }))[0];
-
     // 組織に所属していなければ例外を返す
     if (currentUser.userOrganizations?.some((x) => x.organizationId === organizationId) !== true) {
       throw new AuthenticationError('');

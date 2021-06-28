@@ -2,15 +2,20 @@
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 import { User } from '@/entities/user/user.model';
-import { UserService } from '@/entities/user/user.service';
 import { CryptUtil } from '@/utils/crypt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 /**
  * @description Passportでは出来ない認証処理をするクラス
  */
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService, private userService: UserService) {}
+  constructor(
+    private jwtService: JwtService,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
   // ユーザーを認証する
   async validateUser(username: string, password: string): Promise<User | undefined> {
@@ -23,16 +28,8 @@ export class AuthService {
     // URLの区域名をIDに変換する部分はクライアントで行うので、関連組織の区域の名称-ID対応はすべて取得しておく必要がある。
 
     const user = (
-      await this.userService.find(undefined, {
+      await this.userRepository.find({
         where: { username },
-        // relations: [
-        //   'userOrganizations',
-        //   'userOrganizations.organization',
-        //   'userOrganizations.roles',
-        //   'userOrganizations.roles.abilities',
-        //   'userOrganizations.organization.areas',
-        //   'userAreas',
-        // ],
       })
     )?.[0];
 
@@ -50,5 +47,22 @@ export class AuthService {
   // jwt tokenを返す
   getToken(user: User) {
     return this.jwtService.sign(Object.assign({}, user));
+  }
+
+  async getUserRole(id: number): Promise<User> {
+    const user = (
+      await this.userRepository.findByIds([id], {
+        relations: [
+          'userOrganizations',
+          'userOrganizations.organization',
+          'userOrganizations.roles',
+          'userOrganizations.roles.abilities',
+          // 'userOrganizations.organization.areas',
+          // 'userAreas',
+        ],
+      })
+    )?.[0];
+    user.password = '';
+    return user;
   }
 }
