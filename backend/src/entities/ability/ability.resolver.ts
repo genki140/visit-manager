@@ -1,9 +1,11 @@
+import { UseGqlGuard } from '@/auth/auth.guard';
 import { Resolver } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Ability } from './ability.model';
 
 @Resolver(() => Ability)
+@UseGqlGuard()
 export class AbilityResolver {
   constructor(
     @InjectRepository(Ability)

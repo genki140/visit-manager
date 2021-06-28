@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { MaxLength } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Area } from '../area/area.model';
@@ -61,14 +61,6 @@ export class CreateResidenceInput {
   /** 経度 */
   @Field()
   longitude: number = 0;
-
-  // @Field()
-  // @MaxLength(100)
-  // userId: string = '';
-
-  // @Field()
-  // @MaxLength(100)
-  // password: string = '';
 }
 
 @InputType()

@@ -1,16 +1,16 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CreateUserInput, User } from '@/entities/user/user.model';
 import { UserService } from '@/entities/user/user.service';
-import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
+import { CurrentUser, UseGqlGuard } from '@/auth/auth.guard';
 
 @Resolver(() => User)
+@UseGqlGuard()
 export class UserResolver {
   constructor(@Inject(UserService) private userService: UserService) {}
 
   /** 現在ログインしているユーザーの情報を取得します。*/
-  @UseGuards(GqlAuthGuard)
   @Query(() => User)
   async currentUser(@CurrentUser() currentUser: User) {
     const user = (

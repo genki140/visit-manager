@@ -60,10 +60,5 @@ export class AreaService {
       }
       return areas;
     });
-
-    // const item = await this.userOrganizationRepository.findOneOrFail(payload.id);
-    // item.order = payload.order;
-    // const result = await this.userOrganizationRepository.save(item);
-    // return item;
   }
 }

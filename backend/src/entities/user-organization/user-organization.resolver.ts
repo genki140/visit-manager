@@ -1,6 +1,5 @@
-import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
+import { CurrentUser, UseGqlGuard } from '@/auth/auth.guard';
 import { ErrorCodes } from '@/types/error-types';
-import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApolloError } from 'apollo-server-express';
@@ -10,6 +9,7 @@ import { User } from '../user/user.model';
 import { CreateUserOrganizationInput, UpdateUserOrganizationsInput, UserOrganization } from './user-organization.model';
 
 @Resolver(() => UserOrganization)
+@UseGqlGuard()
 export class UserOrganizationResolver {
   constructor(
     @InjectRepository(UserOrganization)
@@ -19,7 +19,6 @@ export class UserOrganizationResolver {
 
   /** ユーザー一覧を権限情報と共に取得します */
   @Query(() => [UserOrganization])
-  @UseGuards(GqlAuthGuard)
   async userOrganizations(@CurrentUser() currentUser: User) {
     // 関連組織をすべて返す
     const result = await this.userOrganizationRepository.find({
@@ -31,7 +30,6 @@ export class UserOrganizationResolver {
 
   /** 作成したユーザーを管理者とする新規組織の作成 */
   @Mutation(() => UserOrganization)
-  @UseGuards(GqlAuthGuard)
   async createUserOrganization(
     @Args('organization') organization: CreateUserOrganizationInput,
     @CurrentUser() currentUser: User,
@@ -80,7 +78,6 @@ export class UserOrganizationResolver {
 
   /** 作成したユーザーを管理者とする新規組織の作成 */
   @Mutation(() => [UserOrganization])
-  @UseGuards(GqlAuthGuard)
   async updateUserOrganizations(@Args('userOrganizations') userOrganizations: UpdateUserOrganizationsInput) {
     return await this.connection.transaction(async (manager) => {
       const userOrganizationRepository = manager.getRepository(UserOrganization);

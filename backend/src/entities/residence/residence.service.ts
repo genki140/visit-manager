@@ -29,12 +29,6 @@ export class ResidenceService {
     return await this.residenceRepository.findOne(result.id, {
       relations: ['residents'],
     });
-
-    // // 同名チェック
-    // if ((await this.residenceRepository.count({ where: { username: payload.userId } })) > 0) {
-    //   throw new Error('userId is already used.');
-    // }
-    // return await this.residenceRepository.save({ ...payload });
   }
 
   async update(payload: UpdateResidenceInput) {

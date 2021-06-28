@@ -1,14 +1,12 @@
+import { UseGqlGuard } from '@/auth/auth.guard';
 import { Inject } from '@nestjs/common';
 import { Args, ID, Int, Mutation, Resolver } from '@nestjs/graphql';
 
 import { CreateResidenceInput, Residence, UpdateResidenceInput } from './residence.model';
 import { ResidenceService } from './residence.service';
 
-// export const CustomDecorator = createParamDecorator((data: unknown, ctx: ExecutionContext) =>
-//   GqlExecutionContext.create(ctx).getContext(),
-// );
-
 @Resolver(() => Residence)
+@UseGqlGuard()
 export class ResidenceResolver {
   constructor(@Inject(ResidenceService) private residenceService: ResidenceService) {}
 

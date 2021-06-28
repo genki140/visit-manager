@@ -4,9 +4,9 @@ import {
   ArgumentMetadata,
   createParamDecorator,
   ExecutionContext,
-  Inject,
   Injectable,
   PipeTransform,
+  UseGuards,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
@@ -20,6 +20,8 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
     return ctx.getContext().req;
   }
 }
+
+export const UseGqlGuard = () => UseGuards(GqlAuthGuard);
 
 // トークンから現在のユーザー(ID)を取得
 export const CurrentUserId = createParamDecorator((data: unknown, context: ExecutionContext) => {
@@ -37,9 +39,11 @@ export const CurrentUserId = createParamDecorator((data: unknown, context: Execu
 export class GetUserRolePipe implements PipeTransform<User, Promise<User>> {
   constructor(private readonly authService: AuthService) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async transform(user: any, metadata: ArgumentMetadata) {
+    // TODO:どのみちDBから取得するならトークン起源もDBから読み取っても良さそう
+
     const userRole = await this.authService.getUserRole(user.id);
-    // console.log('user:' + JSON.stringify(userRole));
     return userRole;
     // throw new BadRequestException('Validation failed');
   }
@@ -48,17 +52,17 @@ export class GetUserRolePipe implements PipeTransform<User, Promise<User>> {
 // 渡されたユーザー情報が、指定されたパラメータの権限を満たしているかをチェック
 @Injectable()
 export class CheckRolePipe implements PipeTransform<User, Promise<User>> {
-  constructor(options?: { option?: number }) {}
+  // constructor(options?: { option?: number }) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async transform(user: any, metadata: ArgumentMetadata) {
-    // console.log(user);
-
     return user;
   }
 }
 
-export const CurrentUser = (options?: { option?: number }) =>
-  CurrentUserId(GetUserRolePipe, new CheckRolePipe(options));
+export const CurrentUser = () =>
+  // (options?: { option?: number }) =>
+  CurrentUserId(GetUserRolePipe, new CheckRolePipe());
 
 // export const NoGuard = () => SetMetadata('noGuard', true);
 

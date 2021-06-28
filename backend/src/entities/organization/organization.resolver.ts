@@ -1,20 +1,22 @@
+import { UseGqlGuard } from '@/auth/auth.guard';
 import { Inject } from '@nestjs/common';
-import { Resolver, Query, Mutation, Subscription, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { Organization } from './organization.model';
 import { OrganizationService } from './organization.service';
 
 @Resolver(() => Organization)
+@UseGqlGuard()
 export class OrganizationResolver {
   constructor(@Inject(OrganizationService) private organizationService: OrganizationService) {}
-
-  private test = 1;
 
   // 本来ここじゃないけどやっつけ実装
   @Query(() => String)
   async googleMapApiKey() {
     return process.env.GOOGLE_MAP_API_KEY?.toString() ?? '';
   }
+
+  private test = 1;
 
   // 配信のテスト
   @Query(() => Number)

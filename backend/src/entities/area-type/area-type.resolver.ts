@@ -1,21 +1,19 @@
-import { CurrentUser, GqlAuthGuard } from '@/auth/auth.guard';
-import { UseGuards } from '@nestjs/common';
+import { CurrentUser, UseGqlGuard } from '@/auth/auth.guard';
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthenticationError } from 'apollo-server-express';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.model';
-import { UserService } from '../user/user.service';
 import { AreaType } from './area-type.model';
 
 @Resolver(() => AreaType)
+@UseGqlGuard()
 export class AreaTypeResolver {
   constructor(
     @InjectRepository(AreaType)
     private readonly areaTypeRepository: Repository<AreaType>,
   ) {}
 
-  @UseGuards(GqlAuthGuard)
   @Query(() => [AreaType])
   async areaTypes(
     @Args('organizationId', { type: () => Int }) organizationId: number,

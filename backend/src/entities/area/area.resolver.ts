@@ -1,6 +1,6 @@
-import { CurrentUser, GqlAuthGuard, RequiredAbilities } from '@/auth/auth.guard';
-import { Inject, UseGuards } from '@nestjs/common';
-import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { CurrentUser, RequiredAbilities, UseGqlGuard } from '@/auth/auth.guard';
+import { Inject } from '@nestjs/common';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthenticationError } from 'apollo-server-express';
 import { In } from 'typeorm';
 import { AbilityTypes } from '../ability/ability.model';
@@ -10,10 +10,10 @@ import { Area, CreateAreaInput, UpdateAreaOrdersInput } from './area.model';
 import { AreaService } from './area.service';
 
 @Resolver(() => Area)
+@UseGqlGuard()
 export class AreaResolver {
   constructor(@Inject(AreaService) private areaService: AreaService, private readonly userService: UserService) {}
 
-  @UseGuards(GqlAuthGuard)
   @Query(() => [Area])
   async areas(
     @Args('organizationId', { type: () => Int, nullable: true }) organizationId: number | null,
@@ -28,8 +28,6 @@ export class AreaResolver {
 
     // 組織の指定があるのにその組織に所属していなければ例外を返す。
     if (organizationId != null && userOrganizationIds.some((x) => x === organizationId) !== true) {
-      // console.log(organizationId);
-      // console.log(userOrganizationIds);
       throw new AuthenticationError('');
     }
 
@@ -50,15 +48,10 @@ export class AreaResolver {
       ],
     });
 
-    // if (userIds != null) {
-    //   result = result.filter((x) => x.userAreas?.some((y) => userIds.some((z) => y.user?.id === z)));
-    // }
-
     return result;
   }
 
   @Mutation(() => Area)
-  @UseGuards(GqlAuthGuard)
   async createArea(@Args('area') area: CreateAreaInput, @CurrentUser() currentUser: User) {
     RequiredAbilities([AbilityTypes.CreateArea], currentUser, area.organizationId);
 
@@ -67,7 +60,6 @@ export class AreaResolver {
 
   /** 作成したユーザーを管理者とする新規組織の作成 */
   @Mutation(() => [Area])
-  @UseGuards(GqlAuthGuard)
   async updateAreaOrders(@Args('areaOrders') areaOrders: UpdateAreaOrdersInput) {
     const result = await this.areaService.update(areaOrders);
     return result;

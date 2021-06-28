@@ -98,7 +98,7 @@ import { AreaTypeModule } from './entities/area-type/area-type.module';
     DateScalar,
     // {
     //   provide: APP_GUARD,
-    //   useClass: AuthGuard,
+    //   useClass: GqlAuthGuard,
     // },
   ],
 })

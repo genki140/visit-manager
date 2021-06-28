@@ -1,14 +1,16 @@
 import { Inject } from '@nestjs/common';
-import { Args, ID, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
 
 import { OutlineService } from './outline.service';
 import { CreateOutlineInput, Outline, UpdateOutlineInput } from './outline.model';
+import { UseGqlGuard } from '@/auth/auth.guard';
 
 // export const CustomDecorator = createParamDecorator((data: unknown, ctx: ExecutionContext) =>
 //   GqlExecutionContext.create(ctx).getContext(),
 // );
 
 @Resolver(() => Outline)
+@UseGqlGuard()
 export class OutlineResolver {
   constructor(@Inject(OutlineService) private outlineService: OutlineService) {}
 
